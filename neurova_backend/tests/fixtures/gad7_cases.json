@@ -1,0 +1,20 @@
+[
+  {
+    "name": "gad7_minimal_all_0",
+    "answers": {"item_1":0,"item_2":0,"item_3":0,"item_4":0,"item_5":0,"item_6":0,"item_7":0},
+    "expected_total": 0,
+    "expected_severity": "Minimal anxiety"
+  },
+  {
+    "name": "gad7_mild",
+    "answers": {"item_1":1,"item_2":1,"item_3":1,"item_4":1,"item_5":1,"item_6":0,"item_7":0},
+    "expected_total": 5,
+    "expected_severity": "Mild anxiety"
+  },
+  {
+    "name": "gad7_severe",
+    "answers": {"item_1":3,"item_2":3,"item_3":3,"item_4":3,"item_5":3,"item_6":3,"item_7":3},
+    "expected_total": 21,
+    "expected_severity": "Severe anxiety"
+  }
+]

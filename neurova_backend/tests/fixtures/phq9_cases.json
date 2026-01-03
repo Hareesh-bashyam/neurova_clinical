@@ -1,0 +1,23 @@
+[
+  {
+    "name": "phq9_minimal_all_0",
+    "answers": {"item_1":0,"item_2":0,"item_3":0,"item_4":0,"item_5":0,"item_6":0,"item_7":0,"item_8":0,"item_9":0},
+    "expected_total": 0,
+    "expected_severity": "Minimal",
+    "expected_flag": false
+  },
+  {
+    "name": "phq9_item9_flag",
+    "answers": {"item_1":1,"item_2":1,"item_3":1,"item_4":1,"item_5":1,"item_6":1,"item_7":1,"item_8":1,"item_9":1},
+    "expected_total": 9,
+    "expected_severity": "Mild",
+    "expected_flag": true
+  },
+  {
+    "name": "phq9_severe",
+    "answers": {"item_1":3,"item_2":3,"item_3":3,"item_4":3,"item_5":3,"item_6":3,"item_7":3,"item_8":3,"item_9":0},
+    "expected_total": 24,
+    "expected_severity": "Severe",
+    "expected_flag": false
+  }
+]

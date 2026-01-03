@@ -1,0 +1,29 @@
+[
+  {
+    "name": "vanderbilt_unlikely",
+    "answers": {
+      "inattention": [0,0,0,0,0,0,0,0,0],
+      "hyperactivity": [0,0,0,0,0,0,0,0,0]
+    },
+    "expected_average": 0.0,
+    "expected_severity": "Scores <1.5 unlikely ADHD"
+  },
+  {
+    "name": "vanderbilt_possible",
+    "answers": {
+      "inattention": [2,2,2,2,2,2,2,2,2],
+      "hyperactivity": [1,1,1,1,1,1,1,1,1]
+    },
+    "expected_average": 1.5,
+    "expected_severity": "Possible ADHD"
+  },
+  {
+    "name": "vanderbilt_probable",
+    "answers": {
+      "inattention": [3,3,3,3,3,3,3,3,3],
+      "hyperactivity": [3,3,3,3,3,3,3,3,3]
+    },
+    "expected_average": 3.0,
+    "expected_severity": "Probable ADHD"
+  }
+]

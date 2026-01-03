@@ -1,0 +1,32 @@
+[
+  {
+    "name": "audit_no_hazard",
+    "answers": {
+      "item_1":0,"item_2":0,"item_3":0,"item_4":0,"item_5":0,
+      "item_6":0,"item_7":0,"item_8":0,"item_9":0,"item_10":0
+    },
+    "expected_total": 0,
+    "expected_severity": "No hazardous use",
+    "expected_flag": false
+  },
+  {
+    "name": "audit_hazardous",
+    "answers": {
+      "item_1":2,"item_2":2,"item_3":2,"item_4":1,"item_5":1,
+      "item_6":0,"item_7":0,"item_8":0,"item_9":0,"item_10":0
+    },
+    "expected_total": 8,
+    "expected_severity": "Hazardous use",
+    "expected_flag": false
+  },
+  {
+    "name": "audit_dependence_flag",
+    "answers": {
+      "item_1":2,"item_2":3,"item_3":3,"item_4":2,"item_5":2,
+      "item_6":1,"item_7":1,"item_8":0,"item_9":0,"item_10":0
+    },
+    "expected_total": 14,
+    "expected_severity": "Hazardous use",
+    "expected_flag": true
+  }
+]
