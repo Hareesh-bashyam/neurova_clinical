@@ -15,9 +15,11 @@ class Organization(models.Model):
         default="CLINICIAN_ONLY",
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    address = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
+
 
 class UserProfile(models.Model):
     ROLES = [("ORG_ADMIN","ORG_ADMIN"),("CLINICIAN","CLINICIAN"),("STAFF","STAFF"),("AUDITOR","AUDITOR")]

@@ -5,14 +5,14 @@ from rest_framework import status
 
 from sessions.models import Session
 from .models import Score
-from .services import compute_score  # or wherever compute_score lives
+from .services import compute_score
 
 
 class SessionScoreCreateView(APIView):
     def post(self, request, session_id):
         session = Session.objects.get(id=session_id)
 
-        # 🔒 If already scored, return existing score (IDEMPOTENT)
+        # 🔒 Idempotent scoring
         existing = Score.objects.filter(session=session).first()
         if existing:
             return Response(
@@ -34,10 +34,10 @@ class SessionScoreCreateView(APIView):
         result = compute_score(answers)
 
         score = Score.objects.create(
-            organization=session.organization,
             session=session,
             score=result["score"],
             severity=result["severity"],
+            breakdown=answers,   # ✅ REQUIRED BY MODEL
         )
 
         return Response(

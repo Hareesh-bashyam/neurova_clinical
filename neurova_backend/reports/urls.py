@@ -1,6 +1,6 @@
 # reports/urls.py
 from django.urls import path
-from .views import ReportCreateView, ReportSignView, ReportReleaseView
+from .views import ReportCreateView, ReportSignView, ReportReleaseView, ReportPDFView
 
 urlpatterns = [
     path(
@@ -9,4 +9,5 @@ urlpatterns = [
     ),
     path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
     path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
 ]

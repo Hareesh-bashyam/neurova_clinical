@@ -16,10 +16,10 @@ class PatientViewSet(OrgScopedQuerysetMixin, ModelViewSet):
         super().perform_create(serializer)
 
         patient = serializer.instance
-        log_event(
-            request=self.request,
-            org=patient.organization,
-            action="PATIENT_CREATED",
-            entity_type="Patient",
-            entity_id=patient.id,
-        )
+        # log_event(
+        #     request=self.request,
+        #     org=patient.organization,
+        #     action="PATIENT_CREATED",
+        #     entity_type="Patient",
+        #     entity_id=patient.id,
+        # )

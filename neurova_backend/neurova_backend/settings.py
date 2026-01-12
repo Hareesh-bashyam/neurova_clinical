@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-_!0afham_07aezf%a9#c+(pnu%=dr6mxz=7v=l+jbw@ex*-3p3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'safety',
     'reports',
     'auditlogs',
+    'backend.clinical.apps.ClinicalConfig',
+    'backend.clinical.audit',
 
 ]
 
@@ -172,6 +174,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+#media
+# URL used to access the files via HTTP
+MEDIA_URL = '/media/'
+
+# Absolute filesystem path to the directory that will hold user-uploaded files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

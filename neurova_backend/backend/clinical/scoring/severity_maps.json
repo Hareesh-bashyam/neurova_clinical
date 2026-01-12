@@ -1,0 +1,31 @@
+{
+  "PHQ9": [
+    [0, 4, "Minimal"],
+    [5, 9, "Mild"],
+    [10, 14, "Moderate"],
+    [15, 19, "Moderately Severe"],
+    [20, 27, "Severe"]
+  ],
+  "GAD7": [
+    [0, 4, "Minimal"],
+    [5, 9, "Mild"],
+    [10, 14, "Moderate"],
+    [15, 21, "Severe"]
+  ],
+  "PSS10": [
+    [0, 13, "Low Stress"],
+    [14, 26, "Moderate Stress"],
+    [27, 40, "High Stress"]
+  ],
+  "AUDIT": [
+    [0, 7, "Low Risk"],
+    [8, 15, "Hazardous"],
+    [16, 19, "Harmful"],
+    [20, 40, "Possible Dependence"]
+  ],
+  "STOP_BANG": [
+    [0, 2, "Low Risk"],
+    [3, 4, "Intermediate Risk"],
+    [5, 8, "High Risk"]
+  ]
+}

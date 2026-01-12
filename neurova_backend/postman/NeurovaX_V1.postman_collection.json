@@ -1,0 +1,65 @@
+{
+  "info": {
+    "name": "NeurovaX_V1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/healthz"
+      }
+    },
+    {
+      "name": "Readiness Check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/readyz"
+      }
+    },
+    {
+      "name": "Login (Clinician)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.environment.set('auth_token', json.access);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"doctor@e2e.com\",\n  \"password\": \"pass\"\n}"
+        },
+        "url": "{{base_url}}/api/v1/auth/login/"
+      }
+    },
+    {
+      "name": "Create Patient",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Postman Patient\" }"
+        },
+        "url": "{{base_url}}/api/v1/patients/"
+      }
+    }
+  ]
+}

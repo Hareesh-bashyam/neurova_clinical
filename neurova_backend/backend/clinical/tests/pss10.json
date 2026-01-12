@@ -1,0 +1,9 @@
+{
+  "test_code": "PSS10",
+  "test_version": "1.0",
+  "questions": 10,
+  "reverse_items": [4,5,7,8],
+  "min_score": 0,
+  "max_score": 40,
+  "scoring_type": "SUM_REVERSE"
+}

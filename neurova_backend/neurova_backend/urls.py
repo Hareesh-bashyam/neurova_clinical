@@ -34,6 +34,7 @@ urlpatterns = [
     path("api/v1/sessions/", include("sessions.urls")),
     path("api/v1/", include("scoring.urls")),
     path("api/v1/", include("reports.urls")),
+    path("api/v1/clinical/", include("backend.clinical.urls")),
     path("healthz/", healthz),
     path("readyz/", readyz),
 ]

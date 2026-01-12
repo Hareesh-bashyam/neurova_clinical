@@ -12,7 +12,7 @@ class ConsentRecord(models.Model):
     consent_text = models.TextField()
     language = models.CharField(max_length=20, default="en")
     captured_by = models.CharField(max_length=20, default="PATIENT")  # PATIENT / STAFF
-    capture_mode = models.CharField(max_length=20, default="MOBILE")  # MOBILE / KIOSK
+    capture_mode = models.CharField(max_length=20, default="KIOSK")  # MOBILE / KIOSK
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

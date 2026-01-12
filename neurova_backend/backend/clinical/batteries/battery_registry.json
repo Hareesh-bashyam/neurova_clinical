@@ -1,0 +1,74 @@
+[
+  {
+    "battery_code": "DEP_SCREEN_V1",
+    "battery_name": "Depression Screening",
+    "battery_version": "1.0",
+    "screening_label": "Depression screening",
+    "tests": ["PHQ9", "MDQ"],
+    "signoff_required": true
+  },
+  {
+    "battery_code": "ANX_SCREEN_V1",
+    "battery_name": "Anxiety Screening",
+    "battery_version": "1.0",
+    "screening_label": "Anxiety screening",
+    "tests": ["GAD7"],
+    "signoff_required": false
+  },
+  {
+    "battery_code": "STRESS_BURNOUT_V1",
+    "battery_name": "Stress & Burnout Screening",
+    "battery_version": "1.0",
+    "screening_label": "Stress screening",
+    "tests": ["PSS10"],
+    "signoff_required": false
+  },
+  {
+    "battery_code": "SLEEP_RISK_V1",
+    "battery_name": "Sleep Risk Screening",
+    "battery_version": "1.0",
+    "screening_label": "Sleep risk screening",
+    "tests": ["STOP_BANG"],
+    "signoff_required": false
+  },
+  {
+    "battery_code": "SUBSTANCE_SCREEN_V1",
+    "battery_name": "Alcohol Use Screening",
+    "battery_version": "1.0",
+    "screening_label": "Alcohol use screening",
+    "tests": ["AUDIT"],
+    "signoff_required": false
+  },
+  {
+    "battery_code": "ADHD_ADULT_V1",
+    "battery_name": "Adult ADHD Screening",
+    "battery_version": "1.0",
+    "screening_label": "Attention screening",
+    "tests": ["ASRS_V1_1"],
+    "signoff_required": false
+  },
+  {
+    "battery_code": "CMHA_V1",
+    "battery_name": "Complete Mental Health Assessment",
+    "battery_version": "1.0",
+    "screening_label": "Mental health screening",
+    "tests": ["PHQ9", "MDQ", "GAD7", "PSS10", "AUDIT", "STOP_BANG"],
+    "signoff_required": true
+  },
+  {
+    "battery_code": "MOOD_RISK_V1",
+    "battery_name": "Mood Risk Screening",
+    "battery_version": "1.0",
+    "screening_label": "Mood screening",
+    "tests": ["PHQ9", "MDQ"],
+    "signoff_required": true
+  },
+  {
+    "battery_code": "EWB_INDEX_V1",
+    "battery_name": "Emotional Wellbeing Index",
+    "battery_version": "1.0",
+    "screening_label": "Wellbeing screening",
+    "tests": ["PHQ9", "GAD7", "PSS10"],
+    "signoff_required": false
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "test_code": "GAD7",
+  "test_version": "1.0",
+  "questions": 7,
+  "min_score": 0,
+  "max_score": 21,
+  "scoring_type": "SUM"
+}
