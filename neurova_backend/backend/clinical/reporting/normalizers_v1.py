@@ -12,28 +12,23 @@ def normalize_organization(org):
     }
 
 
-def normalize_encounter(session):
-    """
-    Derive encounter administration mode from SessionConsent.
-    BUSINESS RULE:
-    - MOBILE / REMOTE / KIOSK => NOT IN_PERSON
-    - Otherwise => IN_PERSON
-    """
 
-    administration_mode = "IN_PERSON"
-
-    try:
-        consent = session.consent
-        if consent.source in ("MOBILE", "REMOTE", "KIOSK"):
-            administration_mode = consent.source
-    except SessionConsent.DoesNotExist:
-        # No consent record → assume staff-administered
-        pass
+def normalize_patient(patient):
+    age_years = "N/A"
+    if patient.dob:
+        today = date.today()
+        # Calculate age properly accounting for leap years
+        age_years = (
+            today.year
+            - patient.dob.year
+            - ((today.month, today.day) < (patient.dob.month, patient.dob.day))
+        )
 
     return {
-        "type": "OUTPATIENT",
-        "administration_mode": administration_mode,
-        "date_time": session.created_at.isoformat() + "Z",
+        "name": patient.name,
+        "age": age_years,
+        "gender": patient.sex or "Not Provided",
+        "patient_id": patient.external_id,
     }
 
 

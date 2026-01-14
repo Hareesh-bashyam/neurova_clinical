@@ -58,8 +58,21 @@ def compose_sections_v1(report_json: Dict[str, Any]) -> List[Section]:
     sections: List[Section] = []
 
     # ---------- SAFE ROOT OBJECTS ----------
-    organization = report_json.get("organization", {})
-    patient = report_json.get("patient", {})
+    org = report_json.get("organization")
+    if not org:
+        raise ValueError(
+            "Invalid report_json: missing 'organization'. "
+            "This report was generated using an older schema. "
+            "Please regenerate the report."
+        )
+
+    meta = report_json.get("meta")
+    if not meta:
+        raise ValueError(
+            "Invalid report_json: missing 'meta'. "
+            "This report was generated using an older schema. "
+            "Please regenerate the report."
+        )
     encounter = report_json.get("encounter", {})
     trace = report_json.get("traceability", {})
 
@@ -70,13 +83,15 @@ def compose_sections_v1(report_json: Dict[str, Any]) -> List[Section]:
         Section(
             key="HEADER",
             title=None,
-            lines=[
-                _safe_str(organization.get("name", "Organization")),
-                _safe_str(organization.get("address", "")),
+            lines = [
+                org["name"],
+                org["address"],
+                "",
                 "Psychiatric Assessment Report",
-                f"Report ID: {_safe_str(report_json.get('report_id'))}",
-                f"Report Date/Time: {_safe_str(encounter.get('date_time'))}",
-            ],
+                f"Report ID: {report_json['report_id']}",
+                f"Report Date/Time: {meta['generated_at']}",
+]
+
         )
     )
 

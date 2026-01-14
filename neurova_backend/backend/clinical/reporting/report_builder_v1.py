@@ -1,14 +1,22 @@
-import uuid
+from django.db import transaction
 from django.utils import timezone
-from backend.clinical.models import ClinicalOrder, BatterySession, TestRun, ClinicalReport
-from backend.clinical.batteries.battery_runner import get_battery_def
-from backend.clinical.scoring.scoring_engine import (
-    evaluate_phq9, calculate_sum, calculate_reverse_sum, apply_severity,
-    evaluate_mdq, evaluate_asrs
-)
-import json, os
+import uuid
+
+from backend.clinical.models import ClinicalOrder, BatterySession, TestRun
 from reports.models import ClinicalReport
 from core.models import Organization
+from backend.clinical.audit.services import audit
+from backend.clinical.batteries.battery_runner import get_battery_def
+from backend.clinical.scoring.scoring_engine import (
+    evaluate_phq9,
+    calculate_sum,
+    calculate_reverse_sum,
+    apply_severity,
+    evaluate_mdq,
+    evaluate_asrs,
+)
+import json
+import os
 
 
 def _load_severity_maps():
@@ -17,13 +25,25 @@ def _load_severity_maps():
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
+def _load_text_registry():
+    path = os.path.join(os.path.dirname(__file__), "report_text_v1.json")
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
 SEVERITY_MAPS = None
+TEXT_REGISTRY = None
 
 def _severity_label(test_code, score):
     global SEVERITY_MAPS
     if SEVERITY_MAPS is None:
         SEVERITY_MAPS = _load_severity_maps()
     return apply_severity(score, SEVERITY_MAPS[test_code])
+
+def _get_text(key):
+    global TEXT_REGISTRY
+    if TEXT_REGISTRY is None:
+        TEXT_REGISTRY = _load_text_registry()
+    return TEXT_REGISTRY.get(key, "")
 
 def _score_range_str(test_code, severity_label):
     # Hard-map ranges to strings for V1 to avoid dict prints in PDF
@@ -49,18 +69,23 @@ def _test_name(test_code):
     }
     return names.get(test_code, test_code)
 
+
+@transaction.atomic
 def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
     """
-    V1 Canonical Report Generator
+    Phase Ω Canonical Report Generator
     IMMUTABLE after first generation
     """
 
-    # 🔒 HARD IMMUTABILITY LOCK — FIRST LINE
-    existing = ClinicalReport.objects.filter(order=order).first()
+    # 🔒 1. HARD IMMUTABILITY GATE (FROZEN ONLY)
+    existing = ClinicalReport.objects.filter(
+        order=order,
+        is_frozen=True,
+    ).first()
     if existing:
         return existing
 
-    # Preconditions
+    # 🔎 2. PRECONDITIONS (NO REPORT CREATED YET)
     session = (
         BatterySession.objects
         .filter(order=order)
@@ -77,21 +102,21 @@ def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
         .filter(session=session)
         .order_by("test_order_index")
     )
-
     if len(runs) != len(battery["tests"]):
         raise ValueError("Not all tests completed for battery")
 
-    # 🔑 REAL ORGANIZATION (NO PLACEHOLDERS)
-    from core.models import Organization
-    try:
-        org = Organization.objects.get(id=order.organization_id)
-    except Organization.DoesNotExist:
-        raise ValueError("Organization missing for report generation")
+    org = None
+    if order.organization_id:
+        try:
+            org = Organization.objects.get(id=order.organization_id)
+        except Organization.DoesNotExist:
+            org = None
 
+    # 🧠 3. SCORING + SAFETY (INLINE, SINGLE SOURCE)
     red_flag_present = False
     summary_rows = []
     tests_out = []
-    safety_flags = []
+    safety_descriptions = []
 
     for tr in runs:
         test_code = tr.test_code
@@ -108,7 +133,7 @@ def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
             severity = _severity_label("GAD7", score)
 
         elif test_code == "PSS10":
-            score = calculate_reverse_sum(tr.raw_responses, reverse_items=[4,5,7,8])
+            score = calculate_reverse_sum(tr.raw_responses, reverse_items=[4, 5, 7, 8])
             severity = _severity_label("PSS10", score)
 
         elif test_code == "AUDIT":
@@ -141,33 +166,26 @@ def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
         if flags:
             red_flag_present = True
             if "SUICIDE_RISK" in flags:
-                safety_flags.append({
-                    "flag_code": "SUICIDE_RISK",
-                    "title_key": "SAFETY_TITLE",
-                    "body_key": "SAFETY_SUICIDE_BODY"
-                })
+                safety_descriptions.append(_get_text("SAFETY_SUICIDE_BODY"))
 
         tr.computed_score = score
         tr.severity = severity
         tr.reference = _reference_range(test_code)
-        tr.score_range = (
-            _score_range_str(test_code, severity)
-            if score is not None else ""
-        )
+        tr.score_range = _score_range_str(test_code, severity) if score is not None else ""
         tr.red_flags = flags
         tr.save(update_fields=[
             "computed_score",
             "severity",
             "reference",
             "score_range",
-            "red_flags"
+            "red_flags",
         ])
 
         summary_rows.append({
             "test_code": test_code,
             "test_name": _test_name(test_code),
             "score": score if score is not None else "",
-            "severity": severity
+            "severity": severity,
         })
 
         tests_out.append({
@@ -179,68 +197,59 @@ def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
             "score_range": tr.score_range,
             "reference": tr.reference,
             "interpretation_text_key": "GENERIC_INTERPRETATION",
-            "red_flags": flags
+            "red_flags": flags,
         })
 
+    # 🧾 4. FINAL CANONICAL REPORT JSON (SINGLE SOURCE)
     now = timezone.now().isoformat()
-    report_id = str(uuid.uuid4())
-
     report_json = {
-        "report_id": report_id,
+        "meta": {
+            "schema_version": "v1",
+            "engine_version": "v1.0.0",
+            "immutable": True,
+            "generated_at": now,
+        },
+        "report_id": str(uuid.uuid4()),
         "report_type": "PSYCHIATRIC_ASSESSMENT",
-        "battery_code": order.battery_code,
-        "battery_version": order.battery_version,
-
+        "battery": {
+            "battery_code": order.battery_code,
+            "battery_version": order.battery_version,
+        },
         "organization": {
-            "name": org.name,
-            "address": org.address or ""
+            "name": org.name if org else "",
+            "address": org.address if org and org.address else "",
         },
-
         "patient": {
-            "name": order.patient_name,
-            "age": order.patient_age,
+            "full_name": order.patient_name,
+            "age_years": order.patient_age,
             "gender": order.patient_gender,
-            "patient_id": str(order.patient_id) if order.patient_id else ""
+            "patient_id": str(order.patient_id) if order.patient_id else "",
         },
-
         "encounter": {
             "type": order.encounter_type,
             "administration_mode": order.administration_mode,
-            "date_time": now
+            "assessment_date": now,
         },
-
         "assessment_summary": {
             "rows": summary_rows,
-            "red_flag_present": red_flag_present
+            "red_flag_present": red_flag_present,
         },
-
         "tests": tests_out,
-
-        "safety": {
-            "has_flags": red_flag_present,
-            "flags": safety_flags
+        "safety_flags": {
+            "present": red_flag_present,
+            "descriptions": safety_descriptions,
         },
-
-        "interpretation_notes": {
-            "body_key": "CLINICAL_INTERPRETATION_NOTES"
-        },
-
+        "interpretation_notes": {"body_key": "CLINICAL_INTERPRETATION_NOTES"},
         "clinical_signoff": {
             "required": battery["signoff_required"],
             "status": "PENDING" if battery["signoff_required"] else "NOT_REQUIRED",
-            "reviewed_by": {
-                "name": "",
-                "role": "",
-                "registration_number": ""
-            },
-            "reviewed_at": None
+            "reviewed_by": {"name": "", "role": "", "registration_number": ""},
+            "reviewed_at": None,
         },
-
         "legal": {
             "disclaimer_key": "LEGAL_DISCLAIMER",
-            "disclaimer_version": "1.0"
+            "disclaimer_version": "1.0",
         },
-
         "traceability": {
             "battery_code": order.battery_code,
             "battery_version": order.battery_version,
@@ -249,13 +258,27 @@ def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
                 for t in tests_out
             ],
             "generated_by": "NeurovaX Clinical Engine",
-            "generated_at": now
-        }
+            "generated_at": now,
+        },
     }
 
-    return ClinicalReport.objects.create(
-        organization_id=order.organization_id,
+    # ❄️ 5. CREATE EXACTLY ONE FROZEN REPORT
+    report = ClinicalReport.objects.create(
         order=order,
         report_json=report_json,
-        status="GENERATED"
+        schema_version="v1",
+        engine_version="v1.0.0",
+        is_frozen=True,
     )
+
+
+    audit(
+        order.organization_id,
+        "REPORT_GENERATED",
+        actor="system",
+        order_id=order.id,
+        report_id=report_json["report_id"],
+        meta={"battery": order.battery_code},
+    )
+
+    return report

@@ -11,3 +11,6 @@ __pycache__/
 
 # Ignore SQLite database (optional, but recommended for production)
 *.sqlite3
+
+# Ignore log files
+*.log

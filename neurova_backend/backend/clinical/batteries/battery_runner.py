@@ -65,9 +65,11 @@ def advance_to_next_test(session: BatterySession):
     if session.current_test_index < total - 1:
         session.current_test_index += 1
         session.save(update_fields=["current_test_index"])
-        return False  # not completed
+        return True  # has next
 
-    session.status = "COMPLETED"
-    session.completed_at = timezone.now()
-    session.save(update_fields=["status", "completed_at"])
-    return True  # completed
+    # No more tests, session stays IN_PROGRESS until view logic marks it COMPLETED if has_next is False?
+    # Wait, the view says "if not has_next: mark COMPLETED".
+    # So if we return FALSE here, view marks it COMPLETED.
+    # If we return TRUE here, view returns next_test info.
+    
+    return False  # no next test, ready to complete

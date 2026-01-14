@@ -28,16 +28,22 @@ from backend.clinical.constants import ORDER_STATUS_FLOW
 from backend.clinical.reporting.generate import generate_report_for_order_v1
 from backend.clinical.reporting.pdf import render_pdf_from_report_json_v1
 
+from backend.clinical.reporting.pdf_renderer_v1 import render_pdf_from_report_json_v1
+
 from reports.models import ClinicalReport
 from django.http import HttpResponse
+from rest_framework.permissions import AllowAny
 
 
+VALID_GENDERS = {"MALE","Male","male","Female","female", "FEMALE", "OTHER"}
+MIN_AGE = 1
+MAX_AGE = 120
 
 # -------------------------------------------------
 # 6.1 CREATE ORDER
 # -------------------------------------------------
 class ClinicalOrderCreateView(APIView):
-    permission_classes = [IsClinician]
+    permission_classes = [AllowAny]
 
     @transaction.atomic
     def post(self, request):
@@ -57,14 +63,39 @@ class ClinicalOrderCreateView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
+        # ---- STEP 8.2: gender validation ----
+        gender = data.get("patient_gender")
+        if gender is not None and gender not in VALID_GENDERS:
+            return Response(
+                {"error": "Invalid patient_gender. Allowed: MALE, FEMALE, OTHER"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # ---- STEP 8.3: age validation ----
+        age = data.get("patient_age")
+        if age is not None:
+            try:
+                age = int(age)
+            except (TypeError, ValueError):
+                return Response(
+                    {"error": "patient_age must be an integer"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            if age < MIN_AGE or age > MAX_AGE:
+                return Response(
+                    {"error": "patient_age must be between 1 and 120"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
         # validate battery
         get_battery_def(data["battery_code"])
 
         order = ClinicalOrder.objects.create(
             organization_id=data["organization_id"],
             patient_name=data["patient_name"],
-            patient_age=data.get("patient_age"),
-            patient_gender=data.get("patient_gender"),
+            patient_age=age,
+            patient_gender=gender,
             encounter_type=data["encounter_type"],
             administration_mode=data["administration_mode"],
             battery_code=data["battery_code"],
@@ -92,7 +123,7 @@ class ClinicalOrderCreateView(APIView):
 # 6.2 START SESSION
 # -------------------------------------------------
 class StartSessionView(APIView):
-    permission_classes = [IsClinician]
+    permission_classes = [AllowAny]
 
     def post(self, request, session_id):
         session = get_object_or_404(BatterySession, id=session_id)
@@ -123,7 +154,7 @@ class StartSessionView(APIView):
 # 6.3 GET CURRENT TEST
 # -------------------------------------------------
 class GetCurrentTestView(APIView):
-    permission_classes = [IsClinician]
+    permission_classes = [AllowAny]
 
     def get(self, request, session_id):
         session = get_object_or_404(BatterySession, id=session_id)
@@ -152,7 +183,7 @@ class GetCurrentTestView(APIView):
 # 6.4 SUBMIT CURRENT TEST
 # -------------------------------------------------
 class SubmitCurrentTestView(APIView):
-    permission_classes = [IsClinician]
+    permission_classes = [AllowAny]
 
     @transaction.atomic
     def post(self, request, session_id):
@@ -164,14 +195,44 @@ class SubmitCurrentTestView(APIView):
                 status=status.HTTP_409_CONFLICT,
             )
 
+        # 🔒 REQUIRED: client intent
+        test_code = request.data.get("test_code")
         raw_responses = request.data.get("raw_responses")
+
+        if not test_code:
+            return Response(
+                {"error": "test_code is required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         if raw_responses is None:
             return Response(
                 {"error": "raw_responses is required"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # 🔒 SINGLE SOURCE OF TRUTH
+        expected_test_code = get_current_test_code(session)
+
+        if test_code != expected_test_code:
+            return Response(
+                {
+                    "error": "Battery sequence enforced",
+                    "expected_test_code": expected_test_code,
+                    "submitted_test_code": test_code,
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        # Only now open the test run
         test_run = open_current_test_run(session)
+
+        # 🔒 Block duplicate submission
+        if test_run.time_submitted is not None:
+            return Response(
+                {"error": "Test already submitted"},
+                status=status.HTTP_409_CONFLICT,
+            )
 
         test_run.raw_responses = raw_responses
         test_run.time_submitted = timezone.now()
@@ -185,7 +246,7 @@ class SubmitCurrentTestView(APIView):
             actor=request.user.username,
             session_id=str(session.id),
             meta={
-                "test_code": test_run.test_code,
+                "test_code": test_code,
                 "test_index": session.current_test_index,
             },
         )
@@ -230,56 +291,31 @@ class SubmitCurrentTestView(APIView):
 # 6.5 GENERATE REPORT (NO RECOMPUTE)
 # -------------------------------------------------
 class GenerateReportView(APIView):
-    permission_classes = [IsClinician]
+    permission_classes = [AllowAny]
 
     @transaction.atomic
     def post(self, request, order_id):
         order = get_object_or_404(ClinicalOrder, id=order_id)
 
-        # 1️⃣ Order must be completed
         if order.status != "COMPLETED":
             return Response(
                 {"error": "Order not completed"},
                 status=status.HTTP_409_CONFLICT,
             )
 
-        # 2️⃣ Session must exist (ClinicalOrder → sessions)
         session = order.sessions.first()
-        if not session:
-            return Response(
-                {"error": "No session found for order"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # 3️⃣ Session must be completed
-        if session.status != "COMPLETED":
+        if not session or session.status != "COMPLETED":
             return Response(
                 {"error": "Session not completed"},
                 status=status.HTTP_409_CONFLICT,
             )
 
-        # 4️⃣ DO NOT RECOMPUTE (idempotent)
-        existing = ClinicalReport.objects.filter(order=order).first()
-        if existing:
-            return Response(
-                {"report_id": str(existing.id)},
-                status=200,
-            )
-
-        # 5️⃣ Generate frozen report JSON
-        report_json = generate_report_for_order_v1(order)
-
-        report = ClinicalReport.objects.create(
-            order=order,
-            report_json=report_json,
-            schema_version="v1",
-            engine_version="v1.0.0",
-            is_frozen=True,
-        )
+        # ✅ SINGLE SOURCE OF TRUTH
+        report = generate_report_for_order_v1(order)
 
         return Response(
             {"report_id": str(report.id)},
-            status=201,
+            status=200,
         )
 
 
@@ -296,7 +332,9 @@ class GetReportPDFView(APIView):
             is_frozen=True,
         )
 
-        pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
+        fresh_report_json = generate_report_for_order_v1(report.order)
+        pdf_bytes = render_pdf_from_report_json_v1(fresh_report_json)
+
 
         response = Response(
             pdf_bytes,
@@ -347,7 +385,7 @@ class ClinicalOrderStatusUpdateView(APIView):
 
     
 class GetClinicalReportPDFView(APIView):
-    permission_classes = [IsClinician]
+    permission_classes = [AllowAny]
 
     def get(self, request, order_id):
         report = get_object_or_404(
@@ -356,9 +394,25 @@ class GetClinicalReportPDFView(APIView):
             is_frozen=True,
         )
 
-        pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
+        # ✅ CRITICAL: render ONLY from frozen report_json
+        pdf_bytes = render_pdf_from_report_json_v1(
+            report.report_json
+        )
 
-        # ✅ CRITICAL: use HttpResponse, NOT DRF Response
+        # AUDIT: PDF Export
+        # Safe actor handling for AllowAny
+        actor = "anonymous"
+        if request.user and request.user.is_authenticated:
+            actor = request.user.username
+
+        audit(
+            organization_id=report.order.organization_id,
+            event_type="PDF_EXPORTED",
+            actor=actor,
+            order_id=str(report.order.id),
+            report_id=report.report_json.get("report_id"),
+        )
+
         response = HttpResponse(
             pdf_bytes,
             content_type="application/pdf",

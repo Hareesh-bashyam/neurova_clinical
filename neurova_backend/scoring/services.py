@@ -2,7 +2,7 @@ def compute_score(answers: dict) -> dict:
     """
     Simple PHQ-9 style scoring
     """
-    total = sum(int(v) for v in answers)
+    total = sum(int(v) for v in answers.values())
 
     if total <= 4:
         severity = "minimal"

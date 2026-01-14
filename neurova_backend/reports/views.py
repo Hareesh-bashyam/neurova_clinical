@@ -68,23 +68,15 @@ class ReportCreateView(APIView):
         # 5️⃣ Build canonical JSON (V1 — FROZEN)
         report_json = build_report_json_v1(
             report_id=str(report.id),
-
             org=normalizers_v1.normalize_organization(org_obj),
-
             patient=normalizers_v1.normalize_patient(session.order.patient),
-
             encounter=normalizers_v1.normalize_encounter(session),
-
             battery={
                 "code": session.order.panel.code,
                 "version": "1.0",
             },
-
-            # single Score object
             test_results=normalizers_v1.normalize_test_results(score),
-
             flags=[],
-
             signoff=normalizers_v1.normalize_signoff(org_obj),
         )
 
@@ -93,7 +85,7 @@ class ReportCreateView(APIView):
             raise ValidationError(
                 "Canonical report_json invalid — build_report_json_v1 failed"
             )
-
+        
         # 7️⃣ Immutable-safe update
         Report.objects.filter(pk=report.pk).update(report_json=report_json)
 

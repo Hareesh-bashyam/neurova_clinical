@@ -11,6 +11,7 @@ class PatientViewSet(OrgScopedQuerysetMixin, ModelViewSet):
     permission_classes = [IsStaff]
     queryset = Patient.objects.all()
 
+
     def perform_create(self, serializer):
         # IMPORTANT: delegate org injection to OrgScopedQuerysetMixin
         super().perform_create(serializer)

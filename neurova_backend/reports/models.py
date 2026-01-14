@@ -109,6 +109,11 @@ class ReportSignature(ImmutableModelMixin, models.Model):
         return f"Signature for Report {self.report_id}"
 
 class ClinicalReport(models.Model):
+    STATUS = (
+        ("GENERATED", "Generated"),
+        ("SIGNED", "Signed"),
+    )
+
     order = models.OneToOneField(
         "clinical.ClinicalOrder",
         on_delete=models.CASCADE,
@@ -122,6 +127,13 @@ class ClinicalReport(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     is_frozen = models.BooleanField(default=True)
+
+    # ✅ ADD THIS (Phase Ω only)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS,
+        default="GENERATED"
+    )
 
     class Meta:
         db_table = "reports_clinicalreport"

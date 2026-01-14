@@ -9,7 +9,10 @@ PASSWORD = "Hareesh"
 def fail(step, resp):
     print(f"\n[FAIL] {step}")
     print("Status:", resp.status_code)
-    print(resp.text)
+    try:
+        print(repr(resp.text[:100000]))
+    except Exception:
+        print("(Could not print text)")
     sys.exit(1)
 
 
@@ -137,10 +140,17 @@ if r.status_code != 200:
 ok("submit consent")
 
 
-# 9. SCORE SESSION (answers already submitted via events)
+# 9. SCORE SESSION (answers must be provided for now)
 r = requests.post(
     f"{BASE_URL}/api/v1/sessions/{session_id}/score/",
     headers=headers,
+    json={
+        "answers": {
+            "q1": 3, "q2": 3, "q3": 3,
+            "q4": 3, "q5": 3, "q6": 3,
+            "q7": 3, "q8": 3, "q9": 1,
+        }
+    },
 )
 if r.status_code != 200:
     fail("score session", r)
@@ -205,5 +215,5 @@ with open(pdf_path, "wb") as f:
 ok("fetch pdf", f"saved as {pdf_path}")
 
 
-print("\n🎉 B11 MANUAL SMOKE RUN — PASSED")
-print("PDF + JSON + SIGNATURE + RELEASE FLOW IS 100% WIRED ✅")
+print("\n[SUCCESS] B11 MANUAL SMOKE RUN - PASSED")
+print("PDF + JSON + SIGNATURE + RELEASE FLOW IS 100% WIRED")

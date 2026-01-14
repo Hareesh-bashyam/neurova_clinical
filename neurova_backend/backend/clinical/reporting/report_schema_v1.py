@@ -22,11 +22,19 @@ def build_report_json_v1(
     - No engine/session/schema metadata.
     """
 
+    generated_at = datetime.utcnow().isoformat() + "Z"
+
     return {
         "report_id": str(report_id),
         "report_type": "PSYCHIATRIC_ASSESSMENT",
-        "battery_code": battery["code"],
-        "battery_version": battery["version"],
+        "meta": {
+            "generated_at": generated_at,
+            "schema_version": "v1",
+        },
+        "battery": {
+            "battery_code": battery["code"],
+            "battery_version": battery["version"],
+        },
         "organization": {
             "name": org["name"],
             "address": org["address"]
@@ -69,7 +77,7 @@ def build_report_json_v1(
             "battery_version": battery["version"],
             "test_versions": test_results["test_versions"],
             "generated_by": "NeurovaX Clinical Engine",
-            "generated_at": datetime.utcnow().isoformat() + "Z"
+            "generated_at": generated_at
         }
     }
 

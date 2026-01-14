@@ -1,24 +1,44 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 # Create your models here.
 
 
 class Organization(models.Model):
-    ORG_TYPES = [("HOSPITAL","HOSPITAL"),("DIAGNOSTIC","DIAGNOSTIC")]
+    ORG_TYPES = [
+        ("HOSPITAL", "HOSPITAL"),
+        ("DIAGNOSTIC", "DIAGNOSTIC"),
+    ]
+
+    # 🔑 External / Clinical identifier (MUST match ClinicalOrder.organization_id)
+    external_id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        db_index=True,
+        editable=False,
+        help_text="External clinical organization UUID"
+    )
+
+    # Internal DB fields
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=50, unique=True)  # used in S3 path
     org_type = models.CharField(max_length=20, choices=ORG_TYPES)
+
     signature_required = models.BooleanField(default=False)
     default_release_policy = models.CharField(
         max_length=30,
-        choices=[("CLINICIAN_ONLY","CLINICIAN_ONLY"),("PATIENT_AND_CLINICIAN","PATIENT_AND_CLINICIAN")],
+        choices=[
+            ("CLINICIAN_ONLY", "CLINICIAN_ONLY"),
+            ("PATIENT_AND_CLINICIAN", "PATIENT_AND_CLINICIAN"),
+        ],
         default="CLINICIAN_ONLY",
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+
     address = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.code})"
 
 
 class UserProfile(models.Model):
