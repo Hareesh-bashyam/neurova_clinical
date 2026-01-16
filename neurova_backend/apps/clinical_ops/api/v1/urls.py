@@ -1,0 +1,33 @@
+from django.urls import path
+from apps.clinical_ops.api.v1.views import CreatePatient, CreateOrder, ClinicQueue
+from apps.clinical_ops.api.v1.public_views import PublicOrderBootstrap
+from apps.clinical_ops.api.v1.delivery_views import SetDeliveryAndMarkDelivered
+from apps.clinical_ops.api.v1.export_views import ExportOrderJSON
+from apps.clinical_ops.api.v1.public_submit_views import PublicOrderSubmit
+from apps.clinical_ops.api.v1.report_views import GenerateReportPDF
+from apps.clinical_ops.api.v1.report_download_views import StaffDownloadReport, PublicDownloadReport
+from apps.clinical_ops.api.v1.signoff_views import OverrideReportSignoff
+from apps.clinical_ops.api.v1.consent_views import PublicGetConsent, PublicSubmitConsent
+from apps.clinical_ops.api.v1.public_access_code_views import PublicRequestReportCode
+from apps.clinical_ops.api.v1.deletion_views import AdminApproveDeletion
+
+
+urlpatterns = [
+    path("staff/patients/create", CreatePatient.as_view()),
+    path("staff/orders/create", CreateOrder.as_view()),
+    path("staff/queue", ClinicQueue.as_view()),
+    path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
+    path("staff/orders/deliver", SetDeliveryAndMarkDelivered.as_view()),
+    path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
+    path("public/order/<str:token>/submit", PublicOrderSubmit.as_view()),
+    path("staff/reports/generate", GenerateReportPDF.as_view()),
+    path("staff/reports/download", StaffDownloadReport.as_view()),
+    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+    path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
+    path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
+    path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
+    path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
+    
+]
+

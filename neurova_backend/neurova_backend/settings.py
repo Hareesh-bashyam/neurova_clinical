@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'backend.clinical.audit',
     'backend.clinical.signoff',
     'backend.clinical.policies',
-    'backend.clinical.org'
+    'backend.clinical.org',
+    "apps.clinical_ops"
 
 ]
 
@@ -189,6 +190,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 #media
 # URL used to access the files via HTTP
