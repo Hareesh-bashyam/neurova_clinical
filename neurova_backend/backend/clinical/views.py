@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import PermissionDenied
 
 from django.utils import timezone
 from django.db import transaction
@@ -33,6 +34,11 @@ from backend.clinical.reporting.pdf_renderer_v1 import render_pdf_from_report_js
 from reports.models import ClinicalReport
 from django.http import HttpResponse
 from rest_framework.permissions import AllowAny
+from backend.clinical.security.org_guard import (
+    get_request_org_id,
+    require_org_match,
+)
+
 
 
 VALID_GENDERS = {"MALE","Male","male","Female","female", "FEMALE", "OTHER"}
@@ -388,38 +394,74 @@ class GetClinicalReportPDFView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, order_id):
+        # 1. Extract org ID safely
+        try:
+            request_org_id = get_request_org_id(request)
+        except Exception:
+            request_org_id = None
+
+        if not request_org_id:
+            return Response(
+                {"detail": "Missing X-ORG-ID header"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # 2. Fetch order
+        order = get_object_or_404(
+            ClinicalOrder,
+            id=order_id,
+        )
+
+        # 3. Enforce org isolation SAFELY
+        try:
+            require_org_match(
+                request_org_id,
+                order.organization_id,
+            )
+        except PermissionDenied:
+            return Response(
+                {"detail": "Access denied"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        except Exception:
+            return Response(
+                {"detail": "Access denied"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # 4. Fetch frozen report
         report = get_object_or_404(
             ClinicalReport,
-            order_id=order_id,
+            order=order,
             is_frozen=True,
         )
 
-        # ✅ CRITICAL: render ONLY from frozen report_json
+        # 5. Render PDF from frozen JSON only
         pdf_bytes = render_pdf_from_report_json_v1(
             report.report_json
         )
 
-        # AUDIT: PDF Export
-        # Safe actor handling for AllowAny
-        actor = "anonymous"
-        if request.user and request.user.is_authenticated:
-            actor = request.user.username
+        # 6. Audit AFTER validation
+        actor = (
+            request.user.username
+            if request.user and request.user.is_authenticated
+            else "anonymous"
+        )
 
         audit(
-            organization_id=report.order.organization_id,
+            organization_id=order.organization_id,
             event_type="PDF_EXPORTED",
             actor=actor,
-            order_id=str(report.order.id),
+            order_id=str(order.id),
             report_id=report.report_json.get("report_id"),
         )
 
+        # 7. Return PDF
         response = HttpResponse(
             pdf_bytes,
             content_type="application/pdf",
         )
-
         response["Content-Disposition"] = (
             f'inline; filename="report_{order_id}.pdf"'
         )
-
         return response

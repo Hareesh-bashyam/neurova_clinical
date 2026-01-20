@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'backend.clinical.signoff',
     'backend.clinical.policies',
     'backend.clinical.org',
-    "apps.clinical_ops"
+    "apps.clinical_ops",
+    
 
 ]
 

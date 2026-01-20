@@ -1,0 +1,388 @@
+{
+    "info": {
+        "name": "NeurovaX — V1 Freeze",
+        "_postman_id": "2f2f0d39-2f7d-4df3-8a1a-9b9b5d5d4c01",
+        "description": "NeurovaX Clinical Engine V1 Freeze - End-to-End Battery Wizard + Report + PDF + Org Isolation + Negatives",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "01 — CMHA_V1 E2E (Org A)",
+            "item": [
+                {
+                    "name": "01. Create Order — CMHA_V1",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.expect([200,201]).to.include(pm.response.code);",
+                                    "const j = pm.response.json();",
+                                    "pm.environment.set('order_id_cmha', j.order_id);",
+                                    "pm.environment.set('session_id_cmha', j.session_id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/orders/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"organization_id\": \"{{org_a}}\",\n  \"patient_name\": \"Test Patient A\",\n  \"patient_age\": 30,\n  \"patient_gender\": \"Male\",\n  \"encounter_type\": \"OPD\",\n  \"administration_mode\": \"IN_CLINIC\",\n  \"battery_code\": \"CMHA_V1\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "02. Start Session",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_cmha}}/start/"
+                    }
+                },
+                {
+                    "name": "03. Submit PHQ9",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_cmha}}/submit_current/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"test_code\": \"PHQ9\", \"raw_responses\": [0,0,0,0,0,0,0,0,1] }",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "04. Submit MDQ",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_cmha}}/submit_current/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"test_code\": \"MDQ\", \"raw_responses\": { \"symptom_yes_count\": 7, \"co_occur\": true, \"impairment\": \"MODERATE\" } }",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "05. Submit GAD7",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_cmha}}/submit_current/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"test_code\": \"GAD7\", \"raw_responses\": [0,0,0,0,0,0,0] }",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "06. Submit PSS10",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_cmha}}/submit_current/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"test_code\": \"PSS10\", \"raw_responses\": [0,0,0,0,0,0,0,0,0,0] }",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "07. Submit AUDIT",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_cmha}}/submit_current/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"test_code\": \"AUDIT\", \"raw_responses\": [0,0,0,0,0,0,0,0,0,0] }",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "08. Submit STOP_BANG",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_cmha}}/submit_current/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"test_code\": \"STOP_BANG\", \"raw_responses\": [0,0,0,0,0,0,0,0] }",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "09. Generate Report",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_cmha}}/generate_report/"
+                    }
+                },
+                {
+                    "name": "10. Download PDF",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_cmha}}/report/pdf/"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "02 — ANX_SCREEN_V1 E2E (Org A)",
+            "item": [
+                {
+                    "name": "01. Create Order — ANX_SCREEN_V1",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.expect([200,201]).to.include(pm.response.code);",
+                                    "const j = pm.response.json();",
+                                    "pm.environment.set('order_id_anx', j.order_id);",
+                                    "pm.environment.set('session_id_anx', j.session_id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/orders/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"organization_id\": \"{{org_a}}\", \"patient_name\": \"Test Patient B\", \"patient_age\": 28, \"patient_gender\": \"Female\", \"encounter_type\": \"OPD\", \"administration_mode\": \"IN_CLINIC\", \"battery_code\": \"ANX_SCREEN_V1\" }",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "02. Start Session",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_anx}}/start/"
+                    }
+                },
+                {
+                    "name": "03. Submit GAD7",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/sessions/{{session_id_anx}}/submit_current/",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"test_code\": \"GAD7\", \"raw_responses\": [0,0,0,0,0,0,0] }",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "04. Generate Report",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_anx}}/generate_report/"
+                    }
+                },
+                {
+                    "name": "05. Download PDF",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_a}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_anx}}/report/pdf/"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "03 — Negative Tests",
+            "item": [
+                {
+                    "name": "Missing X-ORG-ID should fail",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_anx}}/report/pdf/"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "04 — Cross Org Isolation (Org B)",
+            "item": [
+                {
+                    "name": "Org B blocked from Org A PDF",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-ORG-ID",
+                                "value": "{{org_b}}"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_cmha}}/report/pdf/"
+                    }
+                }
+            ]
+        }
+    ]
+}
