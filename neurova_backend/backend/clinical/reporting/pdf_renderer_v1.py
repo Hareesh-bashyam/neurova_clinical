@@ -78,6 +78,27 @@ def render_pdf_from_report_json_v1(report_json: dict) -> bytes:
     buf = BytesIO()
     c = canvas.Canvas(buf, pagesize=A4, pageCompression=0)
 
+    # --- PHASE 1: DRAFT WATERMARK ---
+    review_status = report_json.get("review_status", "DRAFT")
+
+    if review_status != "REVIEWED":
+        try:
+            c.saveState()
+            c.setFont("Helvetica-Bold", 28)
+            c.setFillGray(0.85)
+            c.translate(100, 300)
+            c.rotate(30)
+            c.drawString(
+                0,
+                0,
+                "PRELIMINARY SCREENING - NOT CLINICALLY REVIEWED",
+            )
+            c.restoreState()
+        except Exception:
+            pass
+    # --- END PHASE 1 ---
+
+
     x0 = MARGIN_L
     x1 = PAGE_W - MARGIN_R
     max_w = x1 - x0

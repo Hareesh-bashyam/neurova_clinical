@@ -183,32 +183,39 @@ def compose_sections_v1(report_json: Dict[str, Any]) -> List[Section]:
     )
 
     # -------------------------
-    # 7) CLINICAL SIGN-OFF
+    # 7) REPORT VALIDATION & CLINICAL RESPONSIBILITY
     # -------------------------
-    signoff = report_json.get("clinical_signoff", {
-        "status": "SYSTEM_VALIDATED"
-    })
+    signoff = report_json.get("clinical_signoff", {})
 
     signoff_lines: List[str] = []
 
-    if signoff.get("status") == "SIGNED":
-        rb = signoff.get("reviewed_by", {})
-        signoff_lines.extend([
-            f"Reviewed by: {_safe(rb.get('name'))}",
-            f"Role: {_safe(rb.get('role'))}",
-            f"Registration Number: {_safe(rb.get('registration_number'))}",
-            f"Reviewed at: {_safe(signoff.get('reviewed_at'))}",
-            "Digital Signature: [SIGNED]",
-        ])
-    else:
-        signoff_lines.append(
-            "This report has been system-validated and has not undergone individual clinical review."
-        )
+    # Always show validation status
+    validation_status = signoff.get("status", "VALIDATION_PENDING")
+    signoff_lines.append(f"Validation Status: {validation_status}")
+
+    # Always show review status
+    review_status = signoff.get("review_status", "DRAFT")
+    signoff_lines.append(f"Clinical Review Status: {review_status}")
+
+    # Reviewer details ONLY if reviewed
+    if review_status == "REVIEWED":
+        rb = signoff.get("reviewed_by", {}) or {}
+        name = rb.get("name")
+        role = rb.get("role")
+
+        if name and role:
+            signoff_lines.append(f"Reviewed By: {name} ({role})")
+        elif name:
+            signoff_lines.append(f"Reviewed By: {name}")
+
+        reviewed_at = signoff.get("reviewed_at")
+        if reviewed_at:
+            signoff_lines.append(f"Reviewed At: {reviewed_at}")
 
     sections.append(
         Section(
-            key="SIGNOFF",
-            title="Clinical Responsibility & Sign-off",
+            key="VALIDATION_AND_REVIEW",
+            title="Report Validation & Clinical Responsibility",
             lines=signoff_lines,
         )
     )

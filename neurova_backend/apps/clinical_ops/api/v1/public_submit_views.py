@@ -11,97 +11,79 @@ from apps.clinical_ops.models_consent import ConsentRecord
 
 from apps.clinical_ops.services.quality import compute_quality
 from apps.clinical_ops.services.scoring_adapter import score_battery
-
+from rest_framework.throttling import AnonRateThrottle
+from django.db import transaction
 
 class PublicOrderSubmit(APIView):
     authentication_classes = []
     permission_classes = []
+    throttle_classes = [AnonRateThrottle]
 
+    @transaction.atomic
     def post(self, request, token):
-        """
-        Expected payload:
-        {
-          "duration_seconds": 420,
-          "answers": [ {"question_id":"phq9_q1","value":2}, ... ],
-          "meta": {"device":"tablet","lang":"en"}
-        }
-        """
-        order = get_object_or_404(AssessmentOrder, public_token=token)
+        # 🔒 Lock order row
+        order = (
+            AssessmentOrder.objects
+            .select_for_update()
+            .get(public_token=token)
+        )
 
-        # expiry check
+        if order.status != AssessmentOrder.STATUS_IN_PROGRESS:
+            return Response(
+                {"error": "order_not_in_progress"},
+                status=status.HTTP_409_CONFLICT,
+            )
+
         if order.public_link_expires_at and timezone.now() > order.public_link_expires_at:
-            return Response({"error": "link_expired"}, status=403)
+            return Response(
+                {"error": "link_expired"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
-        # 🔒 Consent required before answers submission
-        if not ConsentRecord.objects.filter(order=order).exists():
-            return Response({"error": "consent_required"}, status=403)
+        # 🔁 STEP 7 — IDEMPOTENCY GUARD
+        idem_key = request.headers.get("X-Idempotency-Key")
+        if idem_key:
+            obj, created = IdempotencyKey.objects.get_or_create(
+                session=order.session,
+                key=idem_key,
+            )
+            if not created:
+                return Response(
+                    {
+                        "ok": True,
+                        "deduped": True,
+                        "message": "Duplicate submission ignored",
+                    },
+                    status=status.HTTP_200_OK,
+                )
 
-        duration_seconds = int(request.data.get("duration_seconds") or 0)
         answers = request.data.get("answers") or []
-        meta = request.data.get("meta") or {}
+        if not isinstance(answers, list) or not answers:
+            return Response(
+                {"error": "answers_required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        if not isinstance(answers, list) or len(answers) == 0:
-            return Response({"error": "answers_required"}, status=400)
+        # 🔁 Existing safety (keep this!)
+        if hasattr(order, "assessmentresponse"):
+            return Response(
+                {"ok": True, "deduped": True},
+                status=status.HTTP_200_OK,
+            )
 
-        # store raw answers
-        answers_json = {"answers": answers, "meta": meta}
+        answers_json = {"answers": answers}
 
-        AssessmentResponse.objects.update_or_create(
-            org_id=order.org_id,
+        AssessmentResponse.objects.create(
             order=order,
-            defaults={
-                "answers_json": answers_json,
-                "duration_seconds": duration_seconds,
-                "submitted_at": timezone.now(),
-            }
+            org=order.org,
+            answers_json=answers_json,
+            submitted_at=timezone.now(),
         )
 
-        # quality flags
-        q = compute_quality(duration_seconds=duration_seconds, answers=answers)
-        ResponseQuality.objects.update_or_create(
-            org_id=order.org_id,
-            order=order,
-            defaults=q
-        )
-
-        # mark completed
-        order.mark_completed()
-
-        # compute result via scoring engine
-        result_json = score_battery(
-            battery_code=order.battery_code,
-            battery_version=order.battery_version,
-            answers_json=answers_json
-        )
-
-        # 🔒 Normalize result_json for compliance BEFORE signoff
-        summary = result_json.get("summary", {})
-        if "has_red_flags" not in summary:
-            summary["has_red_flags"] = False
-        result_json["summary"] = summary
-
-        primary_severity = summary.get("primary_severity")
-        has_red_flags = bool(summary.get("has_red_flags", False))
-
-        AssessmentResult.objects.update_or_create(
-            org_id=order.org_id,
-            order=order,
-            defaults={
-                "result_json": result_json,
-                "primary_severity": primary_severity,
-                "has_red_flags": has_red_flags,
-                "computed_at": timezone.now(),
-            }
-        )
-
-        # move to awaiting review (clinic workflow)
-        order.status = AssessmentOrder.STATUS_AWAITING_REVIEW
+        order.status = AssessmentOrder.STATUS_COMPLETED
         order.save(update_fields=["status"])
 
-        return Response({
-            "ok": True,
-            "order_id": order.id,
-            "status": order.status,
-            "primary_severity": primary_severity,
-            "has_red_flags": has_red_flags
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"ok": True},
+            status=status.HTTP_200_OK,
+        )

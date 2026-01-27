@@ -11,6 +11,9 @@ class ClinicalOrder(models.Model):
     patient_age = models.IntegerField(null=True, blank=True)
     patient_gender = models.CharField(max_length=20, null=True, blank=True)
 
+    # ✅ NEW FIELD
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+
     encounter_type = models.CharField(max_length=20)  # OPD|IPD|DIAGNOSTIC
     administration_mode = models.CharField(max_length=20)  # IN_CLINIC|ASSISTED|QR
 
@@ -24,7 +27,6 @@ class ClinicalOrder(models.Model):
 
     def __str__(self):
         return f"{self.id} ({self.battery_code})"
-
 
 class BatterySession(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -78,3 +80,25 @@ class TestRun(models.Model):
 
     def __str__(self):
         return f"{self.test_code} (#{self.test_order_index})"
+
+
+class IdempotencyKey(models.Model):
+    session = models.ForeignKey(
+        "clinical.BatterySession",
+        on_delete=models.CASCADE,
+        related_name="idempotency_keys",
+    )
+    key = models.CharField(max_length=128)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["session", "key"],
+                name="unique_idem_key_per_session",
+            )
+        ]
+
+    def __str__(self):
+        return f"IdempotencyKey(session={self.session_id}, key={self.key})"
+

@@ -1,0 +1,55 @@
+./orders/views.py:9:from catalog.models import Panel
+./neurova_backend/urls.py:35:    path("api/v1/", include("catalog.urls")),
+./orders/models.py:4:from catalog.models import Panel
+./sessions/models.py:5:from catalog.models import TestDefinition
+./neurova_backend/settings.py:85:    'catalog',
+./scoring/migrations/0001_initial.py:13:        ('catalog', '0001_initial'),
+./scoring/migrations/0001_initial.py:30:                ('test', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='catalog.testdefinition')),
+./orders/migrations/0001_initial.py:12:        ('catalog', '0001_initial'),
+./orders/migrations/0001_initial.py:25:                ('panel', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='catalog.panel')),
+./sessions/migrations/0004_consentrecord_clinical_se_organiz_411bc4_idx_and_more.py:9:        ('catalog', '0001_initial'),
+./scripts/api_e2e_test.py:38:    f"{BASE_URL}/api/v1/catalog/import/",
+./scripts/api_e2e_test.py:72:    fail("catalog import", r)
+./scripts/api_e2e_test.py:73:ok("catalog import")
+./sessions/migrations/0001_initial.py:12:        ('catalog', '0001_initial'),
+./sessions/migrations/0001_initial.py:52:                ('test', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='catalog.testdefinition')),
+./tests/security/test_rbac.py:7:from catalog.models import Instrument, TestDefinition, Panel
+./tests/security/test_audit_coverage.py:6:from catalog.models import Instrument, TestDefinition, Panel
+./tests/integration/test_state_violations.py:7:from catalog.models import Instrument, TestDefinition
+./tests/integration/test_state_violations.py:8:from catalog.models import Panel
+./tests/e2e/test_full_pathology_flow.py:7:from catalog.models import Instrument, TestDefinition, Panel
+./artifacts/test_runs/seed_script_search.txt:1:./orders/views.py:9:from catalog.models import Panel
+./artifacts/test_runs/seed_script_search.txt:2:./neurova_backend/urls.py:35:    path("api/v1/", include("catalog.urls")),
+./artifacts/test_runs/seed_script_search.txt:3:./orders/models.py:4:from catalog.models import Panel
+./artifacts/test_runs/seed_script_search.txt:4:./sessions/models.py:5:from catalog.models import TestDefinition
+./artifacts/test_runs/seed_script_search.txt:5:./neurova_backend/settings.py:85:    'catalog',
+./artifacts/test_runs/seed_script_search.txt:6:./scoring/migrations/0001_initial.py:13:        ('catalog', '0001_initial'),
+./artifacts/test_runs/seed_script_search.txt:7:./scoring/migrations/0001_initial.py:30:                ('test', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='catalog.testdefinition')),
+./artifacts/test_runs/seed_script_search.txt:8:./orders/migrations/0001_initial.py:12:        ('catalog', '0001_initial'),
+./artifacts/test_runs/seed_script_search.txt:9:./orders/migrations/0001_initial.py:25:                ('panel', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='catalog.panel')),
+./artifacts/test_runs/seed_script_search.txt:10:./sessions/migrations/0004_consentrecord_clinical_se_organiz_411bc4_idx_and_more.py:9:        ('catalog', '0001_initial'),
+./artifacts/test_runs/seed_script_search.txt:11:./scripts/api_e2e_test.py:38:    f"{BASE_URL}/api/v1/catalog/import/",
+./artifacts/test_runs/seed_script_search.txt:12:./scripts/api_e2e_test.py:72:    fail("catalog import", r)
+./artifacts/test_runs/seed_script_search.txt:13:./scripts/api_e2e_test.py:73:ok("catalog import")
+./artifacts/test_runs/seed_script_search.txt:14:./sessions/migrations/0001_initial.py:12:        ('catalog', '0001_initial'),
+./artifacts/test_runs/seed_script_search.txt:15:./sessions/migrations/0001_initial.py:52:                ('test', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='catalog.testdefinition')),
+./artifacts/test_runs/seed_script_search.txt:16:./tests/security/test_rbac.py:7:from catalog.models import Instrument, TestDefinition, Panel
+./artifacts/test_runs/seed_script_search.txt:17:./tests/security/test_audit_coverage.py:6:from catalog.models import Instrument, TestDefinition, Panel
+./artifacts/test_runs/seed_script_search.txt:18:./tests/integration/test_state_violations.py:7:from catalog.models import Instrument, TestDefinition
+./artifacts/test_runs/seed_script_search.txt:19:./tests/integration/test_state_violations.py:8:from catalog.models import Panel
+./artifacts/test_runs/seed_script_search.txt:20:./tests/e2e/test_full_pathology_flow.py:7:from catalog.models import Instrument, TestDefinition, Panel
+./tests/integration/test_report_release.py:7:from catalog.models import Instrument, TestDefinition, Panel
+./tests/integration/test_clinical_flow.py:11:Instrument = apps.get_model("catalog", "Instrument")
+./tests/integration/test_clinical_flow.py:12:TestDefinition = apps.get_model("catalog", "TestDefinition")
+./tests/integration/test_clinical_flow.py:13:Panel = apps.get_model("catalog", "Panel")
+./catalog/views.py:6:from .importer import import_catalog
+./catalog/views.py:17:        import_catalog(org, data)
+./artifacts/test_runs/migrate.txt:2:  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+./tests/integration/test_consent.py:5:from catalog.models import Instrument, TestDefinition, Panel
+./catalog/urls.py:10:    path("catalog/import/", CatalogImportView.as_view()),
+./catalog/apps.py:6:    name = 'catalog'
+./catalog/importer.py:3:def import_catalog(org, data: dict):
+./catalog/importer.py:5:    Deterministic catalog import.
+./catalog/migrations/0001_initial.py:59:                ('instrument', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='catalog.instrument')),
+./catalog/migrations/0001_initial.py:72:                ('panel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='catalog.panel')),
+./catalog/migrations/0001_initial.py:73:                ('test', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='catalog.testdefinition')),

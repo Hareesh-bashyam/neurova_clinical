@@ -8,5 +8,5 @@
 ## Not Intended For
 ## Clinical Setting
 ## Outputs (Reports)
-## Disclaimers (Non-diagnostic)
+## Disclaimers (Screening-Only)
 ## Version

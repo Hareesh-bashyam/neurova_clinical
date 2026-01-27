@@ -11,6 +11,13 @@ def _sample_report(has_flag: bool, signed: bool):
         "report_type": "PSYCHIATRIC_ASSESSMENT",
         "battery_code": "DEP_SCREEN_V1",
         "battery_version": "1.0",
+        "battery": {
+            "battery_code": "DEP_SCREEN_V1",
+            "battery_version": "1.0",
+        },
+        "meta": {
+            "generated_at": "2026-01-08T23:12:01Z",
+        },
         "organization": {"name": "Org Name", "address": "Org Address"},
         "patient": {
             "name": "Postman Test Patient",
@@ -64,7 +71,8 @@ def _sample_report(has_flag: bool, signed: bool):
         },
         "clinical_signoff": {
             "required": True,
-            "status": "SIGNED" if signed else "PENDING",
+            "status": "DATA_VALIDATED" if signed else "VALIDATION_PENDING",
+            "review_status": "REVIEWED" if signed else "DRAFT",
             "reviewed_by": {
                 "name": "Dr X",
                 "role": "Psychiatrist",
@@ -118,7 +126,7 @@ def test_signed_report_contains_signature_placeholder():
     )
     txt = pdf_bytes.decode("latin-1", errors="ignore")
 
-    assert "Digital Signature: [SIGNATURE_PLACEHOLDER]" in txt
+    assert "Reviewed By: Dr X" in txt
 
 
 def test_unsigned_report_contains_exact_sentence():
@@ -128,6 +136,6 @@ def test_unsigned_report_contains_exact_sentence():
     txt = pdf_bytes.decode("latin-1", errors="ignore")
 
     assert (
-        "This report has been system-validated and has not undergone individual clinical review."
+        "PRELIMINARY SCREENING - NOT CLINICALLY REVIEWED"
         in txt
     )

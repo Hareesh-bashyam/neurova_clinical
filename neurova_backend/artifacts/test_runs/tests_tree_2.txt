@@ -1,0 +1,11 @@
+tests
+tests/e2e
+tests/e2e/__pycache__
+tests/fixtures
+tests/integration
+tests/integration/__pycache__
+tests/security
+tests/security/__pycache__
+tests/unit
+tests/unit/__pycache__
+tests/__pycache__

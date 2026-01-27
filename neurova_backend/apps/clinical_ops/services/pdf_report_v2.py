@@ -200,7 +200,7 @@ def generate_report_pdf_bytes_v2(report_context: dict) -> bytes:
     elements.append(Spacer(1, 4*mm))
 
     # ===== SIGN-OFF BOX =====
-    elements.append(Paragraph("Clinical Sign-off", H2))
+    elements.append(Paragraph("Report Validation & Clinical Responsibility", H2))
     sign_rows = [
         ["Status", signoff.get("status","PENDING"), "Signed At", signoff.get("signed_at","-")],
         ["Signed By", signoff.get("signed_by","-"), "Role", signoff.get("role","-")],

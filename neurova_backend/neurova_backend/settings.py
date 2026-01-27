@@ -14,8 +14,42 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
+import json
+import logging
+from datetime import datetime
 
 load_dotenv()
+
+class JsonLogFormatter(logging.Formatter):
+    def format(self, record):
+        payload = {
+            "ts": datetime.utcnow().isoformat() + "Z",
+            "level": record.levelname,
+            "logger": record.name,
+            "msg": record.getMessage(),
+        }
+
+        # attach correlation fields if present
+        for k in (
+            "request_id",
+            "path",
+            "method",
+            "status_code",
+            "org_id",
+            "order_id",
+            "actor_role",
+            "latency_ms",
+        ):
+            v = getattr(record, k, None)
+            if v is not None:
+                payload[k] = v
+
+        if record.exc_info:
+            payload["exc_info"] = self.formatException(record.exc_info)
+
+        return json.dumps(payload)
+
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,7 +111,21 @@ REST_FRAMEWORK = {
         "django_filters.rest_framework.DjangoFilterBackend",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
+    # 🔥 Global exception handler (Step 3)
+    "EXCEPTION_HANDLER": "common.api_exception_handler.neurova_exception_handler",
+
+    # 🚦 Global rate limiting (Step 5A)
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "120/hour",
+        "user": "600/hour",
+    },
 }
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60), # Set based on your security needs
@@ -97,6 +145,7 @@ SPECTACULAR_SETTINGS = {
 
 
 MIDDLEWARE = [
+    "common.request_id_middleware.RequestIDMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -209,13 +258,35 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGGING = {
     "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "json": {
+            "()": "neurova_backend.settings.JsonLogFormatter",
+        },
+    },
     "handlers": {
         "console": {
-            "class": "logging.StreamHandler"
-        }
+            "class": "logging.StreamHandler",
+            "formatter": "json",
+        },
     },
     "root": {
         "handlers": ["console"],
-        "level": "INFO"
+        "level": "INFO",
     },
 }
+
+
+import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+SENTRY_DSN = os.getenv("SENTRY_DSN", "")
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        send_default_pii=False,  # 🚫 no PHI
+        traces_sample_rate=0.0,
+    )

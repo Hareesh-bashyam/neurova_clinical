@@ -9,3 +9,4 @@ class OrgClinicalPolicy(models.Model):
     signoff_required = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
+    token_validity_hours = models.IntegerField(default=48)

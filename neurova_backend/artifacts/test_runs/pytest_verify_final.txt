@@ -1,0 +1,224 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.5, pytest-9.0.2, pluggy-1.6.0
+django: version: 5.2.10, settings: neurova_backend.settings (from ini)
+rootdir: C:\Users\Hareesh\Desktop\Main-Projects\neurova_backend_project\neurova_backend
+configfile: pytest.ini
+plugins: Faker-40.1.2, cov-7.0.0, django-4.11.1
+collected 7 items
+
+backend\clinical\tests\test_pdf_audit.py .                               [ 14%]
+backend\clinical\tests\test_submission_integrity.py .                    [ 28%]
+tests\e2e\test_full_pathology_flow.py F                                  [ 42%]
+backend\clinical\reporting\tests\test_report_pdf_v1.py ....              [100%]
+
+================================== FAILURES ===================================
+__________________________ test_full_pathology_flow ___________________________
+
+tmp_path = WindowsPath('C:/Users/Hareesh/AppData/Local/Temp/pytest-of-Hareesh/pytest-24/test_full_pathology_flow0')
+
+    @pytest.mark.django_db
+    def test_full_pathology_flow(tmp_path):
+        """
+        PHASE A+B+C ù END-TO-END PROOF
+    
+        \u2714 Full workflow
+        \u2714 Immutability preserved
+        \u2714 PDF generation verified (internal)
+        \u2714 Audit trail verified
+        """
+    
+        client = APIClient()
+    
+        # -----------------------
+        # Org + Clinician
+        # -----------------------
+        org = Organization.objects.create(
+            name="E2E Clinic",
+            code="E2E_ORG",
+            signature_required=True
+        )
+    
+        clinician = User.objects.create_user(
+            username="doctor@e2e.com",
+            password="pass"
+        )
+    
+        UserProfile.objects.create(
+            user=clinician,
+            organization=org,
+            role="CLINICIAN"
+        )
+    
+        client.force_authenticate(user=clinician)
+    
+        # -----------------------
+        # Catalog
+        # -----------------------
+        instrument = Instrument.objects.create(
+            organization=org,
+            code="PHQ9",
+            name="PHQ-9"
+        )
+    
+        TestDefinition.objects.create(
+            organization=org,
+            instrument=instrument,
+            code="PHQ9_STD",
+            name="PHQ-9",
+            language="en",
+            json_schema={"type": "object"},
+            scoring_spec={},
+            is_active=True
+        )
+    
+        panel = Panel.objects.create(
+            organization=org,
+            code="PANEL_E2E",
+            name="Mental Health Panel"
+        )
+    
+        # -----------------------
+        # Patient
+        # -----------------------
+        patient = Patient.objects.create(
+            organization=org,
+            name="E2E Patient"
+        )
+    
+        # -----------------------
+        # Order
+        # -----------------------
+        order = Order.objects.create(
+            organization=org,
+            patient=patient,
+            panel=panel
+        )
+    
+        # -----------------------
+        # Session
+        # -----------------------
+        session = Session.objects.create(
+            organization=org,
+            order=order,
+            status="COMPLETED"
+        )
+    
+        # -----------------------
+        # Report (READY û immutable)
+        # -----------------------
+        report = Report.objects.create(
+            organization=org,
+            session=session,
+            status="READY",
+            report_json={"result": "ok"}
+        )
+    
+        # -----------------------
+        # Signature
+        # -----------------------
+        ReportSignature.objects.create(
+            organization=org,
+            report=report,
+            signer_name="Dr E2E",
+            signer_reg_no="E2E-001",
+            signer_role="CLINICIAN"
+        )
+    
+        # -----------------------
+        # Release
+        # -----------------------
+        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+        assert resp.status_code == 200
+    
+        # Original report must remain immutable
+        report.refresh_from_db()
+        assert report.status == "READY"
+    
+        # Audit log must exist
+        assert AuditLog.objects.filter(
+            organization=org,
+            action="REPORT_RELEASED",
+            entity_type="Report",
+            entity_id=str(report.id),
+        ).exists()
+    
+        # -----------------------
+        # PDF GENERATION (INTERNAL)
+        # -----------------------
+        pdf_path = tmp_path / "report.pdf"
+    
+        context = {
+            "patient_name": patient.name,
+            "patient": {"name": patient.name, "age": 30, "gender": "Other"},
+            "session_id": session.id,
+            "tests": [
+                {
+                    "code": "PHQ9",
+                    "score": 5,
+                    "severity": "Mild"
+                }
+            ],
+            "critical_self_harm": False,
+            "engine_version": "v1",
+            "report_schema_version": "1.0",
+            "organization": {"name": org.name, "address": "Some Address"},
+            "report_id": str(report.id),
+            "audit": {"created_at": "2026-01-08T23:15:00Z"},
+        }
+    
+>       generate_report_pdf(str(pdf_path), context)
+
+tests\e2e\test_full_pathology_flow.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-24\\test_full_pathology_flow0\\report.pdf'
+report_json = {'audit': {'created_at': '2026-01-08T23:15:00Z'}, 'critical_self_harm': False, 'engine_version': 'v1', 'organization': {'address': 'Some Address', 'name': 'E2E Clinic'}, ...}
+
+    def generate_report_pdf(buffer, report_json):
+        c = canvas.Canvas(buffer, pagesize=A4)
+        width, height = A4
+        y = height - 40
+    
+        # SECTION 1 ù HEADER
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(40, y, report_json["organization"]["name"])
+    
+        c.setFont("Helvetica", 9)
+        y -= 14
+        c.drawString(40, y, report_json["organization"]["address"] or "")
+    
+        c.setFont("Helvetica-Bold", 14)
+        c.drawRightString(width - 40, height - 40, "Psychiatric Assessment Report")
+    
+        y -= 30
+        c.setFont("Helvetica", 9)
+        c.drawString(40, y, f"Report ID: {report_json['report_id']}")
+        y -= 12
+        c.drawString(40, y, f"Report Date: {report_json['audit']['created_at']}")
+    
+        # SECTION 2 ù PATIENT & ENCOUNTER
+        y -= 30
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(40, y, "Patient & Encounter Details")
+    
+        y -= 16
+        c.setFont("Helvetica", 9)
+        p = report_json["patient"]
+>       e = report_json["encounter"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'encounter'
+
+reports\pdf.py:37: KeyError
+============================== warnings summary ===============================
+catalog\models.py:23
+  C:\Users\Hareesh\Desktop\Main-Projects\neurova_backend_project\neurova_backend\catalog\models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/e2e/test_full_pathology_flow.py)
+    class TestDefinition(models.Model):
+
+backend/clinical/tests/test_submission_integrity.py::test_submission_integrity_vulnerability
+  C:\Users\Hareesh\Desktop\Main-Projects\neurova_backend_project\neurova_backend\neurova_backend\settings.py:26: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "ts": datetime.utcnow().isoformat() + "Z",
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/e2e/test_full_pathology_flow.py::test_full_pathology_flow - KeyE...
+================== 1 failed, 6 passed, 2 warnings in 18.71s ===================

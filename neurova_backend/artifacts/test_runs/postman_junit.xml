@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="NeurovaX V1 — Final Gate (Stable APIs)" tests="11" time="1.499">
+  <testsuite name="00 — Auth / Login (Clinician)" id="a6962874-6aa4-42ad-a792-8ae54b7af8fd" timestamp="2026-01-25T16:06:35.333Z" tests="1" failures="0" errors="0" time="0.656">
+    <testcase name="Login success" time="0.656" classname="00AuthLoginClinician"/>
+  </testsuite>
+  <testsuite name="01 — Create Patient / Create Patient" id="ec7e8551-c72b-4eb2-ab6e-0220bc51d357" timestamp="2026-01-25T16:06:35.333Z" tests="1" failures="0" errors="0" time="0.135">
+    <testcase name="Patient created" time="0.135" classname="01CreatePatientCreatePatient"/>
+  </testsuite>
+  <testsuite name="02 — Order + Session / Create Order" id="477548c6-6cb8-45bd-96ad-cb2ba0d80768" timestamp="2026-01-25T16:06:35.333Z" tests="1" failures="0" errors="0" time="0.243">
+    <testcase name="Order created" time="0.243" classname="02OrderSessionCreateOrder"/>
+  </testsuite>
+  <testsuite name="02 — Order + Session / Start Session" id="7eeb21a3-7d65-49f9-86d0-f972ea1f1f30" timestamp="2026-01-25T16:06:35.333Z" tests="1" failures="0" errors="1" time="0.078">
+    <system-err><![CDATA[Iteration: 0
+
+---
+testScriptError: Unexpected token '<' at 1:1
+<!DOCTYPE html>
+^
+---
+]]></system-err>
+    <testcase name="Session started" time="0.078" classname="02OrderSessionStartSession"/>
+  </testsuite>
+  <testsuite name="03 — Submit Responses + Consent / Submit Responses" id="0d12a95d-4969-4e46-b651-3deb895fd5bb" timestamp="2026-01-25T16:06:35.333Z" tests="0" failures="0" errors="0" time="0.058"/>
+  <testsuite name="03 — Submit Responses + Consent / Submit Consent" id="94c6cbdb-9441-4f72-baa3-9f4991acd2ca" timestamp="2026-01-25T16:06:35.333Z" tests="0" failures="0" errors="0" time="0.054"/>
+  <testsuite name="04 — Score + Report / Score Session" id="09278705-1196-4609-b34b-b7efd5b48c11" timestamp="2026-01-25T16:06:35.333Z" tests="0" failures="0" errors="0" time="0.054"/>
+  <testsuite name="04 — Score + Report / Generate Report" id="1ba736a5-9d3d-4380-a12e-27ee5f3ee396" timestamp="2026-01-25T16:06:35.333Z" tests="0" failures="0" errors="1" time="0.055">
+    <system-err><![CDATA[Iteration: 0
+
+---
+testScriptError: Unexpected token '<' at 1:1
+<!DOCTYPE html>
+^
+---
+]]></system-err>
+  </testsuite>
+  <testsuite name="05 — Sign + Release + PDF / Sign Report" id="e183947e-14a4-49c6-8d8a-d27b0d9020aa" timestamp="2026-01-25T16:06:35.333Z" tests="0" failures="0" errors="0" time="0.055"/>
+  <testsuite name="05 — Sign + Release + PDF / Release Report" id="de3a7d84-edfc-48cb-8353-8d958f630cfa" timestamp="2026-01-25T16:06:35.333Z" tests="0" failures="0" errors="0" time="0.058"/>
+  <testsuite name="05 — Sign + Release + PDF / Download PDF" id="03bc7a27-7e11-4dd1-a91c-5dd65f11ea4a" timestamp="2026-01-25T16:06:35.333Z" tests="0" failures="0" errors="0" time="0.053"/>
+</testsuites>

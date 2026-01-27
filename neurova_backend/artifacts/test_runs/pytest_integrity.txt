@@ -1,0 +1,178 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.5, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Hareesh\Desktop\Main-Projects\neurova_backend_project\neurova_backend\venv_win\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 5.2.10, settings: neurova_backend.settings (from ini)
+rootdir: C:\Users\Hareesh\Desktop\Main-Projects\neurova_backend_project\neurova_backend
+configfile: pytest.ini
+plugins: Faker-40.1.2, cov-7.0.0, django-4.11.1
+collecting ... collected 1 item
+
+backend/clinical/tests/test_submission_integrity.py::test_submission_integrity_vulnerability FAILED [100%]
+
+================================== FAILURES ===================================
+___________________ test_submission_integrity_vulnerability ___________________
+
+    @pytest.mark.django_db
+    def test_submission_integrity_vulnerability():
+        """
+        Reproduction test for submission integrity vulnerability.
+        VERIFIES that replayed submissions are accepted and advance the battery index incorrectly.
+        """
+        c = Client()
+        org = Organization.objects.create(id=uuid.uuid4(), name="Org", address="Addr")
+    
+        # 1. Create order for CMHA_V1 (PHQ9 -> MDQ -> GAD7 ...)
+        resp = c.post("/api/v1/clinical/orders/",
+                      data={
+                          "organization_id": str(org.id),
+                          "patient_name": "Patient",
+                          "encounter_type": "OPD",
+                          "administration_mode": "IN_CLINIC",
+                          "battery_code": "CMHA_V1"
+                      },
+                      content_type="application/json",
+                      **{"HTTP_X_ORG_ID": str(org.id)}
+                      )
+        assert resp.status_code == 201
+        session_id = resp.json()["session_id"]
+    
+        # 2. Start session
+        resp = c.post(f"/api/v1/clinical/sessions/{session_id}/start/",
+               content_type="application/json",
+               **{"HTTP_X_ORG_ID": str(org.id)})
+        assert resp.status_code == 200
+        assert resp.json()["data"]["test_code"] == "PHQ9"
+    
+        # 3. Submit PHQ9 (Valid)
+        phq9_payload = {"raw_responses": [0,0,0,0,0,0,0,0,0]}
+        resp = c.post(f"/api/v1/clinical/sessions/{session_id}/submit_current/",
+               data=phq9_payload,
+               content_type="application/json",
+               **{"HTTP_X_ORG_ID": str(org.id)})
+    
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert data["next_test_code"] == "MDQ"
+        assert data["next_test_index"] == 1
+    
+        # 4. ATTACK: Replay PHQ9 submission
+        # We send the EXACT SAME payload again.
+        # The server expects MDQ, but we send PHQ9 data (array of 9 zeros).
+        # MDQ expects dict, but server might not validate schema deeply enough, OR
+        # if we send generic data it might just accept it.
+        # Even worse: simple replay.
+    
+        resp_attack = c.post(f"/api/v1/clinical/sessions/{session_id}/submit_current/",
+               data=phq9_payload,  # Replaying PHQ9 data
+               content_type="application/json",
+               **{"HTTP_X_ORG_ID": str(org.id)})
+    
+        # CURRENT VULNERABLE BEHAVIOR:
+        # Server accepts it, treating it as the submission for MDQ (Index 1).
+        # Advances to GAD7 (Index 2).
+    
+        if resp_attack.status_code == 200:
+            data_attack = resp_attack.json()
+            print(f"\n[VULNERABILITY CONFIRMED] Attack succeeded. Advanced to: {data_attack.get('next_test_code')}")
+    
+            # If bug exists, we are now at GAD7
+            if data_attack.get("next_test_code") == "GAD7":
+                pytest.fail("VULNERABILITY CONFIRMED: Replayed PHQ9 submission caused skip of MDQ.")
+    
+        # If fixed, this should be 409 or 400
+>       assert resp_attack.status_code in (400, 409), f"Should recognize mismatch/replay. Got {resp_attack.status_code}"
+E       AssertionError: Should recognize mismatch/replay. Got 200
+E       assert 200 in (400, 409)
+E        +  where 200 = <Response status_code=200, "application/json">.status_code
+
+backend\clinical\tests\test_submission_integrity.py:74: AssertionError
+---------------------------- Captured stdout setup ----------------------------
+Operations to perform:
+  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying audit.0001_initial... OK
+  Applying core.0001_initial... OK
+  Applying auditlogs.0001_initial... OK
+  Applying auditlogs.0002_auditlog_auditlogs_a_organiz_d8849b_idx_and_more... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying catalog.0001_initial... OK
+  Applying clinical.0001_initial... OK
+  Applying clinical.0002_delete_clinicalreport... OK
+  Applying clinical.0003_clinicalorder_phone_number... OK
+  Applying clinical.0004_idempotencykey... OK
+  Applying clinical_ops.0001_initial... OK
+  Applying clinical_ops.0002_assessmentorder_delivery_mode_and_more... OK
+  Applying clinical_ops.0003_responsequality... OK
+  Applying clinical_ops.0004_assessmentresponse_assessmentresult... OK
+  Applying clinical_ops.0005_assessmentreport... OK
+  Applying clinical_ops.0006_assessmentreport_signoff_method_and_more... OK
+  Applying clinical_ops.0007_auditevent... OK
+  Applying clinical_ops.0008_consentrecord... OK
+  Applying clinical_ops.0009_assessmentorder_report_access_code_and_more... OK
+  Applying clinical_ops.0010_assessmentorder_data_retention_until_and_more... OK
+  Applying clinical_ops.0011_deletionrequest... OK
+  Applying patients.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying clinical_sessions.0001_initial... OK
+  Applying clinical_sessions.0002_sessionevent... OK
+  Applying clinical_sessions.0003_sessionconsent... OK
+  Applying clinical_sessions.0004_consentrecord_clinical_se_organiz_411bc4_idx_and_more... OK
+  Applying clinical_sessions.0005_alter_consentrecord_capture_mode... OK
+  Applying core.0002_organization_address... OK
+  Applying core.0003_organization_external_id... OK
+  Applying org.0001_initial... OK
+  Applying patients.0002_patient_patients_pa_organiz_f38037_idx_and_more... OK
+  Applying policies.0001_initial... OK
+  Applying policies.0002_orgclinicalpolicy_token_validity_hours... OK
+  Applying reports.0001_initial... OK
+  Applying reports.0002_report_reports_rep_organiz_ae5072_idx_and_more... OK
+  Applying reports.0003_alter_report_pdf_file... OK
+  Applying reports.0004_alter_report_pdf_file... OK
+  Applying reports.0005_alter_report_pdf_file... OK
+  Applying reports.0006_clinicalreport... OK
+  Applying reports.0007_clinicalreport_status... OK
+  Applying reports.0008_clinicalreport_review_status_and_more... OK
+  Applying reports.0009_clinicalreport_correction_reason_and_more... OK
+  Applying reports.0010_clinicalreport_one_report_per_order_and_more... OK
+  Applying reports.0011_clinicalreport_pdf_sha256... OK
+  Applying safety.0001_initial... OK
+  Applying safety.0002_flagacknowledgement_safety_flag_organiz_050255_idx_and_more... OK
+  Applying scoring.0001_initial... OK
+  Applying scoring.0002_score_delete_scoreresult... OK
+  Applying scoring.0003_score_scoring_sco_session_c75173_idx_and_more... OK
+  Applying sessions.0001_initial... OK
+  Applying signoff.0001_initial... OK
+---------------------------- Captured stderr setup ----------------------------
+Creating test database for alias 'default' ('test_neurova_clinical')...
+
+---------------------------- Captured stdout call -----------------------------
+
+[VULNERABILITY CONFIRMED] Attack succeeded. Advanced to: None
+-------------------------- Captured stderr teardown ---------------------------
+Destroying test database for alias 'default' ('test_neurova_clinical')...
+
+=========================== short test summary info ===========================
+FAILED backend/clinical/tests/test_submission_integrity.py::test_submission_integrity_vulnerability - AssertionError: Should recognize mismatch/replay. Got 200
+assert 200 in (400, 409)
+ +  where 200 = <Response status_code=200, "application/json">.status_code
+============================= 1 failed in 17.55s ==============================

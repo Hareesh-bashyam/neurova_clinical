@@ -6,8 +6,10 @@ from rest_framework.exceptions import PermissionDenied
 from django.utils import timezone
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 
 from common.permissions import IsClinician
+from rest_framework.permissions import AllowAny
 
 from backend.clinical.models import (
     ClinicalOrder,
@@ -27,23 +29,22 @@ from backend.clinical.audit.services import audit
 from backend.clinical.constants import ORDER_STATUS_FLOW
 
 from backend.clinical.reporting.generate import generate_report_for_order_v1
-from backend.clinical.reporting.pdf import render_pdf_from_report_json_v1
-
 from backend.clinical.reporting.pdf_renderer_v1 import render_pdf_from_report_json_v1
 
-from reports.models import ClinicalReport
-from django.http import HttpResponse
-from rest_framework.permissions import AllowAny
 from backend.clinical.security.org_guard import (
     get_request_org_id,
     require_org_match,
 )
 
+from reports.models import ClinicalReport
+from backend.clinical.models import IdempotencyKey
 
 
-VALID_GENDERS = {"MALE","Male","male","Female","female", "FEMALE", "OTHER"}
+
+VALID_GENDERS = {"MALE", "Male", "male", "Female", "female", "FEMALE", "OTHER"}
 MIN_AGE = 1
 MAX_AGE = 120
+
 
 # -------------------------------------------------
 # 6.1 CREATE ORDER
@@ -65,36 +66,41 @@ class ClinicalOrderCreateView(APIView):
         for field in required:
             if field not in data:
                 return Response(
-                    {"error": f"Missing field: {field}"},
+                    {"success": False, "message": f"Missing field: {field}", "data": None},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-        # ---- STEP 8.2: gender validation ----
         gender = data.get("patient_gender")
         if gender is not None and gender not in VALID_GENDERS:
             return Response(
-                {"error": "Invalid patient_gender. Allowed: MALE, FEMALE, OTHER"},
+                {
+                    "success": False,
+                    "message": "Invalid patient_gender. Allowed: MALE, FEMALE, OTHER",
+                    "data": None,
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # ---- STEP 8.3: age validation ----
         age = data.get("patient_age")
         if age is not None:
             try:
                 age = int(age)
             except (TypeError, ValueError):
                 return Response(
-                    {"error": "patient_age must be an integer"},
+                    {"success": False, "message": "patient_age must be an integer", "data": None},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
             if age < MIN_AGE or age > MAX_AGE:
                 return Response(
-                    {"error": "patient_age must be between 1 and 120"},
+                    {
+                        "success": False,
+                        "message": "patient_age must be between 1 and 120",
+                        "data": None,
+                    },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-        # validate battery
         get_battery_def(data["battery_code"])
 
         order = ClinicalOrder.objects.create(
@@ -117,12 +123,17 @@ class ClinicalOrderCreateView(APIView):
 
         return Response(
             {
-                "order_id": str(order.id),
-                "session_id": str(session.id),
-                "battery_code": order.battery_code,
+                "success": True,
+                "message": "Order created successfully",
+                "data": {
+                    "order_id": str(order.id),
+                    "session_id": str(session.id),
+                    "battery_code": order.battery_code,
+                },
             },
             status=status.HTTP_201_CREATED,
         )
+
 
 
 # -------------------------------------------------
@@ -136,7 +147,7 @@ class StartSessionView(APIView):
 
         if session.status not in ["READY", "NOT_STARTED"]:
             return Response(
-                {"error": "Session cannot be started"},
+                {"success": False, "message": "Session cannot be started", "data": None},
                 status=status.HTTP_409_CONFLICT,
             )
 
@@ -147,12 +158,16 @@ class StartSessionView(APIView):
 
         return Response(
             {
-                "session_id": str(session.id),
-                "current_test_index": session.current_test_index,
-                "test_code": test_code,
-                "screening_label": battery["screening_label"],
+                "success": True,
+                "message": "Session started successfully",
+                "data": {
+                    "session_id": str(session.id),
+                    "current_test_index": session.current_test_index,
+                    "test_code": test_code,
+                    "screening_label": battery["screening_label"],
+                },
             },
-            status=200,
+            status=status.HTTP_200_OK,
         )
 
 
@@ -167,7 +182,7 @@ class GetCurrentTestView(APIView):
 
         if session.status != "IN_PROGRESS":
             return Response(
-                {"error": "Session is not in progress"},
+                {"success": False, "message": "Session is not in progress", "data": None},
                 status=status.HTTP_409_CONFLICT,
             )
 
@@ -176,12 +191,16 @@ class GetCurrentTestView(APIView):
 
         return Response(
             {
-                "session_id": str(session.id),
-                "current_test_index": session.current_test_index,
-                "test_code": test_code,
-                "screening_label": battery["screening_label"],
+                "success": True,
+                "message": "Current test retrieved successfully",
+                "data": {
+                    "session_id": str(session.id),
+                    "current_test_index": session.current_test_index,
+                    "test_code": test_code,
+                    "screening_label": battery["screening_label"],
+                },
             },
-            status=200,
+            status=status.HTTP_200_OK,
         )
 
 
@@ -193,108 +212,126 @@ class SubmitCurrentTestView(APIView):
 
     @transaction.atomic
     def post(self, request, session_id):
-        session = get_object_or_404(BatterySession, id=session_id)
+        # 🔒 HARD LOCK SESSION ROW (STEP 6)
+        session = (
+            BatterySession.objects
+            .select_for_update()
+            .get(id=session_id)
+        )
 
+        # 🔁 IDEMPOTENCY GUARD (STEP 7)
+        idem_key = request.headers.get("X-Idempotency-Key")
+        if idem_key:
+            obj, created = IdempotencyKey.objects.get_or_create(
+                session=session,
+                key=idem_key,
+            )
+            if not created:
+                return Response(
+                    {
+                        "success": True,
+                        "message": "Duplicate submission ignored",
+                        "data": {
+                            "deduped": True,
+                            "session_id": str(session.id),
+                            "current_test_index": session.current_test_index,
+                            "request_id": getattr(request, "request_id", None),
+                        },
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
+        # ---- SESSION STATE VALIDATION ----
         if session.status != "IN_PROGRESS":
             return Response(
-                {"error": "Session not in progress"},
-                status=status.HTTP_409_CONFLICT,
-            )
-
-        # 🔒 REQUIRED: client intent
-        test_code = request.data.get("test_code")
-        raw_responses = request.data.get("raw_responses")
-
-        if not test_code:
-            return Response(
-                {"error": "test_code is required"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if raw_responses is None:
-            return Response(
-                {"error": "raw_responses is required"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # 🔒 SINGLE SOURCE OF TRUTH
-        expected_test_code = get_current_test_code(session)
-
-        if test_code != expected_test_code:
-            return Response(
                 {
-                    "error": "Battery sequence enforced",
-                    "expected_test_code": expected_test_code,
-                    "submitted_test_code": test_code,
+                    "success": False,
+                    "message": "Session not in progress",
+                    "data": None,
                 },
                 status=status.HTTP_409_CONFLICT,
             )
 
-        # Only now open the test run
-        test_run = open_current_test_run(session)
+        # ---- EXPECTED TEST VALIDATION ----
+        expected_test_code = get_current_test_code(session)
+        submitted_test_code = request.data.get("test_code")
 
-        # 🔒 Block duplicate submission
-        if test_run.time_submitted is not None:
+        # 🔒 SECURITY FIX: Require test_code to prevent playback/misalignment attacks
+        if not submitted_test_code:
             return Response(
-                {"error": "Test already submitted"},
+                {
+                    "success": False,
+                    "message": "test_code is required for integrity check",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if submitted_test_code != expected_test_code:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid test submission order",
+                    "data": {
+                        "expected_test_code": expected_test_code,
+                        "submitted_test_code": submitted_test_code,
+                    },
+                },
                 status=status.HTTP_409_CONFLICT,
             )
 
-        test_run.raw_responses = raw_responses
+        # ---- OPEN / FETCH TEST RUN ----
+        test_run = open_current_test_run(session)
+
+        # ---- DUPLICATE SUBMISSION SAFETY (LEGACY) ----
+        if test_run.time_submitted is not None:
+            return Response(
+                {
+                    "success": True,
+                    "message": "Test already submitted",
+                    "data": None,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        # ---- SAVE ANSWERS ----
+        test_run.raw_responses = request.data.get("raw_responses")
         test_run.time_submitted = timezone.now()
         test_run.save(update_fields=["raw_responses", "time_submitted"])
 
+        # ---- ADVANCE SESSION ----
         has_next = advance_to_next_test(session)
-
-        audit(
-            organization_id=session.organization_id,
-            event_type="TEST_SUBMITTED",
-            actor=request.user.username,
-            session_id=str(session.id),
-            meta={
-                "test_code": test_code,
-                "test_index": session.current_test_index,
-            },
-        )
+        
+        next_test_code = None
+        if has_next:
+             session.refresh_from_db()
+             next_test_code = get_current_test_code(session)
 
         if not has_next:
             session.status = "COMPLETED"
             session.completed_at = timezone.now()
             session.save(update_fields=["status", "completed_at"])
 
+            # ✅ ALSO COMPLETE ORDER (THIS WAS MISSING)
             order = session.order
             order.status = "COMPLETED"
             order.save(update_fields=["status"])
 
-            audit(
-                organization_id=order.organization_id,
-                event_type="SESSION_COMPLETED",
-                actor=request.user.username,
-                session_id=str(session.id),
-                order_id=str(order.id),
-            )
-
-            return Response(
-                {
-                    "completed": True,
-                    "order_id": str(order.id),
-                    "report_ready": True,
-                },
-                status=200,
-            )
-
         return Response(
-            {
-                "completed": False,
-                "next_test_code": get_current_test_code(session),
-                "next_test_index": session.current_test_index,
-            },
-            status=200,
-        )
-
+                {
+                    "success": True,
+                    "message": "Test submitted successfully",
+                    "data": {
+                        "completed": not has_next,
+                        "next_test_code": next_test_code,
+                        "next_test_index": session.current_test_index,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
 
 # -------------------------------------------------
-# 6.5 GENERATE REPORT (NO RECOMPUTE)
+# 6.5 GENERATE REPORT (PHASE 1)
 # -------------------------------------------------
 class GenerateReportView(APIView):
     permission_classes = [AllowAny]
@@ -303,54 +340,35 @@ class GenerateReportView(APIView):
     def post(self, request, order_id):
         order = get_object_or_404(ClinicalOrder, id=order_id)
 
+        # ---- STEP 1: order must be completed ----
         if order.status != "COMPLETED":
             return Response(
-                {"error": "Order not completed"},
+                {
+                    "success": False,
+                    "message": "Order not completed",
+                    "data": None,
+                },
                 status=status.HTTP_409_CONFLICT,
             )
 
-        session = order.sessions.first()
-        if not session or session.status != "COMPLETED":
-            return Response(
-                {"error": "Session not completed"},
-                status=status.HTTP_409_CONFLICT,
-            )
-
-        # ✅ SINGLE SOURCE OF TRUTH
+        # ---- STEP 2: generate report ----
         report = generate_report_for_order_v1(order)
 
+        # ---- STEP 3: PHASE 1 explicit lifecycle ----
+        report.validation_status = ClinicalReport.DATA_VALIDATED
+        report.review_status = ClinicalReport.REVIEW_DRAFT
+        report.save(update_fields=["validation_status", "review_status"])
+
         return Response(
-            {"report_id": str(report.id)},
-            status=200,
+            {
+                "success": True,
+                "message": "Report generated successfully",
+                "data": {
+                    "report_id": str(report.id),
+                },
+            },
+            status=status.HTTP_200_OK,
         )
-
-
-# -------------------------------------------------
-# 6.6 GET PDF (READ ONLY, NO RECOMPUTE)
-# -------------------------------------------------
-class GetReportPDFView(APIView):
-    permission_classes = [IsClinician]
-
-    def get(self, request, order_id):
-        report = get_object_or_404(
-            ClinicalReport,
-            order_id=order_id,
-            is_frozen=True,
-        )
-
-        fresh_report_json = generate_report_for_order_v1(report.order)
-        pdf_bytes = render_pdf_from_report_json_v1(fresh_report_json)
-
-
-        response = Response(
-            pdf_bytes,
-            content_type="application/pdf",
-        )
-        response["Content-Disposition"] = (
-            f'inline; filename="report_{order_id}.pdf"'
-        )
-        return response
-
 
 # -------------------------------------------------
 # ORDER STATUS UPDATE
@@ -361,7 +379,10 @@ class ClinicalOrderStatusUpdateView(APIView):
     def post(self, request, order_id):
         new_status = request.data.get("status")
         if not new_status:
-            return Response({"error": "status is required"}, status=400)
+            return Response(
+                {"success": False, "message": "status is required", "data": None},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         order = get_object_or_404(ClinicalOrder, id=order_id)
         current_status = order.status
@@ -369,8 +390,12 @@ class ClinicalOrderStatusUpdateView(APIView):
         allowed = ORDER_STATUS_FLOW.get(current_status, [])
         if new_status not in allowed:
             return Response(
-                {"error": f"Invalid transition: {current_status} → {new_status}"},
-                status=400,
+                {
+                    "success": False,
+                    "message": f"Invalid transition: {current_status} → {new_status}",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         order.status = new_status
@@ -385,83 +410,74 @@ class ClinicalOrderStatusUpdateView(APIView):
         )
 
         return Response(
-            {"order_id": str(order.id), "status": order.status},
-            status=200,
+            {
+                "success": True,
+                "message": "Order status updated successfully",
+                "data": {"order_id": str(order.id), "status": order.status},
+            },
+            status=status.HTTP_200_OK,
         )
 
-    
+
+# -------------------------------------------------
+# 6.6 GET CLINICAL REPORT PDF (VALIDATED + FROZEN ONLY)
+# -------------------------------------------------
 class GetClinicalReportPDFView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, order_id):
-        # 1. Extract org ID safely
-        try:
-            request_org_id = get_request_org_id(request)
-        except Exception:
-            request_org_id = None
-
+        request_org_id = get_request_org_id(request)
         if not request_org_id:
             return Response(
-                {"detail": "Missing X-ORG-ID header"},
+                {"success": False, "message": "Missing X-ORG-ID header", "data": None},
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # 2. Fetch order
-        order = get_object_or_404(
-            ClinicalOrder,
-            id=order_id,
-        )
+        order = get_object_or_404(ClinicalOrder, id=order_id)
+        require_org_match(request_org_id, order.organization_id)
 
-        # 3. Enforce org isolation SAFELY
-        try:
-            require_org_match(
-                request_org_id,
-                order.organization_id,
-            )
-        except PermissionDenied:
+        report = get_object_or_404(ClinicalReport, order=order, is_frozen=True)
+
+        # --- PHASE FINAL-1: BLOCK DELIVERY FOR CRITICAL FLAGS WITHOUT REVIEW ---
+        safety = report.report_json.get("safety_flags", {})
+        has_critical_flag = bool(safety.get("present"))
+
+        if has_critical_flag and report.review_status != ClinicalReport.REVIEW_REVIEWED:
             return Response(
-                {"detail": "Access denied"},
-                status=status.HTTP_403_FORBIDDEN,
+                {
+                    "success": False,
+                    "message": "clinician_review_required_for_critical_flags",
+                    "data": None
+                },
+                status=status.HTTP_400_BAD_REQUEST,
             )
-        except Exception:
+        # --- END PHASE FINAL-1 ---
+
+
+        # ✅ STEP 3: block export until validated
+        if report.validation_status != ClinicalReport.DATA_VALIDATED:
             return Response(
-                {"detail": "Access denied"},
-                status=status.HTTP_403_FORBIDDEN,
+                {
+                    "success": False,
+                    "message": "Report data not validated",
+                    "data": {"validation_status": report.validation_status},
+                },
+                status=status.HTTP_409_CONFLICT,
             )
 
-        # 4. Fetch frozen report
-        report = get_object_or_404(
-            ClinicalReport,
-            order=order,
-            is_frozen=True,
-        )
+        pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
 
-        # 5. Render PDF from frozen JSON only
-        pdf_bytes = render_pdf_from_report_json_v1(
-            report.report_json
-        )
-
-        # 6. Audit AFTER validation
-        actor = (
-            request.user.username
-            if request.user and request.user.is_authenticated
-            else "anonymous"
-        )
-
-        audit(
+        # ✅ STEP 4: AUDIT LOG (Was Missing!)
+        from backend.clinical.audit.models import ClinicalAuditEvent
+        ClinicalAuditEvent.objects.create(
             organization_id=order.organization_id,
             event_type="PDF_EXPORTED",
-            actor=actor,
-            order_id=str(order.id),
-            report_id=report.report_json.get("report_id"),
+            actor=str(request.user.id) if request.user.is_authenticated else "anonymous",
+            order_id=order.id,
+            report_id=report.id,
+            meta={"file_name": f"report_{order_id}.pdf"},
         )
 
-        # 7. Return PDF
-        response = HttpResponse(
-            pdf_bytes,
-            content_type="application/pdf",
-        )
-        response["Content-Disposition"] = (
-            f'inline; filename="report_{order_id}.pdf"'
-        )
+        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+        response["Content-Disposition"] = f'inline; filename="report_{order_id}.pdf"'
         return response

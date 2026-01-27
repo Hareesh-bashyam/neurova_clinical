@@ -12,7 +12,7 @@ def evaluate_signoff_rules(result_json: dict) -> dict:
       - scoring exists
       - report contains disclaimers and required keys
       - red flags are present/absent but are *explicitly disclosed*
-    IMPORTANT: This is NOT clinical diagnosis. It is data integrity + completeness signoff.
+    IMPORTANT: This confirms data completeness and integrity only. It is data integrity + completeness signoff.
     """
     summary = (result_json or {}).get("summary", {}) or {}
 
@@ -47,8 +47,8 @@ def system_sign_report(report: AssessmentReport, actor_user=None):
         # Reject system signoff
         report.signoff_status = "REJECTED"
         report.signoff_method = "SYSTEM"
-        report.signed_by_name = SYSTEM_SIGNER_NAME
-        report.signed_by_role = SYSTEM_SIGNER_ROLE
+        report.signed_by_name = None
+        report.signed_by_role = None
         report.signed_at = timezone.now()
         report.signoff_reason = f"System signoff failed. Missing: {verdict['missing']}"
         report.save(update_fields=[

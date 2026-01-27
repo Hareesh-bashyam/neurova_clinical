@@ -12,40 +12,172 @@ from apps.clinical_ops.api.v1.serializers import (
 )
 import secrets
 from apps.clinical_ops.services.retention_policy import compute_retention_date
+from datetime import timedelta
+from backend.clinical.policies.services import get_or_create_policy
 
 def _make_token():
     return secrets.token_urlsafe(32)[:64]
 
-class CreatePatient(APIView):
-    def post(self, request):
-        s = PatientCreateSerializer(data=request.data)
-        s.is_valid(raise_exception=True)
-        org = get_object_or_404(Org, id=s.validated_data["org_id"], is_active=True)
+VALID_GENDERS = {"MALE", "FEMALE", "OTHER"}
 
+class CreatePatient(APIView):
+
+    def post(self, request):
+        data = request.data
+
+        # ---- STEP 1: Required fields ----
+        required = [
+            "org_id",
+            "full_name",
+            "age",
+            "sex",
+        ]
+
+        for field in required:
+            if field not in data:
+                return Response(
+                    {
+                        "success": False,
+                        "message": f"Missing field: {field}",
+                        "data": None,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        # ---- STEP 2: Organization validation ----
+        org = Org.objects.filter(
+            id=data["org_id"],
+            is_active=True
+        ).first()
+
+        if not org:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid or inactive organization",
+                    "data": None,
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        # ---- STEP 3: full_name validation ----
+        full_name = str(data.get("full_name")).strip()
+        if len(full_name) < 3:
+            return Response(
+                {
+                    "success": False,
+                    "message": "full_name must be at least 3 characters",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # ---- STEP 4: age validation ----
+        try:
+            age = int(data.get("age"))
+        except (TypeError, ValueError):
+            return Response(
+                {
+                    "success": False,
+                    "message": "age must be an integer",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if age < 0 or age > 120:
+            return Response(
+                {
+                    "success": False,
+                    "message": "age must be between 0 and 120",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # ---- sex validation ----
+        sex = data.get("sex")
+
+        if not sex:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Missing field: sex",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        sex = str(sex).strip().upper()
+
+        if sex not in VALID_GENDERS:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid sex. Allowed: MALE, FEMALE, OTHER",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # ---- STEP 6: optional fields ----
+        mrn = data.get("mrn") or None
+        phone = data.get("phone") or None
+        email = data.get("email") or None
+
+        # ---- STEP 7: create patient ----
         patient = Patient.objects.create(
             org=org,
-            mrn=s.validated_data.get("mrn") or None,
-            full_name=s.validated_data["full_name"],
-            age=s.validated_data["age"],
-            sex=s.validated_data["sex"],
-            phone=s.validated_data.get("phone") or None,
-            email=s.validated_data.get("email") or None,
+            mrn=mrn,
+            full_name=full_name,
+            age=age,
+            sex=sex,
+            phone=phone,
+            email=email,
         )
-        return Response({"patient_id": patient.id}, status=status.HTTP_201_CREATED)
 
+        # ---- STEP 8: success response ----
+        return Response(
+            {
+                "success": True,
+                "message": "Patient created successfully",
+                "data": {
+                    "patient_id": patient.id,
+                },
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+    
 
 class CreateOrder(APIView):
     def post(self, request):
         s = OrderCreateSerializer(data=request.data)
-        s.is_valid(raise_exception=True)
 
+        # ---- VALIDATION HANDLING (FIX) ----
+        if not s.is_valid():
+            first_field, errors = next(iter(s.errors.items()))
+            first_error = errors[0]
+
+            return Response(
+                {
+                    "success": False,
+                    "message": f"{first_field}: {first_error}",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # ---- BUSINESS LOGIC ----
         org = get_object_or_404(Org, id=s.validated_data["org_id"], is_active=True)
         patient = get_object_or_404(
             Patient, id=s.validated_data["patient_id"], org=org
         )
 
         token = _make_token()
-        expires = timezone.now() + timezone.timedelta(days=2)
+        policy = get_or_create_policy(org.id)
+        hours = policy.token_validity_hours or 48
+        expires = timezone.now() + timedelta(hours=hours)
 
         order = AssessmentOrder.objects.create(
             org=org,
@@ -69,15 +201,18 @@ class CreateOrder(APIView):
             public_link_expires_at=expires,
         )
 
-        # ✅ 15A.4 — Apply retention policy at creation time
         order.data_retention_until = compute_retention_date(order.created_at)
         order.save(update_fields=["data_retention_until"])
 
         return Response(
             {
-                "order_id": order.id,
-                "public_token": order.public_token,
-                "public_link_expires_at": order.public_link_expires_at.isoformat(),
+                "success": True,
+                "message": "Order created successfully",
+                "data": {
+                    "order_id": order.id,
+                    "public_token": order.public_token,
+                    "public_link_expires_at": order.public_link_expires_at.isoformat(),
+                },
             },
             status=status.HTTP_201_CREATED,
         )
@@ -86,10 +221,51 @@ class CreateOrder(APIView):
 class ClinicQueue(APIView):
     def get(self, request):
         org_id = request.query_params.get("org_id")
-        if not org_id:
-            return Response({"error":"org_id is required"}, status=400)
-        org = get_object_or_404(Org, id=org_id, is_active=True)
 
-        qs = AssessmentOrder.objects.filter(org=org).order_by("-created_at")[:200]
+        # ---- STEP 1: required param ----
+        if not org_id:
+            return Response(
+                {
+                    "success": False,
+                    "message": "org_id is required",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # ---- STEP 2: org validation (NO get_object_or_404) ----
+        org = Org.objects.filter(
+            id=org_id,
+            is_active=True
+        ).first()
+
+        if not org:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid or inactive organization",
+                    "data": None,
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        # ---- STEP 3: fetch queue ----
+        qs = (
+            AssessmentOrder.objects
+            .filter(org=org)
+            .order_by("-created_at")[:200]
+        )
+
         data = QueueListSerializer(qs, many=True).data
-        return Response({"results": data})
+
+        # ---- STEP 4: success response ----
+        return Response(
+            {
+                "success": True,
+                "message": "Queue fetched successfully",
+                "data": {
+                    "results": data,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )

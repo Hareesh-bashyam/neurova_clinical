@@ -1,0 +1,622 @@
+./requirements.txt:9:reportlab>=4.2
+./artifacts/test_runs/pytest_coverage.txt:13:backend/clinical/tests/test_pdf_audit.py .                               [ 22%]
+./artifacts/test_runs/pytest_coverage.txt:24:backend/clinical/reporting/tests/test_report_pdf_v1.py ....              [100%]
+./artifacts/test_runs/pytest_coverage.txt:119:apps/clinical_ops/services/pdf_report.py                                                  114    114     0%   1-157
+./artifacts/test_runs/pytest_coverage.txt:120:apps/clinical_ops/services/pdf_report_v2.py                                                98     89     9%   10-11, 17-234
+./artifacts/test_runs/pytest_coverage.txt:169:backend/clinical/reporting/pdf.py                                                          42     42     0%   1-65
+./artifacts/test_runs/pytest_coverage.txt:170:backend/clinical/reporting/pdf_renderer_v1.py                                             120      6    95%   97-98, 172-175
+./artifacts/test_runs/pytest_coverage.txt:179:backend/clinical/reporting/tests/test_report_pdf_v1.py                                     21      0   100%
+./artifacts/test_runs/pytest_coverage.txt:192:backend/clinical/tests/test_pdf_audit.py                                                   47      1    98%   88
+./artifacts/test_runs/pytest_coverage.txt:260:reports/__init__.py                                                                         0      0   100%
+./artifacts/test_runs/pytest_coverage.txt:261:reports/admin.py                                                                            9      0   100%
+./artifacts/test_runs/pytest_coverage.txt:262:reports/apps.py                                                                             4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:263:reports/migrations/0001_initial.py                                                          7      0   100%
+./artifacts/test_runs/pytest_coverage.txt:264:reports/migrations/0002_report_reports_rep_organiz_ae5072_idx_and_more.py                   4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:265:reports/migrations/0003_alter_report_pdf_file.py                                            5      0   100%
+./artifacts/test_runs/pytest_coverage.txt:266:reports/migrations/0004_alter_report_pdf_file.py                                            5      0   100%
+./artifacts/test_runs/pytest_coverage.txt:267:reports/migrations/0005_alter_report_pdf_file.py                                            5      0   100%
+./artifacts/test_runs/pytest_coverage.txt:268:reports/migrations/0006_clinicalreport.py                                                   5      0   100%
+./artifacts/test_runs/pytest_coverage.txt:269:reports/migrations/0007_clinicalreport_status.py                                            4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:270:reports/migrations/0008_clinicalreport_review_status_and_more.py                            4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:271:reports/migrations/0009_clinicalreport_correction_reason_and_more.py                        5      0   100%
+./artifacts/test_runs/pytest_coverage.txt:272:reports/migrations/0010_clinicalreport_one_report_per_order_and_more.py                     4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:273:reports/migrations/0011_clinicalreport_pdf_sha256.py                                        4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:274:reports/migrations/__init__.py                                                              0      0   100%
+./artifacts/test_runs/pytest_coverage.txt:275:reports/models.py                                                                          87     21    76%   54, 59-61, 64-66, 71-78, 82-88, 109
+./artifacts/test_runs/pytest_coverage.txt:276:reports/pdf.py                                                                             62     11    82%   57, 64-74
+./artifacts/test_runs/pytest_coverage.txt:277:reports/storage_paths.py                                                                    2      1    50%   2
+./artifacts/test_runs/pytest_coverage.txt:278:reports/tests.py                                                                            1      1     0%   1
+./artifacts/test_runs/pytest_coverage.txt:279:reports/urls.py                                                                             3      0   100%
+./artifacts/test_runs/pytest_coverage.txt:280:reports/views.py                                                                           99     44    56%   37-105, 119-150, 166-167, 203-219, 258, 283-306
+./artifacts/test_runs/pytest_coverage.txt:329:tests/unit/test_pdf_generation.py                                                           0      0   100%
+./artifacts/test_runs/pytest_flow_4.txt:128:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_flow_4.txt:146:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_flow_4.txt:169:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_flow_4.txt:174:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-33\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_flow_4.txt:177:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_flow_4.txt:237:reports\pdf.py:63: KeyError
+./artifacts/test_runs/pytest_flow_4.txt:298:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_4.txt:299:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_4.txt:300:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_4.txt:306:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./artifacts/test_runs/postman_newman_run.txt:42:  POST http://127.0.0.1:8000/api/v1/reports/{{report_id}}/sign/ [404 Not Found, 11.16kB, 55ms]
+./artifacts/test_runs/postman_newman_run.txt:45:  POST http://127.0.0.1:8000/api/v1/reports/{{report_id}}/release/ [404 Not Found, 11.17kB, 58ms]
+./artifacts/test_runs/postman_newman_run.txt:48:  GET http://127.0.0.1:8000/api/v1/reports/{{report_id}}/pdf/ [404 Not Found, 11.15kB, 53ms]
+./artifacts/test_runs/pytest_flow_3.txt:128:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_flow_3.txt:146:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_flow_3.txt:169:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_flow_3.txt:174:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-31\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_flow_3.txt:177:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_flow_3.txt:232:reports\pdf.py:58: KeyError
+./artifacts/test_runs/pytest_flow_3.txt:293:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_3.txt:294:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_3.txt:295:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_3.txt:301:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./artifacts/test_runs/pytest_integrity.txt:149:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_integrity.txt:150:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_integrity.txt:151:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_integrity.txt:157:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./reports/views.py:17:from backend.clinical.reporting.pdf_renderer_v1 import (
+./reports/views.py:18:    render_pdf_from_report_json_v1
+./reports/views.py:217:        pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
+./reports/views.py:219:        return HttpResponse(pdf_bytes, content_type="application/pdf")
+./postman/NeurovaX_V1.postman_collection.json:232:            "url": "{{base_url}}/api/v1/reports/{{report_id}}/sign/",
+./postman/NeurovaX_V1.postman_collection.json:248:            "url": "{{base_url}}/api/v1/reports/{{report_id}}/release/"
+./postman/NeurovaX_V1.postman_collection.json:260:            "url": "{{base_url}}/api/v1/reports/{{report_id}}/pdf/"
+./artifacts/test_runs/pytest_flow_2.txt:128:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_flow_2.txt:146:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_flow_2.txt:168:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_flow_2.txt:173:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-29\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_flow_2.txt:176:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_flow_2.txt:229:reports\pdf.py:56: KeyError
+./artifacts/test_runs/pytest_flow_2.txt:290:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_2.txt:291:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_2.txt:292:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow_2.txt:298:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./artifacts/test_runs/pytest_flow.txt:128:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_flow.txt:146:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_flow.txt:168:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_flow.txt:173:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-26\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_flow.txt:176:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_flow.txt:218:reports\pdf.py:45: KeyError
+./artifacts/test_runs/pytest_flow.txt:279:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow.txt:280:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow.txt:281:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pytest_flow.txt:287:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./reports/urls.py:1:# reports/urls.py
+./reports/urls.py:10:    path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
+./reports/urls.py:11:    path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+./reports/urls.py:12:    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
+./reports/urls.py:13:    path("reports/<int:report_id>/mark-reviewed/", MarkReportReviewedView.as_view()),
+./reports/urls.py:14:    path("reports/<int:report_id>/create-correction/", CreateReportCorrectionView.as_view()),
+./tools/postman/NeurovaX_V1_Freeze.postman_collection.json:243:                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_cmha}}/report/pdf/"
+./tools/postman/NeurovaX_V1_Freeze.postman_collection.json:352:                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_anx}}/report/pdf/"
+./tools/postman/NeurovaX_V1_Freeze.postman_collection.json:364:                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_anx}}/report/pdf/"
+./tools/postman/NeurovaX_V1_Freeze.postman_collection.json:382:                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_cmha}}/report/pdf/"
+./artifacts/test_runs/pytest_verify_final.txt:9:backend\clinical\tests\test_pdf_audit.py .                               [ 14%]
+./artifacts/test_runs/pytest_verify_final.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py ....              [100%]
+./artifacts/test_runs/pytest_verify_final.txt:130:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_verify_final.txt:148:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_verify_final.txt:169:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_verify_final.txt:174:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-24\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_verify_final.txt:177:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_verify_final.txt:211:reports\pdf.py:37: KeyError
+./artifacts/test_runs/pytest_verify_2.txt:9:backend\clinical\tests\test_pdf_audit.py F                               [ 14%]
+./artifacts/test_runs/pytest_verify_2.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py ..FF              [100%]
+./artifacts/test_runs/pytest_verify_2.txt:15:___________________ test_pdf_export_creates_at_audit_event ____________________
+./artifacts/test_runs/pytest_verify_2.txt:18:    def test_pdf_export_creates_at_audit_event():
+./artifacts/test_runs/pytest_verify_2.txt:110:        pdf_resp = c.get(f"/api/v1/clinical/orders/{order_id}/report/pdf/", **{"HTTP_X_ORG_ID": str(org.id)})
+./artifacts/test_runs/pytest_verify_2.txt:111:>       assert pdf_resp.status_code == 200
+./artifacts/test_runs/pytest_verify_2.txt:115:backend\clinical\tests\test_pdf_audit.py:101: AssertionError
+./artifacts/test_runs/pytest_verify_2.txt:117:{"ts": "2026-01-26T03:58:51.709746Z", "level": "WARNING", "logger": "django.request", "msg": "Bad Request: /api/v1/clinical/orders/347a0645-1a95-48a3-81c7-abcc5868d217/report/pdf/", "status_code": 400}
+./artifacts/test_runs/pytest_verify_2.txt:119:WARNING  django.request:log.py:253 Bad Request: /api/v1/clinical/orders/347a0645-1a95-48a3-81c7-abcc5868d217/report/pdf/
+./artifacts/test_runs/pytest_verify_2.txt:282:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_verify_2.txt:300:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_verify_2.txt:318:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_verify_2.txt:323:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-20\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_verify_2.txt:326:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_verify_2.txt:348:reports\pdf.py:25: KeyError
+./artifacts/test_runs/pytest_verify_2.txt:352:        pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pytest_verify_2.txt:355:        txt = pdf_bytes.decode("latin-1", errors="ignore")
+./artifacts/test_runs/pytest_verify_2.txt:360:backend\clinical\reporting\tests\test_report_pdf_v1.py:128: AssertionError
+./artifacts/test_runs/pytest_verify_2.txt:364:        pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pytest_verify_2.txt:367:        txt = pdf_bytes.decode("latin-1", errors="ignore")
+./artifacts/test_runs/pytest_verify_2.txt:375:backend\clinical\reporting\tests\test_report_pdf_v1.py:137: AssertionError
+./artifacts/test_runs/pytest_verify_2.txt:381:backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pytest_verify_2.txt:387:FAILED backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pytest_verify_2.txt:390:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_signed_report_contains_signature_placeholder
+./artifacts/test_runs/pytest_verify_2.txt:391:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_unsigned_report_contains_exact_sentence
+./artifacts/test_runs/pytest_verify_3.txt:9:backend\clinical\tests\test_pdf_audit.py F                               [ 14%]
+./artifacts/test_runs/pytest_verify_3.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py ..F.              [100%]
+./artifacts/test_runs/pytest_verify_3.txt:15:___________________ test_pdf_export_creates_at_audit_event ____________________
+./artifacts/test_runs/pytest_verify_3.txt:18:    def test_pdf_export_creates_at_audit_event():
+./artifacts/test_runs/pytest_verify_3.txt:110:        pdf_resp = c.get(f"/api/v1/clinical/orders/{order_id}/report/pdf/", **{"HTTP_X_ORG_ID": str(org.id)})
+./artifacts/test_runs/pytest_verify_3.txt:111:        assert pdf_resp.status_code == 200
+./artifacts/test_runs/pytest_verify_3.txt:112:        assert pdf_resp["Content-Type"] == "application/pdf"
+./artifacts/test_runs/pytest_verify_3.txt:121:backend\clinical\tests\test_pdf_audit.py:106: AssertionError
+./artifacts/test_runs/pytest_verify_3.txt:285:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_verify_3.txt:303:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_verify_3.txt:322:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_verify_3.txt:327:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-21\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_verify_3.txt:330:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_verify_3.txt:354:reports\pdf.py:27: KeyError
+./artifacts/test_runs/pytest_verify_3.txt:358:        pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pytest_verify_3.txt:361:        txt = pdf_bytes.decode("latin-1", errors="ignore")
+./artifacts/test_runs/pytest_verify_3.txt:366:backend\clinical\reporting\tests\test_report_pdf_v1.py:128: AssertionError
+./artifacts/test_runs/pytest_verify_3.txt:374:FAILED backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pytest_verify_3.txt:377:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_signed_report_contains_signature_placeholder
+./artifacts/test_runs/pytest_verify_4.txt:9:backend\clinical\tests\test_pdf_audit.py F                               [ 14%]
+./artifacts/test_runs/pytest_verify_4.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py ....              [100%]
+./artifacts/test_runs/pytest_verify_4.txt:15:___________________ test_pdf_export_creates_at_audit_event ____________________
+./artifacts/test_runs/pytest_verify_4.txt:18:    def test_pdf_export_creates_at_audit_event():
+./artifacts/test_runs/pytest_verify_4.txt:110:        pdf_resp = c.get(f"/api/v1/clinical/orders/{order_id}/report/pdf/", **{"HTTP_X_ORG_ID": str(org.id)})
+./artifacts/test_runs/pytest_verify_4.txt:111:>       assert pdf_resp.status_code == 200
+./artifacts/test_runs/pytest_verify_4.txt:115:backend\clinical\tests\test_pdf_audit.py:101: AssertionError
+./artifacts/test_runs/pytest_verify_4.txt:117:{"ts": "2026-01-26T04:02:46.315850Z", "level": "ERROR", "logger": "neurova.api", "msg": "api_exception", "request_id": "7c9ad671-9525-44ea-8077-fb3182182117", "path": "/api/v1/clinical/orders/4e6c2033-7e2e-4636-9531-997b4cba5c06/report/pdf/", "method": "GET", "exc_info": "Traceback (most recent call last):\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\venv_win\\Lib\\site-packages\\rest_framework\\views.py\", line 512, in dispatch\n    response = handler(request, *args, **kwargs)\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\backend\\clinical\\views.py\", line 459, in get\n    ClinicalAuditEvent.objects.create(\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        organization_id=order.organization_id,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<4 lines>...\n        details={\"file_name\": f\"report_{order_id}.pdf\"},\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\venv_win\\Lib\\site-packages\\django\\db\\models\\manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\venv_win\\Lib\\site-packages\\django\\db\\models\\query.py\", line 663, in create\n    obj = self.model(**kwargs)\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\venv_win\\Lib\\site-packages\\django\\db\\models\\base.py\", line 569, in __init__\n    raise TypeError(\n    ...<2 lines>...\n    )\nTypeError: ClinicalAuditEvent() got unexpected keyword arguments: 'details'"}
+./artifacts/test_runs/pytest_verify_4.txt:118:{"ts": "2026-01-26T04:02:46.343324Z", "level": "ERROR", "logger": "django.request", "msg": "Internal Server Error: /api/v1/clinical/orders/4e6c2033-7e2e-4636-9531-997b4cba5c06/report/pdf/", "status_code": 500}
+./artifacts/test_runs/pytest_verify_4.txt:130:        details={"file_name": f"report_{order_id}.pdf"},
+./artifacts/test_runs/pytest_verify_4.txt:144:ERROR    django.request:log.py:253 Internal Server Error: /api/v1/clinical/orders/4e6c2033-7e2e-4636-9531-997b4cba5c06/report/pdf/
+./artifacts/test_runs/pytest_verify_4.txt:339:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_verify_4.txt:357:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_verify_4.txt:377:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_verify_4.txt:382:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-22\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_verify_4.txt:385:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_verify_4.txt:418:reports\pdf.py:36: KeyError
+./artifacts/test_runs/pytest_verify_4.txt:424:backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pytest_verify_4.txt:425:backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pytest_verify_4.txt:431:FAILED backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pip_install.txt:10:Requirement already satisfied: reportlab>=4.2 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 9)) (4.4.7)
+./artifacts/test_runs/pip_install.txt:27:Requirement already satisfied: pillow>=9.0.0 in ./.venv/lib/python3.12/site-packages (from reportlab>=4.2->-r requirements.txt (line 9)) (12.0.0)
+./artifacts/test_runs/pip_install.txt:28:Requirement already satisfied: charset-normalizer in ./.venv/lib/python3.12/site-packages (from reportlab>=4.2->-r requirements.txt (line 9)) (3.4.4)
+./artifacts/test_runs/pytest_verify.txt:9:backend\clinical\tests\test_pdf_audit.py F                               [ 14%]
+./artifacts/test_runs/pytest_verify.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py FFFF              [100%]
+./artifacts/test_runs/pytest_verify.txt:15:___________________ test_pdf_export_creates_at_audit_event ____________________
+./artifacts/test_runs/pytest_verify.txt:18:    def test_pdf_export_creates_at_audit_event():
+./artifacts/test_runs/pytest_verify.txt:108:backend\clinical\tests\test_pdf_audit.py:91: AssertionError
+./artifacts/test_runs/pytest_verify.txt:271:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pytest_verify.txt:289:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pytest_verify.txt:307:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pytest_verify.txt:312:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-19\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pytest_verify.txt:315:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pytest_verify.txt:330:reports\pdf.py:18: KeyError
+./artifacts/test_runs/pytest_verify.txt:331:____________________________ test_pdf_is_generated ____________________________
+./artifacts/test_runs/pytest_verify.txt:333:    def test_pdf_is_generated():
+./artifacts/test_runs/pytest_verify.txt:334:>       pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pytest_verify.txt:338:backend\clinical\reporting\tests\test_report_pdf_v1.py:98: 
+./artifacts/test_runs/pytest_verify.txt:340:backend\clinical\reporting\pdf_renderer_v1.py:107: in render_pdf_from_report_json_v1
+./artifacts/test_runs/pytest_verify.txt:357:___________________ test_pdf_does_not_leak_internal_strings ___________________
+./artifacts/test_runs/pytest_verify.txt:359:    def test_pdf_does_not_leak_internal_strings():
+./artifacts/test_runs/pytest_verify.txt:360:>       pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pytest_verify.txt:364:backend\clinical\reporting\tests\test_report_pdf_v1.py:105: 
+./artifacts/test_runs/pytest_verify.txt:366:backend\clinical\reporting\pdf_renderer_v1.py:107: in render_pdf_from_report_json_v1
+./artifacts/test_runs/pytest_verify.txt:386:>       pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pytest_verify.txt:390:backend\clinical\reporting\tests\test_report_pdf_v1.py:120: 
+./artifacts/test_runs/pytest_verify.txt:392:backend\clinical\reporting\pdf_renderer_v1.py:107: in render_pdf_from_report_json_v1
+./artifacts/test_runs/pytest_verify.txt:412:>       pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pytest_verify.txt:416:backend\clinical\reporting\tests\test_report_pdf_v1.py:129: 
+./artifacts/test_runs/pytest_verify.txt:418:backend\clinical\reporting\pdf_renderer_v1.py:107: in render_pdf_from_report_json_v1
+./artifacts/test_runs/pytest_verify.txt:442:FAILED backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pytest_verify.txt:445:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_pdf_is_generated
+./artifacts/test_runs/pytest_verify.txt:446:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_pdf_does_not_leak_internal_strings
+./artifacts/test_runs/pytest_verify.txt:447:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_signed_report_contains_signature_placeholder
+./artifacts/test_runs/pytest_verify.txt:448:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_unsigned_report_contains_exact_sentence
+./reports/storage_paths.py:2:    return f"org/{instance.organization.code}/reports/{instance.id}/{filename}"
+./artifacts/test_runs/pip_freeze.txt:64:reportlab==4.4.9
+./reports/services/pdf_renderer.py:1:from reportlab.lib.pagesizes import A4
+./reports/services/pdf_renderer.py:2:from reportlab.lib.colors import black, grey, red
+./reports/services/pdf_renderer.py:3:from reportlab.pdfgen import canvas
+./reports/services/pdf_renderer.py:12:def render_report_pdf(buffer, report_json):
+./reports/services/pdf_generator.py:1:# reports/pdf.py
+./reports/services/pdf_generator.py:6:from reportlab.lib.pagesizes import A4
+./reports/services/pdf_generator.py:7:from reportlab.pdfgen import canvas
+./reports/services/pdf_generator.py:8:from reportlab.lib.colors import black, darkgrey, red
+./reports/services/pdf_generator.py:9:from reportlab.lib.units import mm
+./reports/services/pdf_generator.py:12:def generate_report_pdf(buffer, report_json):
+./backend/clinical/views.py:32:from backend.clinical.reporting.pdf_renderer_v1 import render_pdf_from_report_json_v1
+./backend/clinical/views.py:462:        pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
+./backend/clinical/views.py:472:            meta={"file_name": f"report_{order_id}.pdf"},
+./backend/clinical/views.py:475:        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+./backend/clinical/views.py:476:        response["Content-Disposition"] = f'inline; filename="report_{order_id}.pdf"'
+./reports/pdf.py:1:from reportlab.lib.pagesizes import A4
+./reports/pdf.py:2:from reportlab.pdfgen import canvas
+./reports/pdf.py:3:from reportlab.lib.colors import black, red
+./reports/pdf.py:7:def generate_report_pdf(buffer, report_json):
+./neurova_backend/settings.py:251:MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+./reports/models.py:28:    pdf_file = models.FileField(
+./reports/models.py:71:        if self.pdf_file:
+./reports/models.py:72:            value = str(self.pdf_file.name)
+./reports/models.py:75:                raise ValidationError({"pdf_file": "Invalid file path"})
+./reports/models.py:77:            if not value.lower().endswith(".pdf"):
+./reports/models.py:78:                raise ValidationError({"pdf_file": "pdf_file must be a PDF"})
+./reports/models.py:81:    def safe_pdf_path(self):
+./reports/models.py:83:            if not self.pdf_file:
+./reports/models.py:85:            path = self.pdf_file.path
+./reports/models.py:196:    pdf_sha256 = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+./backend/clinical/urls.py:72:        "orders/<uuid:order_id>/report/pdf/",
+./backend/clinical/urls.py:74:        name="clinical-report-pdf",
+./neurova_backend/urls.py:47:urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+./artifacts/test_runs/pdf_search.txt:1:./requirements.txt:9:reportlab>=4.2
+./artifacts/test_runs/pdf_search.txt:2:./artifacts/test_runs/pytest_coverage.txt:13:backend/clinical/tests/test_pdf_audit.py .                               [ 22%]
+./artifacts/test_runs/pdf_search.txt:3:./artifacts/test_runs/pytest_coverage.txt:24:backend/clinical/reporting/tests/test_report_pdf_v1.py ....              [100%]
+./artifacts/test_runs/pdf_search.txt:4:./artifacts/test_runs/pytest_coverage.txt:119:apps/clinical_ops/services/pdf_report.py                                                  114    114     0%   1-157
+./artifacts/test_runs/pdf_search.txt:5:./artifacts/test_runs/pytest_coverage.txt:120:apps/clinical_ops/services/pdf_report_v2.py                                                98     89     9%   10-11, 17-234
+./artifacts/test_runs/pdf_search.txt:6:./artifacts/test_runs/pytest_coverage.txt:169:backend/clinical/reporting/pdf.py                                                          42     42     0%   1-65
+./artifacts/test_runs/pdf_search.txt:7:./artifacts/test_runs/pytest_coverage.txt:170:backend/clinical/reporting/pdf_renderer_v1.py                                             120      6    95%   97-98, 172-175
+./artifacts/test_runs/pdf_search.txt:8:./artifacts/test_runs/pytest_coverage.txt:179:backend/clinical/reporting/tests/test_report_pdf_v1.py                                     21      0   100%
+./artifacts/test_runs/pdf_search.txt:9:./artifacts/test_runs/pytest_coverage.txt:192:backend/clinical/tests/test_pdf_audit.py                                                   47      1    98%   88
+./artifacts/test_runs/pdf_search.txt:10:./artifacts/test_runs/pytest_coverage.txt:260:reports/__init__.py                                                                         0      0   100%
+./artifacts/test_runs/pdf_search.txt:11:./artifacts/test_runs/pytest_coverage.txt:261:reports/admin.py                                                                            9      0   100%
+./artifacts/test_runs/pdf_search.txt:12:./artifacts/test_runs/pytest_coverage.txt:262:reports/apps.py                                                                             4      0   100%
+./artifacts/test_runs/pdf_search.txt:13:./artifacts/test_runs/pytest_coverage.txt:263:reports/migrations/0001_initial.py                                                          7      0   100%
+./artifacts/test_runs/pdf_search.txt:14:./artifacts/test_runs/pytest_coverage.txt:264:reports/migrations/0002_report_reports_rep_organiz_ae5072_idx_and_more.py                   4      0   100%
+./artifacts/test_runs/pdf_search.txt:15:./artifacts/test_runs/pytest_coverage.txt:265:reports/migrations/0003_alter_report_pdf_file.py                                            5      0   100%
+./artifacts/test_runs/pdf_search.txt:16:./artifacts/test_runs/pytest_coverage.txt:266:reports/migrations/0004_alter_report_pdf_file.py                                            5      0   100%
+./artifacts/test_runs/pdf_search.txt:17:./artifacts/test_runs/pytest_coverage.txt:267:reports/migrations/0005_alter_report_pdf_file.py                                            5      0   100%
+./artifacts/test_runs/pdf_search.txt:18:./artifacts/test_runs/pytest_coverage.txt:268:reports/migrations/0006_clinicalreport.py                                                   5      0   100%
+./artifacts/test_runs/pdf_search.txt:19:./artifacts/test_runs/pytest_coverage.txt:269:reports/migrations/0007_clinicalreport_status.py                                            4      0   100%
+./artifacts/test_runs/pdf_search.txt:20:./artifacts/test_runs/pytest_coverage.txt:270:reports/migrations/0008_clinicalreport_review_status_and_more.py                            4      0   100%
+./artifacts/test_runs/pdf_search.txt:21:./artifacts/test_runs/pytest_coverage.txt:271:reports/migrations/0009_clinicalreport_correction_reason_and_more.py                        5      0   100%
+./artifacts/test_runs/pdf_search.txt:22:./artifacts/test_runs/pytest_coverage.txt:272:reports/migrations/0010_clinicalreport_one_report_per_order_and_more.py                     4      0   100%
+./artifacts/test_runs/pdf_search.txt:23:./artifacts/test_runs/pytest_coverage.txt:273:reports/migrations/0011_clinicalreport_pdf_sha256.py                                        4      0   100%
+./artifacts/test_runs/pdf_search.txt:24:./artifacts/test_runs/pytest_coverage.txt:274:reports/migrations/__init__.py                                                              0      0   100%
+./artifacts/test_runs/pdf_search.txt:25:./artifacts/test_runs/pytest_coverage.txt:275:reports/models.py                                                                          87     21    76%   54, 59-61, 64-66, 71-78, 82-88, 109
+./artifacts/test_runs/pdf_search.txt:26:./artifacts/test_runs/pytest_coverage.txt:276:reports/pdf.py                                                                             62     11    82%   57, 64-74
+./artifacts/test_runs/pdf_search.txt:27:./artifacts/test_runs/pytest_coverage.txt:277:reports/storage_paths.py                                                                    2      1    50%   2
+./artifacts/test_runs/pdf_search.txt:28:./artifacts/test_runs/pytest_coverage.txt:278:reports/tests.py                                                                            1      1     0%   1
+./artifacts/test_runs/pdf_search.txt:29:./artifacts/test_runs/pytest_coverage.txt:279:reports/urls.py                                                                             3      0   100%
+./artifacts/test_runs/pdf_search.txt:30:./artifacts/test_runs/pytest_coverage.txt:280:reports/views.py                                                                           99     44    56%   37-105, 119-150, 166-167, 203-219, 258, 283-306
+./artifacts/test_runs/pdf_search.txt:31:./artifacts/test_runs/pytest_coverage.txt:329:tests/unit/test_pdf_generation.py                                                           0      0   100%
+./artifacts/test_runs/pdf_search.txt:32:./artifacts/test_runs/pytest_flow_4.txt:128:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:33:./artifacts/test_runs/pytest_flow_4.txt:146:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:34:./artifacts/test_runs/pytest_flow_4.txt:169:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:35:./artifacts/test_runs/pytest_flow_4.txt:174:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-33\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:36:./artifacts/test_runs/pytest_flow_4.txt:177:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:37:./artifacts/test_runs/pytest_flow_4.txt:237:reports\pdf.py:63: KeyError
+./artifacts/test_runs/pdf_search.txt:38:./artifacts/test_runs/pytest_flow_4.txt:298:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:39:./artifacts/test_runs/pytest_flow_4.txt:299:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:40:./artifacts/test_runs/pytest_flow_4.txt:300:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:41:./artifacts/test_runs/pytest_flow_4.txt:306:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./artifacts/test_runs/pdf_search.txt:42:./artifacts/test_runs/postman_newman_run.txt:42:  POST http://127.0.0.1:8000/api/v1/reports/{{report_id}}/sign/ [404 Not Found, 11.16kB, 55ms]
+./artifacts/test_runs/pdf_search.txt:43:./artifacts/test_runs/postman_newman_run.txt:45:  POST http://127.0.0.1:8000/api/v1/reports/{{report_id}}/release/ [404 Not Found, 11.17kB, 58ms]
+./artifacts/test_runs/pdf_search.txt:44:./artifacts/test_runs/postman_newman_run.txt:48:  GET http://127.0.0.1:8000/api/v1/reports/{{report_id}}/pdf/ [404 Not Found, 11.15kB, 53ms]
+./artifacts/test_runs/pdf_search.txt:45:./artifacts/test_runs/pytest_flow_3.txt:128:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:46:./artifacts/test_runs/pytest_flow_3.txt:146:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:47:./artifacts/test_runs/pytest_flow_3.txt:169:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:48:./artifacts/test_runs/pytest_flow_3.txt:174:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-31\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:49:./artifacts/test_runs/pytest_flow_3.txt:177:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:50:./artifacts/test_runs/pytest_flow_3.txt:232:reports\pdf.py:58: KeyError
+./artifacts/test_runs/pdf_search.txt:51:./artifacts/test_runs/pytest_flow_3.txt:293:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:52:./artifacts/test_runs/pytest_flow_3.txt:294:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:53:./artifacts/test_runs/pytest_flow_3.txt:295:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:54:./artifacts/test_runs/pytest_flow_3.txt:301:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./artifacts/test_runs/pdf_search.txt:55:./artifacts/test_runs/pytest_integrity.txt:149:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:56:./artifacts/test_runs/pytest_integrity.txt:150:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:57:./artifacts/test_runs/pytest_integrity.txt:151:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:58:./artifacts/test_runs/pytest_integrity.txt:157:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./artifacts/test_runs/pdf_search.txt:59:./reports/views.py:17:from backend.clinical.reporting.pdf_renderer_v1 import (
+./artifacts/test_runs/pdf_search.txt:60:./reports/views.py:18:    render_pdf_from_report_json_v1
+./artifacts/test_runs/pdf_search.txt:61:./reports/views.py:217:        pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
+./artifacts/test_runs/pdf_search.txt:62:./reports/views.py:219:        return HttpResponse(pdf_bytes, content_type="application/pdf")
+./artifacts/test_runs/pdf_search.txt:63:./postman/NeurovaX_V1.postman_collection.json:232:            "url": "{{base_url}}/api/v1/reports/{{report_id}}/sign/",
+./artifacts/test_runs/pdf_search.txt:64:./postman/NeurovaX_V1.postman_collection.json:248:            "url": "{{base_url}}/api/v1/reports/{{report_id}}/release/"
+./artifacts/test_runs/pdf_search.txt:65:./postman/NeurovaX_V1.postman_collection.json:260:            "url": "{{base_url}}/api/v1/reports/{{report_id}}/pdf/"
+./artifacts/test_runs/pdf_search.txt:66:./artifacts/test_runs/pytest_flow_2.txt:128:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:67:./artifacts/test_runs/pytest_flow_2.txt:146:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:68:./artifacts/test_runs/pytest_flow_2.txt:168:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:69:./artifacts/test_runs/pytest_flow_2.txt:173:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-29\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:70:./artifacts/test_runs/pytest_flow_2.txt:176:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:71:./artifacts/test_runs/pytest_flow_2.txt:229:reports\pdf.py:56: KeyError
+./artifacts/test_runs/pdf_search.txt:72:./artifacts/test_runs/pytest_flow_2.txt:290:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:73:./artifacts/test_runs/pytest_flow_2.txt:291:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:74:./artifacts/test_runs/pytest_flow_2.txt:292:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:75:./artifacts/test_runs/pytest_flow_2.txt:298:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./artifacts/test_runs/pdf_search.txt:76:./artifacts/test_runs/pytest_flow.txt:128:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:77:./artifacts/test_runs/pytest_flow.txt:146:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:78:./artifacts/test_runs/pytest_flow.txt:168:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:79:./artifacts/test_runs/pytest_flow.txt:173:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-26\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:80:./artifacts/test_runs/pytest_flow.txt:176:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:81:./artifacts/test_runs/pytest_flow.txt:218:reports\pdf.py:45: KeyError
+./artifacts/test_runs/pdf_search.txt:82:./artifacts/test_runs/pytest_flow.txt:279:  Applying reports.0003_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:83:./artifacts/test_runs/pytest_flow.txt:280:  Applying reports.0004_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:84:./artifacts/test_runs/pytest_flow.txt:281:  Applying reports.0005_alter_report_pdf_file... OK
+./artifacts/test_runs/pdf_search.txt:85:./artifacts/test_runs/pytest_flow.txt:287:  Applying reports.0011_clinicalreport_pdf_sha256... OK
+./artifacts/test_runs/pdf_search.txt:86:./reports/urls.py:1:# reports/urls.py
+./artifacts/test_runs/pdf_search.txt:87:./reports/urls.py:10:    path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
+./artifacts/test_runs/pdf_search.txt:88:./reports/urls.py:11:    path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+./artifacts/test_runs/pdf_search.txt:89:./reports/urls.py:12:    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
+./artifacts/test_runs/pdf_search.txt:90:./reports/urls.py:13:    path("reports/<int:report_id>/mark-reviewed/", MarkReportReviewedView.as_view()),
+./artifacts/test_runs/pdf_search.txt:91:./reports/urls.py:14:    path("reports/<int:report_id>/create-correction/", CreateReportCorrectionView.as_view()),
+./artifacts/test_runs/pdf_search.txt:92:./tools/postman/NeurovaX_V1_Freeze.postman_collection.json:243:                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_cmha}}/report/pdf/"
+./artifacts/test_runs/pdf_search.txt:93:./tools/postman/NeurovaX_V1_Freeze.postman_collection.json:352:                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_anx}}/report/pdf/"
+./artifacts/test_runs/pdf_search.txt:94:./tools/postman/NeurovaX_V1_Freeze.postman_collection.json:364:                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_anx}}/report/pdf/"
+./artifacts/test_runs/pdf_search.txt:95:./tools/postman/NeurovaX_V1_Freeze.postman_collection.json:382:                        "url": "{{base_url}}/api/v1/clinical/orders/{{order_id_cmha}}/report/pdf/"
+./artifacts/test_runs/pdf_search.txt:96:./artifacts/test_runs/pytest_verify_final.txt:9:backend\clinical\tests\test_pdf_audit.py .                               [ 14%]
+./artifacts/test_runs/pdf_search.txt:97:./artifacts/test_runs/pytest_verify_final.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py ....              [100%]
+./artifacts/test_runs/pdf_search.txt:98:./artifacts/test_runs/pytest_verify_final.txt:130:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:99:./artifacts/test_runs/pytest_verify_final.txt:148:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:100:./artifacts/test_runs/pytest_verify_final.txt:169:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:101:./artifacts/test_runs/pytest_verify_final.txt:174:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-24\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:102:./artifacts/test_runs/pytest_verify_final.txt:177:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:103:./artifacts/test_runs/pytest_verify_final.txt:211:reports\pdf.py:37: KeyError
+./artifacts/test_runs/pdf_search.txt:104:./artifacts/test_runs/pytest_verify_2.txt:9:backend\clinical\tests\test_pdf_audit.py F                               [ 14%]
+./artifacts/test_runs/pdf_search.txt:105:./artifacts/test_runs/pytest_verify_2.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py ..FF              [100%]
+./artifacts/test_runs/pdf_search.txt:106:./artifacts/test_runs/pytest_verify_2.txt:15:___________________ test_pdf_export_creates_at_audit_event ____________________
+./artifacts/test_runs/pdf_search.txt:107:./artifacts/test_runs/pytest_verify_2.txt:18:    def test_pdf_export_creates_at_audit_event():
+./artifacts/test_runs/pdf_search.txt:108:./artifacts/test_runs/pytest_verify_2.txt:110:        pdf_resp = c.get(f"/api/v1/clinical/orders/{order_id}/report/pdf/", **{"HTTP_X_ORG_ID": str(org.id)})
+./artifacts/test_runs/pdf_search.txt:109:./artifacts/test_runs/pytest_verify_2.txt:111:>       assert pdf_resp.status_code == 200
+./artifacts/test_runs/pdf_search.txt:110:./artifacts/test_runs/pytest_verify_2.txt:115:backend\clinical\tests\test_pdf_audit.py:101: AssertionError
+./artifacts/test_runs/pdf_search.txt:111:./artifacts/test_runs/pytest_verify_2.txt:117:{"ts": "2026-01-26T03:58:51.709746Z", "level": "WARNING", "logger": "django.request", "msg": "Bad Request: /api/v1/clinical/orders/347a0645-1a95-48a3-81c7-abcc5868d217/report/pdf/", "status_code": 400}
+./artifacts/test_runs/pdf_search.txt:112:./artifacts/test_runs/pytest_verify_2.txt:119:WARNING  django.request:log.py:253 Bad Request: /api/v1/clinical/orders/347a0645-1a95-48a3-81c7-abcc5868d217/report/pdf/
+./artifacts/test_runs/pdf_search.txt:113:./artifacts/test_runs/pytest_verify_2.txt:282:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:114:./artifacts/test_runs/pytest_verify_2.txt:300:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:115:./artifacts/test_runs/pytest_verify_2.txt:318:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:116:./artifacts/test_runs/pytest_verify_2.txt:323:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-20\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:117:./artifacts/test_runs/pytest_verify_2.txt:326:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:118:./artifacts/test_runs/pytest_verify_2.txt:348:reports\pdf.py:25: KeyError
+./artifacts/test_runs/pdf_search.txt:119:./artifacts/test_runs/pytest_verify_2.txt:352:        pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pdf_search.txt:120:./artifacts/test_runs/pytest_verify_2.txt:355:        txt = pdf_bytes.decode("latin-1", errors="ignore")
+./artifacts/test_runs/pdf_search.txt:121:./artifacts/test_runs/pytest_verify_2.txt:360:backend\clinical\reporting\tests\test_report_pdf_v1.py:128: AssertionError
+./artifacts/test_runs/pdf_search.txt:122:./artifacts/test_runs/pytest_verify_2.txt:364:        pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pdf_search.txt:123:./artifacts/test_runs/pytest_verify_2.txt:367:        txt = pdf_bytes.decode("latin-1", errors="ignore")
+./artifacts/test_runs/pdf_search.txt:124:./artifacts/test_runs/pytest_verify_2.txt:375:backend\clinical\reporting\tests\test_report_pdf_v1.py:137: AssertionError
+./artifacts/test_runs/pdf_search.txt:125:./artifacts/test_runs/pytest_verify_2.txt:381:backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pdf_search.txt:126:./artifacts/test_runs/pytest_verify_2.txt:387:FAILED backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pdf_search.txt:127:./artifacts/test_runs/pytest_verify_2.txt:390:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_signed_report_contains_signature_placeholder
+./artifacts/test_runs/pdf_search.txt:128:./artifacts/test_runs/pytest_verify_2.txt:391:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_unsigned_report_contains_exact_sentence
+./artifacts/test_runs/pdf_search.txt:129:./artifacts/test_runs/pytest_verify_3.txt:9:backend\clinical\tests\test_pdf_audit.py F                               [ 14%]
+./artifacts/test_runs/pdf_search.txt:130:./artifacts/test_runs/pytest_verify_3.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py ..F.              [100%]
+./artifacts/test_runs/pdf_search.txt:131:./artifacts/test_runs/pytest_verify_3.txt:15:___________________ test_pdf_export_creates_at_audit_event ____________________
+./artifacts/test_runs/pdf_search.txt:132:./artifacts/test_runs/pytest_verify_3.txt:18:    def test_pdf_export_creates_at_audit_event():
+./artifacts/test_runs/pdf_search.txt:133:./artifacts/test_runs/pytest_verify_3.txt:110:        pdf_resp = c.get(f"/api/v1/clinical/orders/{order_id}/report/pdf/", **{"HTTP_X_ORG_ID": str(org.id)})
+./artifacts/test_runs/pdf_search.txt:134:./artifacts/test_runs/pytest_verify_3.txt:111:        assert pdf_resp.status_code == 200
+./artifacts/test_runs/pdf_search.txt:135:./artifacts/test_runs/pytest_verify_3.txt:112:        assert pdf_resp["Content-Type"] == "application/pdf"
+./artifacts/test_runs/pdf_search.txt:136:./artifacts/test_runs/pytest_verify_3.txt:121:backend\clinical\tests\test_pdf_audit.py:106: AssertionError
+./artifacts/test_runs/pdf_search.txt:137:./artifacts/test_runs/pytest_verify_3.txt:285:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:138:./artifacts/test_runs/pytest_verify_3.txt:303:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:139:./artifacts/test_runs/pytest_verify_3.txt:322:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:140:./artifacts/test_runs/pytest_verify_3.txt:327:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-21\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:141:./artifacts/test_runs/pytest_verify_3.txt:330:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:142:./artifacts/test_runs/pytest_verify_3.txt:354:reports\pdf.py:27: KeyError
+./artifacts/test_runs/pdf_search.txt:143:./artifacts/test_runs/pytest_verify_3.txt:358:        pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pdf_search.txt:144:./artifacts/test_runs/pytest_verify_3.txt:361:        txt = pdf_bytes.decode("latin-1", errors="ignore")
+./artifacts/test_runs/pdf_search.txt:145:./artifacts/test_runs/pytest_verify_3.txt:366:backend\clinical\reporting\tests\test_report_pdf_v1.py:128: AssertionError
+./artifacts/test_runs/pdf_search.txt:146:./artifacts/test_runs/pytest_verify_3.txt:374:FAILED backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pdf_search.txt:147:./artifacts/test_runs/pytest_verify_3.txt:377:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_signed_report_contains_signature_placeholder
+./artifacts/test_runs/pdf_search.txt:148:./artifacts/test_runs/pytest_verify_4.txt:9:backend\clinical\tests\test_pdf_audit.py F                               [ 14%]
+./artifacts/test_runs/pdf_search.txt:149:./artifacts/test_runs/pytest_verify_4.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py ....              [100%]
+./artifacts/test_runs/pdf_search.txt:150:./artifacts/test_runs/pytest_verify_4.txt:15:___________________ test_pdf_export_creates_at_audit_event ____________________
+./artifacts/test_runs/pdf_search.txt:151:./artifacts/test_runs/pytest_verify_4.txt:18:    def test_pdf_export_creates_at_audit_event():
+./artifacts/test_runs/pdf_search.txt:152:./artifacts/test_runs/pytest_verify_4.txt:110:        pdf_resp = c.get(f"/api/v1/clinical/orders/{order_id}/report/pdf/", **{"HTTP_X_ORG_ID": str(org.id)})
+./artifacts/test_runs/pdf_search.txt:153:./artifacts/test_runs/pytest_verify_4.txt:111:>       assert pdf_resp.status_code == 200
+./artifacts/test_runs/pdf_search.txt:154:./artifacts/test_runs/pytest_verify_4.txt:115:backend\clinical\tests\test_pdf_audit.py:101: AssertionError
+./artifacts/test_runs/pdf_search.txt:155:./artifacts/test_runs/pytest_verify_4.txt:117:{"ts": "2026-01-26T04:02:46.315850Z", "level": "ERROR", "logger": "neurova.api", "msg": "api_exception", "request_id": "7c9ad671-9525-44ea-8077-fb3182182117", "path": "/api/v1/clinical/orders/4e6c2033-7e2e-4636-9531-997b4cba5c06/report/pdf/", "method": "GET", "exc_info": "Traceback (most recent call last):\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\venv_win\\Lib\\site-packages\\rest_framework\\views.py\", line 512, in dispatch\n    response = handler(request, *args, **kwargs)\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\backend\\clinical\\views.py\", line 459, in get\n    ClinicalAuditEvent.objects.create(\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        organization_id=order.organization_id,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<4 lines>...\n        details={\"file_name\": f\"report_{order_id}.pdf\"},\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\venv_win\\Lib\\site-packages\\django\\db\\models\\manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\venv_win\\Lib\\site-packages\\django\\db\\models\\query.py\", line 663, in create\n    obj = self.model(**kwargs)\n  File \"C:\\Users\\Hareesh\\Desktop\\Main-Projects\\neurova_backend_project\\neurova_backend\\venv_win\\Lib\\site-packages\\django\\db\\models\\base.py\", line 569, in __init__\n    raise TypeError(\n    ...<2 lines>...\n    )\nTypeError: ClinicalAuditEvent() got unexpected keyword arguments: 'details'"}
+./artifacts/test_runs/pdf_search.txt:156:./artifacts/test_runs/pytest_verify_4.txt:118:{"ts": "2026-01-26T04:02:46.343324Z", "level": "ERROR", "logger": "django.request", "msg": "Internal Server Error: /api/v1/clinical/orders/4e6c2033-7e2e-4636-9531-997b4cba5c06/report/pdf/", "status_code": 500}
+./artifacts/test_runs/pdf_search.txt:157:./artifacts/test_runs/pytest_verify_4.txt:130:        details={"file_name": f"report_{order_id}.pdf"},
+./artifacts/test_runs/pdf_search.txt:158:./artifacts/test_runs/pytest_verify_4.txt:144:ERROR    django.request:log.py:253 Internal Server Error: /api/v1/clinical/orders/4e6c2033-7e2e-4636-9531-997b4cba5c06/report/pdf/
+./artifacts/test_runs/pdf_search.txt:159:./artifacts/test_runs/pytest_verify_4.txt:339:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:160:./artifacts/test_runs/pytest_verify_4.txt:357:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:161:./artifacts/test_runs/pytest_verify_4.txt:377:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:162:./artifacts/test_runs/pytest_verify_4.txt:382:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-22\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:163:./artifacts/test_runs/pytest_verify_4.txt:385:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:164:./artifacts/test_runs/pytest_verify_4.txt:418:reports\pdf.py:36: KeyError
+./artifacts/test_runs/pdf_search.txt:165:./artifacts/test_runs/pytest_verify_4.txt:424:backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pdf_search.txt:166:./artifacts/test_runs/pytest_verify_4.txt:425:backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pdf_search.txt:167:./artifacts/test_runs/pytest_verify_4.txt:431:FAILED backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pdf_search.txt:168:./artifacts/test_runs/pip_install.txt:10:Requirement already satisfied: reportlab>=4.2 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 9)) (4.4.7)
+./artifacts/test_runs/pdf_search.txt:169:./artifacts/test_runs/pip_install.txt:27:Requirement already satisfied: pillow>=9.0.0 in ./.venv/lib/python3.12/site-packages (from reportlab>=4.2->-r requirements.txt (line 9)) (12.0.0)
+./artifacts/test_runs/pdf_search.txt:170:./artifacts/test_runs/pip_install.txt:28:Requirement already satisfied: charset-normalizer in ./.venv/lib/python3.12/site-packages (from reportlab>=4.2->-r requirements.txt (line 9)) (3.4.4)
+./artifacts/test_runs/pdf_search.txt:171:./artifacts/test_runs/pytest_verify.txt:9:backend\clinical\tests\test_pdf_audit.py F                               [ 14%]
+./artifacts/test_runs/pdf_search.txt:172:./artifacts/test_runs/pytest_verify.txt:12:backend\clinical\reporting\tests\test_report_pdf_v1.py FFFF              [100%]
+./artifacts/test_runs/pdf_search.txt:173:./artifacts/test_runs/pytest_verify.txt:15:___________________ test_pdf_export_creates_at_audit_event ____________________
+./artifacts/test_runs/pdf_search.txt:174:./artifacts/test_runs/pytest_verify.txt:18:    def test_pdf_export_creates_at_audit_event():
+./artifacts/test_runs/pdf_search.txt:175:./artifacts/test_runs/pytest_verify.txt:108:backend\clinical\tests\test_pdf_audit.py:91: AssertionError
+./artifacts/test_runs/pdf_search.txt:176:./artifacts/test_runs/pytest_verify.txt:271:        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./artifacts/test_runs/pdf_search.txt:177:./artifacts/test_runs/pytest_verify.txt:289:        pdf_path = tmp_path / "report.pdf"
+./artifacts/test_runs/pdf_search.txt:178:./artifacts/test_runs/pytest_verify.txt:307:>       generate_report_pdf(str(pdf_path), context)
+./artifacts/test_runs/pdf_search.txt:179:./artifacts/test_runs/pytest_verify.txt:312:buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-19\\test_full_pathology_flow0\\report.pdf'
+./artifacts/test_runs/pdf_search.txt:180:./artifacts/test_runs/pytest_verify.txt:315:    def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:181:./artifacts/test_runs/pytest_verify.txt:330:reports\pdf.py:18: KeyError
+./artifacts/test_runs/pdf_search.txt:182:./artifacts/test_runs/pytest_verify.txt:331:____________________________ test_pdf_is_generated ____________________________
+./artifacts/test_runs/pdf_search.txt:183:./artifacts/test_runs/pytest_verify.txt:333:    def test_pdf_is_generated():
+./artifacts/test_runs/pdf_search.txt:184:./artifacts/test_runs/pytest_verify.txt:334:>       pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pdf_search.txt:185:./artifacts/test_runs/pytest_verify.txt:338:backend\clinical\reporting\tests\test_report_pdf_v1.py:98: 
+./artifacts/test_runs/pdf_search.txt:186:./artifacts/test_runs/pytest_verify.txt:340:backend\clinical\reporting\pdf_renderer_v1.py:107: in render_pdf_from_report_json_v1
+./artifacts/test_runs/pdf_search.txt:187:./artifacts/test_runs/pytest_verify.txt:357:___________________ test_pdf_does_not_leak_internal_strings ___________________
+./artifacts/test_runs/pdf_search.txt:188:./artifacts/test_runs/pytest_verify.txt:359:    def test_pdf_does_not_leak_internal_strings():
+./artifacts/test_runs/pdf_search.txt:189:./artifacts/test_runs/pytest_verify.txt:360:>       pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pdf_search.txt:190:./artifacts/test_runs/pytest_verify.txt:364:backend\clinical\reporting\tests\test_report_pdf_v1.py:105: 
+./artifacts/test_runs/pdf_search.txt:191:./artifacts/test_runs/pytest_verify.txt:366:backend\clinical\reporting\pdf_renderer_v1.py:107: in render_pdf_from_report_json_v1
+./artifacts/test_runs/pdf_search.txt:192:./artifacts/test_runs/pytest_verify.txt:386:>       pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pdf_search.txt:193:./artifacts/test_runs/pytest_verify.txt:390:backend\clinical\reporting\tests\test_report_pdf_v1.py:120: 
+./artifacts/test_runs/pdf_search.txt:194:./artifacts/test_runs/pytest_verify.txt:392:backend\clinical\reporting\pdf_renderer_v1.py:107: in render_pdf_from_report_json_v1
+./artifacts/test_runs/pdf_search.txt:195:./artifacts/test_runs/pytest_verify.txt:412:>       pdf_bytes = render_pdf_from_report_json_v1(
+./artifacts/test_runs/pdf_search.txt:196:./artifacts/test_runs/pytest_verify.txt:416:backend\clinical\reporting\tests\test_report_pdf_v1.py:129: 
+./artifacts/test_runs/pdf_search.txt:197:./artifacts/test_runs/pytest_verify.txt:418:backend\clinical\reporting\pdf_renderer_v1.py:107: in render_pdf_from_report_json_v1
+./artifacts/test_runs/pdf_search.txt:198:./artifacts/test_runs/pytest_verify.txt:442:FAILED backend/clinical/tests/test_pdf_audit.py::test_pdf_export_creates_at_audit_event
+./artifacts/test_runs/pdf_search.txt:199:./artifacts/test_runs/pytest_verify.txt:445:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_pdf_is_generated
+./artifacts/test_runs/pdf_search.txt:200:./artifacts/test_runs/pytest_verify.txt:446:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_pdf_does_not_leak_internal_strings
+./artifacts/test_runs/pdf_search.txt:201:./artifacts/test_runs/pytest_verify.txt:447:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_signed_report_contains_signature_placeholder
+./artifacts/test_runs/pdf_search.txt:202:./artifacts/test_runs/pytest_verify.txt:448:FAILED backend/clinical/reporting/tests/test_report_pdf_v1.py::test_unsigned_report_contains_exact_sentence
+./artifacts/test_runs/pdf_search.txt:203:./reports/storage_paths.py:2:    return f"org/{instance.organization.code}/reports/{instance.id}/{filename}"
+./artifacts/test_runs/pdf_search.txt:204:./artifacts/test_runs/pip_freeze.txt:64:reportlab==4.4.9
+./artifacts/test_runs/pdf_search.txt:205:./reports/services/pdf_renderer.py:1:from reportlab.lib.pagesizes import A4
+./artifacts/test_runs/pdf_search.txt:206:./reports/services/pdf_renderer.py:2:from reportlab.lib.colors import black, grey, red
+./artifacts/test_runs/pdf_search.txt:207:./reports/services/pdf_renderer.py:3:from reportlab.pdfgen import canvas
+./artifacts/test_runs/pdf_search.txt:208:./reports/services/pdf_renderer.py:12:def render_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:209:./reports/services/pdf_generator.py:1:# reports/pdf.py
+./artifacts/test_runs/pdf_search.txt:210:./reports/services/pdf_generator.py:6:from reportlab.lib.pagesizes import A4
+./artifacts/test_runs/pdf_search.txt:211:./reports/services/pdf_generator.py:7:from reportlab.pdfgen import canvas
+./artifacts/test_runs/pdf_search.txt:212:./reports/services/pdf_generator.py:8:from reportlab.lib.colors import black, darkgrey, red
+./artifacts/test_runs/pdf_search.txt:213:./reports/services/pdf_generator.py:9:from reportlab.lib.units import mm
+./artifacts/test_runs/pdf_search.txt:214:./reports/services/pdf_generator.py:12:def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:215:./backend/clinical/views.py:32:from backend.clinical.reporting.pdf_renderer_v1 import render_pdf_from_report_json_v1
+./artifacts/test_runs/pdf_search.txt:216:./backend/clinical/views.py:462:        pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
+./artifacts/test_runs/pdf_search.txt:217:./backend/clinical/views.py:472:            meta={"file_name": f"report_{order_id}.pdf"},
+./artifacts/test_runs/pdf_search.txt:218:./backend/clinical/views.py:475:        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+./artifacts/test_runs/pdf_search.txt:219:./backend/clinical/views.py:476:        response["Content-Disposition"] = f'inline; filename="report_{order_id}.pdf"'
+./artifacts/test_runs/pdf_search.txt:220:./reports/pdf.py:1:from reportlab.lib.pagesizes import A4
+./artifacts/test_runs/pdf_search.txt:221:./reports/pdf.py:2:from reportlab.pdfgen import canvas
+./artifacts/test_runs/pdf_search.txt:222:./reports/pdf.py:3:from reportlab.lib.colors import black, red
+./artifacts/test_runs/pdf_search.txt:223:./reports/pdf.py:7:def generate_report_pdf(buffer, report_json):
+./artifacts/test_runs/pdf_search.txt:224:./neurova_backend/settings.py:251:MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+./artifacts/test_runs/pdf_search.txt:225:./reports/models.py:28:    pdf_file = models.FileField(
+./artifacts/test_runs/pdf_search.txt:226:./reports/models.py:71:        if self.pdf_file:
+./artifacts/test_runs/pdf_search.txt:227:./reports/models.py:72:            value = str(self.pdf_file.name)
+./artifacts/test_runs/pdf_search.txt:228:./reports/models.py:75:                raise ValidationError({"pdf_file": "Invalid file path"})
+./artifacts/test_runs/pdf_search.txt:229:./reports/models.py:77:            if not value.lower().endswith(".pdf"):
+./artifacts/test_runs/pdf_search.txt:230:./reports/models.py:78:                raise ValidationError({"pdf_file": "pdf_file must be a PDF"})
+./artifacts/test_runs/pdf_search.txt:231:./reports/models.py:81:    def safe_pdf_path(self):
+./artifacts/test_runs/pdf_search.txt:232:./reports/models.py:83:            if not self.pdf_file:
+./artifacts/test_runs/pdf_search.txt:233:./reports/models.py:85:            path = self.pdf_file.path
+./artifacts/test_runs/pdf_search.txt:234:./reports/models.py:196:    pdf_sha256 = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+./artifacts/test_runs/pdf_search.txt:235:./backend/clinical/urls.py:72:        "orders/<uuid:order_id>/report/pdf/",
+./artifacts/test_runs/pdf_search.txt:236:./backend/clinical/urls.py:74:        name="clinical-report-pdf",
+./artifacts/test_runs/pdf_search.txt:237:./neurova_backend/urls.py:47:urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+./reports/migrations/0005_alter_report_pdf_file.py:10:        ('reports', '0004_alter_report_pdf_file'),
+./reports/migrations/0005_alter_report_pdf_file.py:16:            name='pdf_file',
+./reports/migrations/0006_clinicalreport.py:11:        ('reports', '0005_alter_report_pdf_file'),
+./reports/migrations/0011_clinicalreport_pdf_sha256.py:15:            name='pdf_sha256',
+./reports/migrations/0004_alter_report_pdf_file.py:10:        ('reports', '0003_alter_report_pdf_file'),
+./reports/migrations/0004_alter_report_pdf_file.py:16:            name='pdf_file',
+./reports/migrations/0001_initial.py:23:                ('pdf_file', models.FileField(upload_to='reports/')),
+./reports/migrations/0003_alter_report_pdf_file.py:16:            name='pdf_file',
+./tests/security/test_audit_coverage.py:116:    resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./tests/security/test_rbac.py:99:    resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./tests/security/test_rbac.py:182:    resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./backend/clinical/tests/test_pdf_audit.py:8:def test_pdf_export_creates_at_audit_event():
+./backend/clinical/tests/test_pdf_audit.py:100:    pdf_resp = c.get(f"/api/v1/clinical/orders/{order_id}/report/pdf/", **{"HTTP_X_ORG_ID": str(org.id)})
+./backend/clinical/tests/test_pdf_audit.py:101:    assert pdf_resp.status_code == 200
+./backend/clinical/tests/test_pdf_audit.py:102:    assert pdf_resp["Content-Type"] == "application/pdf"
+./tests/e2e/test_full_pathology_flow.py:14:from reports.pdf import generate_report_pdf
+./tests/e2e/test_full_pathology_flow.py:128:    resp = client.post(f"/api/v1/reports/{report.id}/release/")
+./tests/e2e/test_full_pathology_flow.py:146:    pdf_path = tmp_path / "report.pdf"
+./tests/e2e/test_full_pathology_flow.py:170:    generate_report_pdf(str(pdf_path), context)
+./tests/e2e/test_full_pathology_flow.py:175:    assert pdf_path.exists()
+./tests/e2e/test_full_pathology_flow.py:176:    assert pdf_path.stat().st_size > 1000  # meaningful PDF
+./tests/e2e/test_full_pathology_flow.py:178:    content = pdf_path.read_bytes()
+./artifacts/test_runs/generated_pdfs.txt:1:./media/clinical_reports/2026/01/14/NEUROVAX_REPORT_ORDER_1.pdf
+./artifacts/test_runs/generated_pdfs.txt:2:./media/clinical_reports/2026/01/14/NEUROVAX_REPORT_ORDER_1_daE0cty.pdf
+./artifacts/test_runs/generated_pdfs.txt:3:./media/clinical_reports/2026/01/14/NEUROVAX_REPORT_ORDER_1_gRRNRr7.pdf
+./artifacts/test_runs/generated_pdfs.txt:4:./media/clinical_reports/2026/01/14/NEUROVAX_REPORT_ORDER_1_k4dqTzo.pdf
+./artifacts/test_runs/generated_pdfs.txt:5:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_1.pdf
+./artifacts/test_runs/generated_pdfs.txt:6:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_1_a4Psofp.pdf
+./artifacts/test_runs/generated_pdfs.txt:7:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_1_jUm4fzY.pdf
+./artifacts/test_runs/generated_pdfs.txt:8:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_1_L3FSh5u.pdf
+./artifacts/test_runs/generated_pdfs.txt:9:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_1_VIrluta.pdf
+./artifacts/test_runs/generated_pdfs.txt:10:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_3.pdf
+./artifacts/test_runs/generated_pdfs.txt:11:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_3_Dpci5nd.pdf
+./artifacts/test_runs/generated_pdfs.txt:12:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_3_FW9ALVC.pdf
+./artifacts/test_runs/generated_pdfs.txt:13:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_3_mZp1XAi.pdf
+./artifacts/test_runs/generated_pdfs.txt:14:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_3_Q4FLvV1.pdf
+./artifacts/test_runs/generated_pdfs.txt:15:./media/clinical_reports/2026/01/15/NEUROVAX_REPORT_ORDER_3_UtdeXAS.pdf
+./artifacts/test_runs/generated_pdfs.txt:16:./media/clinical_reports/2026/01/23/NEUROVAX_REPORT_ORDER_5.pdf
+./artifacts/test_runs/generated_pdfs.txt:17:./media/clinical_reports/2026/01/23/NEUROVAX_REPORT_ORDER_5_gANh3Xq.pdf
+./artifacts/test_runs/generated_pdfs.txt:18:./media/clinical_reports/2026/01/23/NEUROVAX_REPORT_ORDER_5_USLNgoN.pdf
+./artifacts/test_runs/generated_pdfs.txt:19:./media/clinical_reports/2026/01/23/NEUROVAX_REPORT_ORDER_5_vXiWOHU.pdf
+./artifacts/test_runs/generated_pdfs.txt:20:./media/org/DEV_ORG/reports/2/Report_DEV_ORG_2.pdf
+./tests/integration/test_report_release.py:102:    release_url = f"/api/v1/reports/{report.id}/release/"
+./scripts/api_e2e_test.py:175:    f"{BASE_URL}/api/v1/reports/{report_id}/sign/",
+./scripts/api_e2e_test.py:190:    f"{BASE_URL}/api/v1/reports/{report_id}/release/",
+./scripts/api_e2e_test.py:200:    f"{BASE_URL}/api/v1/reports/{report_id}/pdf/",
+./scripts/api_e2e_test.py:205:    fail("fetch pdf", r)
+./scripts/api_e2e_test.py:208:    print("[FAIL] pdf validation: not a valid PDF")
+./scripts/api_e2e_test.py:211:pdf_path = f"report_{report_id}.pdf"
+./scripts/api_e2e_test.py:212:with open(pdf_path, "wb") as f:
+./scripts/api_e2e_test.py:215:ok("fetch pdf", f"saved as {pdf_path}")
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:3:from backend.clinical.reporting.pdf_renderer_v1 import (
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:4:    render_pdf_from_report_json_v1
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:101:def test_pdf_is_generated():
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:102:    pdf_bytes = render_pdf_from_report_json_v1(
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:105:    assert pdf_bytes[:4] == b"%PDF"
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:108:def test_pdf_does_not_leak_internal_strings():
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:109:    pdf_bytes = render_pdf_from_report_json_v1(
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:112:    txt = pdf_bytes.decode("latin-1", errors="ignore")
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:124:    pdf_bytes = render_pdf_from_report_json_v1(
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:127:    txt = pdf_bytes.decode("latin-1", errors="ignore")
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:133:    pdf_bytes = render_pdf_from_report_json_v1(
+./backend/clinical/reporting/tests/test_report_pdf_v1.py:136:    txt = pdf_bytes.decode("latin-1", errors="ignore")
+./backend/clinical/reporting/tests/test_org_isolation.py:30:    # try fetch pdf with OrgB header (must 404/403)
+./backend/clinical/reporting/tests/test_org_isolation.py:31:    resp2 = c.get(f"/api/v1/clinical/orders/{order_id}/pdf/", **{"HTTP_X_ORG_ID": str(org_b.id)})
+./apps/clinical_ops/api/v1/report_views.py:14:from apps.clinical_ops.services.pdf_report_v2 import generate_report_pdf_bytes_v2
+./apps/clinical_ops/api/v1/report_views.py:67:        pdf_bytes = generate_report_pdf_bytes_v2(ctx)
+./apps/clinical_ops/api/v1/report_views.py:69:        filename = f"NEUROVAX_REPORT_ORDER_{order.id}.pdf"
+./apps/clinical_ops/api/v1/report_views.py:71:        report.pdf_file.save(filename, ContentFile(pdf_bytes), save=True)
+./apps/clinical_ops/api/v1/report_views.py:74:        report.pdf_file.open("rb")
+./apps/clinical_ops/api/v1/report_views.py:75:        pdf_hash = hashlib.sha256(report.pdf_file.read()).hexdigest()
+./apps/clinical_ops/api/v1/report_views.py:76:        report.pdf_file.close()
+./apps/clinical_ops/api/v1/report_views.py:78:        report.pdf_sha256 = pdf_hash
+./apps/clinical_ops/api/v1/report_views.py:79:        report.save(update_fields=["pdf_file", "pdf_sha256"])
+./apps/clinical_ops/api/v1/report_views.py:96:        report.save(update_fields=["generated_at", "generated_by_user_id", "pdf_file"])
+./apps/clinical_ops/api/v1/report_views.py:102:                "pdf_url": report.pdf_file.url if report.pdf_file else None,
+./apps/clinical_ops/api/v1/report_download_views.py:34:        if not report.pdf_file:
+./apps/clinical_ops/api/v1/report_download_views.py:35:            return Response({"error": "pdf_not_generated"}, status=404)
+./apps/clinical_ops/api/v1/report_download_views.py:38:        report.pdf_file.open("rb")
+./apps/clinical_ops/api/v1/report_download_views.py:39:        pdf_bytes = report.pdf_file.read()
+./apps/clinical_ops/api/v1/report_download_views.py:40:        report.pdf_file.close()
+./apps/clinical_ops/api/v1/report_download_views.py:42:        current_hash = hashlib.sha256(pdf_bytes).hexdigest()
+./apps/clinical_ops/api/v1/report_download_views.py:44:        if report.pdf_sha256 and current_hash != report.pdf_sha256:
+./apps/clinical_ops/api/v1/report_download_views.py:46:                {"error": "pdf_integrity_check_failed"},
+./apps/clinical_ops/api/v1/report_download_views.py:51:            report.pdf_file.open("rb"),
+./apps/clinical_ops/api/v1/report_download_views.py:52:            content_type="application/pdf",
+./apps/clinical_ops/api/v1/report_download_views.py:88:        if not report.pdf_file:
+./apps/clinical_ops/api/v1/report_download_views.py:89:            return Response({"error": "pdf_not_generated"}, status=404)
+./apps/clinical_ops/api/v1/report_download_views.py:92:        report.pdf_file.open("rb")
+./apps/clinical_ops/api/v1/report_download_views.py:93:        pdf_bytes = report.pdf_file.read()
+./apps/clinical_ops/api/v1/report_download_views.py:94:        report.pdf_file.close()
+./apps/clinical_ops/api/v1/report_download_views.py:96:        current_hash = hashlib.sha256(pdf_bytes).hexdigest()
+./apps/clinical_ops/api/v1/report_download_views.py:98:        if report.pdf_sha256 and current_hash != report.pdf_sha256:
+./apps/clinical_ops/api/v1/report_download_views.py:100:                {"error": "pdf_integrity_check_failed"},
+./apps/clinical_ops/api/v1/report_download_views.py:105:            report.pdf_file.open("rb"),
+./apps/clinical_ops/api/v1/report_download_views.py:106:            content_type="application/pdf",
+./backend/clinical/reporting/tests/test_omega_e2e.py:12:def test_omega_e2e_cmha_pdf_contains_safety_and_no_leaks():
+./backend/clinical/reporting/tests/test_omega_e2e.py:172:        f"/api/v1/reports/{report.id}/mark-reviewed/",
+./backend/clinical/reporting/tests/test_omega_e2e.py:181:    pdf = c.get(
+./backend/clinical/reporting/tests/test_omega_e2e.py:182:        f"/api/v1/clinical/orders/{order_id}/report/pdf/",
+./backend/clinical/reporting/tests/test_omega_e2e.py:185:    assert pdf.status_code == 200
+./backend/clinical/reporting/tests/test_omega_e2e.py:187:    text = pdf.content.decode("latin-1", errors="ignore")
+./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./apps/clinical_ops/migrations/0005_assessmentreport.py:19:                ('pdf_file', models.FileField(blank=True, null=True, upload_to='clinical_reports/%Y/%m/%d/')),
+./apps/clinical_ops/services/pdf_report_v2.py:2:from reportlab.lib.pagesizes import A4
+./apps/clinical_ops/services/pdf_report_v2.py:3:from reportlab.lib.units import mm
+./apps/clinical_ops/services/pdf_report_v2.py:4:from reportlab.lib import colors
+./apps/clinical_ops/services/pdf_report_v2.py:5:from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+./apps/clinical_ops/services/pdf_report_v2.py:6:from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
+./apps/clinical_ops/services/pdf_report_v2.py:7:from reportlab.lib.enums import TA_LEFT, TA_RIGHT
+./apps/clinical_ops/services/pdf_report_v2.py:13:def generate_report_pdf_bytes_v2(report_context: dict) -> bytes:
+./apps/clinical_ops/services/pdf_report.py:2:from reportlab.lib.pagesizes import A4
+./apps/clinical_ops/services/pdf_report.py:3:from reportlab.pdfgen import canvas
+./apps/clinical_ops/services/pdf_report.py:4:from reportlab.lib.units import mm
+./apps/clinical_ops/services/pdf_report.py:12:def generate_report_pdf_bytes(report_context: dict) -> bytes:
+./apps/clinical_ops/models_report.py:9:    pdf_file = models.FileField(upload_to="clinical_reports/%Y/%m/%d/", null=True, blank=True)
+./backend/clinical/admin.py:6:from backend.clinical.reporting.pdf_renderer_v1 import render_pdf_from_report_json_v1
+./backend/clinical/admin.py:33:def download_pdf(modeladmin, request, queryset):
+./backend/clinical/admin.py:44:    pdf_bytes = render_pdf_from_report_json_v1(rep.report_json)
+./backend/clinical/admin.py:46:    response = HttpResponse(pdf_bytes, content_type="application/pdf")
+./backend/clinical/admin.py:48:        f'attachment; filename="report_{rep.order_id}.pdf"'
+./backend/clinical/admin.py:74:    actions = [download_pdf, apply_signoff_fixed]
+./backend/clinical/reporting/pdf.py:3:from reportlab.lib.pagesizes import A4
+./backend/clinical/reporting/pdf.py:4:from reportlab.pdfgen import canvas
+./backend/clinical/reporting/pdf.py:9:def render_pdf_from_report_json_v1(report_json):
+./backend/clinical/reporting/pdf.py:16:    pdf = canvas.Canvas(buffer, pagesize=A4)
+./backend/clinical/reporting/pdf.py:26:            pdf.setFont("Helvetica-Bold", 12)
+./backend/clinical/reporting/pdf.py:27:            pdf.drawString(40, y, section.title)
+./backend/clinical/reporting/pdf.py:31:        pdf.setFont("Helvetica", 10)
+./backend/clinical/reporting/pdf.py:34:                pdf.showPage()
+./backend/clinical/reporting/pdf.py:36:                pdf.setFont("Helvetica", 10)
+./backend/clinical/reporting/pdf.py:38:            pdf.drawString(40, y, line)
+./backend/clinical/reporting/pdf.py:46:            pdf.setFont("Helvetica-Bold", 10)
+./backend/clinical/reporting/pdf.py:47:            pdf.drawString(40, y, " | ".join(headers))
+./backend/clinical/reporting/pdf.py:50:            pdf.setFont("Helvetica", 10)
+./backend/clinical/reporting/pdf.py:53:                    pdf.showPage()
+./backend/clinical/reporting/pdf.py:55:                    pdf.setFont("Helvetica", 10)
+./backend/clinical/reporting/pdf.py:56:                pdf.drawString(40, y, " | ".join(row))
+./backend/clinical/reporting/pdf.py:61:    pdf.showPage()
+./backend/clinical/reporting/pdf.py:62:    pdf.save()
+./backend/clinical/reporting/pdf_renderer_v1.py:2:from reportlab.lib.pagesizes import A4
+./backend/clinical/reporting/pdf_renderer_v1.py:3:from reportlab.lib.units import mm
+./backend/clinical/reporting/pdf_renderer_v1.py:4:from reportlab.pdfgen import canvas
+./backend/clinical/reporting/pdf_renderer_v1.py:5:from reportlab.lib import colors
+./backend/clinical/reporting/pdf_renderer_v1.py:77:def render_pdf_from_report_json_v1(report_json: dict) -> bytes:

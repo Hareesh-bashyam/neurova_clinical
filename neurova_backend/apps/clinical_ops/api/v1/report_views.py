@@ -13,6 +13,7 @@ from apps.clinical_ops.models_assessment import AssessmentResult
 from apps.clinical_ops.services.report_context import build_report_context
 from apps.clinical_ops.services.pdf_report_v2 import generate_report_pdf_bytes_v2
 from apps.clinical_ops.services.signoff_engine import system_sign_report
+import hashlib
 
 
 class GenerateReportPDF(APIView):
@@ -66,9 +67,20 @@ class GenerateReportPDF(APIView):
         pdf_bytes = generate_report_pdf_bytes_v2(ctx)
 
         filename = f"NEUROVAX_REPORT_ORDER_{order.id}.pdf"
+
         report.pdf_file.save(filename, ContentFile(pdf_bytes), save=True)
 
-        # Auto system sign-off (mandatory)
+        # 🔐 Compute hash from FINAL saved bytes
+        report.pdf_file.open("rb")
+        pdf_hash = hashlib.sha256(report.pdf_file.read()).hexdigest()
+        report.pdf_file.close()
+
+        report.pdf_sha256 = pdf_hash
+        report.save(update_fields=["pdf_file", "pdf_sha256"])
+
+
+        # Automated data validation confirmation
+
         system_sign_report(
             report,
             actor_user=request.user if request.user.is_authenticated else None

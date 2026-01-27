@@ -26,6 +26,8 @@ class Patient(models.Model):
     phone = models.CharField(max_length=32, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
 
+
+
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -139,6 +141,39 @@ class AssessmentOrder(models.Model):
             super().save(update_fields=["data_retention_until"])
 
         return result
+
+    def mark_completed(self):
+        if self.status not in {
+            self.STATUS_CREATED,
+            self.STATUS_IN_PROGRESS,
+        }:
+            raise ValidationError(
+                f"Cannot complete order from state {self.status}"
+            )
+
+        self.status = self.STATUS_COMPLETED
+        self.completed_at = timezone.now()
+        self.save(update_fields=["status", "completed_at"])
+
+    def mark_awaiting_review(self):
+        if self.status != self.STATUS_COMPLETED:
+            raise ValidationError(
+                "Order must be completed before moving to review"
+            )
+
+        self.status = self.STATUS_AWAITING_REVIEW
+        self.save(update_fields=["status"])
+
+    def mark_started(self):
+        if self.status != self.STATUS_CREATED:
+            raise ValidationError(
+                f"Cannot start order from state {self.status}"
+            )
+
+        self.status = self.STATUS_IN_PROGRESS
+        self.started_at = timezone.now()
+        self.save(update_fields=["status", "started_at"])
+
 
 class ResponseQuality(models.Model):
     org = models.ForeignKey(Org, on_delete=models.CASCADE)

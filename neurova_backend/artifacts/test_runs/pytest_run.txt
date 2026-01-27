@@ -1,0 +1,47 @@
+......................                                                   [100%]
+=============================== warnings summary ===============================
+backend/clinical/models.py:54
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/backend/clinical/models.py:54: PytestCollectionWarning: cannot collect test class 'TestRun' because it has a __init__ constructor (from: backend/clinical/reporting/tests/test_report_immutability.py)
+    class TestRun(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/e2e/test_full_pathology_flow.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/integration/test_clinical_flow.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/integration/test_consent.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/integration/test_report_release.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/integration/test_state_violations.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/security/test_audit_coverage.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/security/test_rbac.py)
+    class TestDefinition(models.Model):
+
+backend/clinical/reporting/tests/test_org_isolation.py::test_org_isolation_blocks_cross_org_access
+backend/clinical/tests/test_submission_integrity.py::test_submission_integrity_vulnerability
+tests/integration/test_report_release.py::test_report_release_logic
+tests/integration/test_report_release.py::test_report_release_logic
+tests/integration/test_report_release.py::test_report_release_logic
+tests/security/test_health_ready.py::test_readyz_fails_when_db_down
+tests/security/test_rbac.py::test_staff_cannot_release_report
+tests/security/test_rbac.py::test_staff_cannot_release_report
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/neurova_backend/settings.py:26: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "ts": datetime.utcnow().isoformat() + "Z",
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+22 passed, 16 warnings in 23.03s

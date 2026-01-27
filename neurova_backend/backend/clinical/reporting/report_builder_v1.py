@@ -18,6 +18,12 @@ from backend.clinical.scoring.scoring_engine import (
 import json
 import os
 
+# -------------------------------------------------
+# Canonical Report Versioning (Phase Ω)
+# -------------------------------------------------
+SCHEMA_VERSION = "v1"
+ENGINE_VERSION = "v1.0.0"
+
 
 def _load_severity_maps():
     path = os.path.join(os.path.dirname(__file__), "..", "scoring", "severity_maps.json")
@@ -242,7 +248,7 @@ def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
         "interpretation_notes": {"body_key": "CLINICAL_INTERPRETATION_NOTES"},
         "clinical_signoff": {
             "required": battery["signoff_required"],
-            "status": "PENDING" if battery["signoff_required"] else "NOT_REQUIRED",
+            "status": "VALIDATION_PENDING" if battery["signoff_required"] else "NOT_REQUIRED",
             "reviewed_by": {"name": "", "role": "", "registration_number": ""},
             "reviewed_at": None,
         },
@@ -265,11 +271,18 @@ def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
     # ❄️ 5. CREATE EXACTLY ONE FROZEN REPORT
     report = ClinicalReport.objects.create(
         order=order,
+        schema_version=SCHEMA_VERSION,
+        engine_version=ENGINE_VERSION,
         report_json=report_json,
-        schema_version="v1",
-        engine_version="v1.0.0",
-        is_frozen=True,
+
+        # legacy lifecycle remains GENERATED
+        status="GENERATED",
+
+        # ✅ TASK 4: validation lifecycle (NO system signing)
+        validation_status=ClinicalReport.DATA_VALIDATED,
+        review_status=ClinicalReport.REVIEW_DRAFT,
     )
+
 
 
     audit(

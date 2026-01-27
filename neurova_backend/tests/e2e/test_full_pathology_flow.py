@@ -147,17 +147,24 @@ def test_full_pathology_flow(tmp_path):
 
     context = {
         "patient_name": patient.name,
+        "patient": {"name": patient.name, "age": 30, "gender": "Other"},
         "session_id": session.id,
+        "encounter": {"type": "OPD", "mode": "IN_CLINIC", "date_time": "2026-01-01"},
         "tests": [
             {
-                "code": "PHQ9",
+                "test_code": "PHQ9",
                 "score": 5,
-                "severity": "Mild"
+                "severity": "Mild",
+                "red_flags": [],
             }
         ],
         "critical_self_harm": False,
         "engine_version": "v1",
         "report_schema_version": "1.0",
+        "organization": {"name": org.name, "address": "Some Address"},
+        "report_id": str(report.id),
+        "audit": {"created_at": "2026-01-08T23:15:00Z"},
+        "system_notes": {"red_flag_present": False},
     }
 
     generate_report_pdf(str(pdf_path), context)

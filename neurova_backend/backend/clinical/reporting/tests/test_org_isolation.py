@@ -25,7 +25,7 @@ def test_org_isolation_blocks_cross_org_access():
                   **{"HTTP_X_ORG_ID": str(org_a.id)}
                   )
     assert resp.status_code in (200,201)
-    order_id = resp.json()["order_id"]
+    order_id = resp.json()["data"]["order_id"]
 
     # try fetch pdf with OrgB header (must 404/403)
     resp2 = c.get(f"/api/v1/clinical/orders/{order_id}/pdf/", **{"HTTP_X_ORG_ID": str(org_b.id)})

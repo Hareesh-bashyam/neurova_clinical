@@ -1,65 +1,266 @@
 {
   "info": {
-    "name": "NeurovaX_V1",
+    "name": "NeurovaX V1 — Final Gate (Stable APIs)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Health Check",
-      "request": {
-        "method": "GET",
-        "url": "{{base_url}}/healthz"
-      }
-    },
-    {
-      "name": "Readiness Check",
-      "request": {
-        "method": "GET",
-        "url": "{{base_url}}/readyz"
-      }
-    },
-    {
-      "name": "Login (Clinician)",
-      "event": [
+      "name": "00 — Auth",
+      "item": [
         {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "var json = pm.response.json();",
-              "pm.environment.set('auth_token', json.access);"
-            ]
+          "name": "Login (Clinician)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.response.code).to.equal(200);",
+                  "const j = pm.response.json();",
+                  "pm.environment.set('auth_token', j.data.access_token);",
+                  "pm.test('Login success', () => pm.expect(j.success).to.be.true);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/v1/auth/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"username\": \"hareesh\", \"password\": \"Hareesh\" }"
+            }
           }
         }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"username\": \"doctor@e2e.com\",\n  \"password\": \"pass\"\n}"
-        },
-        "url": "{{base_url}}/api/v1/auth/login/"
-      }
+      ]
     },
+
     {
-      "name": "Create Patient",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{ \"name\": \"Postman Patient\" }"
+      "name": "01 — Create Patient",
+      "item": [
+        {
+          "name": "Create Patient",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.expect([200,201]).to.include(pm.response.code);",
+                  "const j = pm.response.json();",
+                  "pm.environment.set('patient_id', j.id);",
+                  "pm.test('Patient created', () => pm.expect(j.id).to.be.a('number'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/v1/patients/",
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"name\": \"Postman Patient\" }"
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "02 — Order + Session",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.expect([200,201]).to.include(pm.response.code);",
+                  "const j = pm.response.json();",
+                  "pm.environment.set('order_id', j.order_id);",
+                  "pm.test('Order created', () => pm.expect(j.order_id).to.exist);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/v1/orders/",
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"patient_id\": {{patient_id}}, \"panel_code\": \"MENTAL_HEALTH_BASIC\" }"
+            }
+          }
         },
-        "url": "{{base_url}}/api/v1/patients/"
-      }
+
+        {
+          "name": "Start Session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.response.code).to.equal(200);",
+                  "const j = pm.response.json();",
+                  "pm.environment.set('session_id', j.session_id);",
+                  "pm.test('Session started', () => pm.expect(j.session_id).to.exist);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" }
+            ],
+            "url": "{{base_url}}/api/v1/orders/{{order_id}}/start-session/"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "03 — Submit Responses + Consent",
+      "item": [
+        {
+          "name": "Submit Responses",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/v1/sessions/{{session_id}}/events/",
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"event_type\": \"responses_submitted\", \"responses\": { \"q1\":1,\"q2\":1,\"q3\":1,\"q4\":1,\"q5\":1,\"q6\":1,\"q7\":1,\"q8\":1,\"q9\":1 } }"
+            }
+          }
+        },
+
+        {
+          "name": "Submit Consent",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/v1/sessions/{{session_id}}/consent/",
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"consent_given\": true, \"source\": \"postman\" }"
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "04 — Score + Report",
+      "item": [
+        {
+          "name": "Score Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/v1/sessions/{{session_id}}/score/",
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"answers\": { \"q1\":1,\"q2\":1,\"q3\":1,\"q4\":1,\"q5\":1,\"q6\":1,\"q7\":1,\"q8\":1,\"q9\":1 } }"
+            }
+          }
+        },
+
+        {
+          "name": "Generate Report",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.expect([200,201]).to.include(pm.response.code);",
+                  "const j = pm.response.json();",
+                  "pm.environment.set('report_id', j.report_id || j.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" }
+            ],
+            "url": "{{base_url}}/api/v1/sessions/{{session_id}}/report/"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "05 — Sign + Release + PDF",
+      "item": [
+        {
+          "name": "Sign Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/v1/reports/{{report_id}}/sign/",
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"signer_name\":\"Dr Rao\",\"signer_reg_no\":\"APMC-44321\",\"signer_role\":\"Psychiatrist\" }"
+            }
+          }
+        },
+
+        {
+          "name": "Release Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" }
+            ],
+            "url": "{{base_url}}/api/v1/reports/{{report_id}}/release/"
+          }
+        },
+
+        {
+          "name": "Download PDF",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "X-ORG-ID", "value": "{{org_id}}" }
+            ],
+            "url": "{{base_url}}/api/v1/reports/{{report_id}}/pdf/"
+          }
+        }
+      ]
     }
   ]
 }

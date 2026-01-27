@@ -135,5 +135,75 @@ class ClinicalReport(models.Model):
         default="GENERATED"
     )
 
+        # --- PHASE 1 ADDITIONS ---
+
+    VALIDATION_PENDING = "VALIDATION_PENDING"
+    DATA_VALIDATED = "DATA_VALIDATED"
+    VALIDATION_FAILED = "VALIDATION_FAILED"
+
+    VALIDATION_STATUS_CHOICES = [
+        (VALIDATION_PENDING, "Validation pending"),
+        (DATA_VALIDATED, "Data validated"),
+        (VALIDATION_FAILED, "Validation failed"),
+    ]
+
+    REVIEW_DRAFT = "DRAFT"
+    REVIEW_REVIEWED = "REVIEWED"
+
+    REVIEW_STATUS_CHOICES = [
+        (REVIEW_DRAFT, "Draft"),
+        (REVIEW_REVIEWED, "Reviewed"),
+    ]
+
+    validation_status = models.CharField(
+        max_length=32,
+        choices=VALIDATION_STATUS_CHOICES,
+        default=VALIDATION_PENDING,
+        db_index=True,
+    )
+
+    review_status = models.CharField(
+        max_length=16,
+        choices=REVIEW_STATUS_CHOICES,
+        default=REVIEW_DRAFT,
+        db_index=True,
+    )
+
+    reviewed_by_user_id = models.CharField(max_length=128, null=True, blank=True)
+    reviewed_by_name = models.CharField(max_length=255, null=True, blank=True)
+    reviewed_by_role = models.CharField(max_length=255, null=True, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+
+    # --- END PHASE 1 ADDITIONS ---
+
+    # --- PHASE FINAL-1: CORRECTION / SUPERSEDE ---
+
+    supersedes_report = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="superseded_by",
+    )
+
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    correction_reason = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True,
+    )
+    pdf_sha256 = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+
+    # --- END PHASE FINAL-1 ---
+
+
+
     class Meta:
-        db_table = "reports_clinicalreport"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["order"],
+                name="one_report_per_order",
+            ),
+        ]
+

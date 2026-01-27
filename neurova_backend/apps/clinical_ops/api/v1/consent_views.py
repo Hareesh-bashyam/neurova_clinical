@@ -8,10 +8,12 @@ from apps.clinical_ops.models import AssessmentOrder
 from apps.clinical_ops.models_consent import ConsentRecord
 from apps.clinical_ops.services.consent_text import get_consent_text
 from apps.clinical_ops.audit.logger import log_event
+from rest_framework.throttling import AnonRateThrottle
 
 class PublicGetConsent(APIView):
     authentication_classes = []
     permission_classes = []
+    throttle_classes = [AnonRateThrottle]
 
     def get(self, request, token):
         order = get_object_or_404(AssessmentOrder, public_token=token)

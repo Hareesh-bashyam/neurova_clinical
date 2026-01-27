@@ -19,6 +19,10 @@ from backend.clinical.reporting.pdf_renderer_v1 import (
 )
 from backend.clinical.reporting.report_schema_v1 import build_report_json_v1
 from backend.clinical.reporting import normalizers_v1
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
+from reports.models import ClinicalReport
+from rest_framework.permissions import IsAuthenticated
 
 
 # ===============================================================
@@ -162,6 +166,7 @@ class ReportReleaseView(APIView):
         except Report.DoesNotExist:
             return Response({"error": "Report not found"}, status=404)
 
+        # 🔒 Signature gate (policy check, no mutation)
         if report.organization.signature_required:
             if not ReportSignature.objects.filter(report=report).exists():
                 return Response(
@@ -169,11 +174,7 @@ class ReportReleaseView(APIView):
                     status=400,
                 )
 
-        try:
-            report.release()
-        except ValidationError as e:
-            return Response({"error": e.messages}, status=400)
-
+        # 🧾 AUDIT ONLY — NO REPORT MUTATION
         log_event(
             request,
             report.organization,
@@ -182,7 +183,13 @@ class ReportReleaseView(APIView):
             report.id,
         )
 
-        return Response({"status": "released"}, status=200)
+        return Response(
+            {
+                "status": "released",
+                "report_id": report.id,
+            },
+            status=200,
+        )
 
 
 # ===============================================================
@@ -210,3 +217,96 @@ class ReportPDFView(APIView):
         pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
 
         return HttpResponse(pdf_bytes, content_type="application/pdf")
+
+
+# -------------------------------------------------
+# MARK REPORT AS REVIEWED
+# -------------------------------------------------
+class MarkReportReviewedView(APIView):
+    """
+    Marks a ClinicalReport as reviewed by a clinician/staff.
+    No UI dependency. No PDF generation. No recomputation.
+    """
+
+    permission_classes = [IsClinician]  # keep same auth pattern as other report endpoints
+
+    def post(self, request, report_id):
+        report = get_object_or_404(
+            ClinicalReport,
+            id=report_id,
+        )
+
+        # ---- REVIEW METADATA ----
+        report.review_status = ClinicalReport.REVIEW_REVIEWED
+        report.reviewed_by_user_id = (
+            str(getattr(request.user, "id", None))
+            if request.user and request.user.is_authenticated
+            else None
+        )
+
+        report.reviewed_by_name = (
+            request.user.get_full_name()
+            if request.user and request.user.is_authenticated and hasattr(request.user, "get_full_name")
+            else getattr(request.user, "username", None)
+        )
+
+        report.reviewed_by_role = "Clinician"
+        report.reviewed_at = timezone.now()
+
+        # ---- VALIDATION COUPLING (PHASE FINAL–1 RULE) ----
+        if report.validation_status == ClinicalReport.VALIDATION_PENDING:
+            report.validation_status = ClinicalReport.DATA_VALIDATED
+
+        report.save(update_fields=[
+            "review_status",
+            "reviewed_by_user_id",
+            "reviewed_by_name",
+            "reviewed_by_role",
+            "reviewed_at",
+            "validation_status",
+        ])
+
+        return Response(
+            {
+                "ok": True,
+                "review_status": report.review_status,
+                "validation_status": report.validation_status,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+class CreateReportCorrectionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @transaction.atomic
+    def post(self, request, report_id):
+        old = get_object_or_404(
+            ClinicalReport,
+            id=report_id,
+            is_active=True,
+        )
+
+        reason = request.data.get("correction_reason", "").strip()
+
+        # 1) Deactivate old report
+        old.is_active = False
+        old.save(update_fields=["is_active"])
+
+        # 2) Create corrected report (same order, same data)
+        new = ClinicalReport.objects.create(
+            order=old.order,
+            report_json=old.report_json,
+            validation_status=ClinicalReport.DATA_VALIDATED,
+            review_status=ClinicalReport.REVIEW_DRAFT,
+            supersedes_report=old,
+            is_active=True,
+            correction_reason=reason or None,
+        )
+
+        return Response(
+            {
+                "ok": True,
+                "new_report_id": new.id,
+            },
+            status=status.HTTP_201_CREATED,
+        )

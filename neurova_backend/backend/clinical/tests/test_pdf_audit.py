@@ -24,26 +24,26 @@ def test_pdf_export_creates_at_audit_event():
                   **{"HTTP_X_ORG_ID": str(org.id)}
                   )
     assert resp.status_code == 201
-    order_id = resp.json()["order_id"]
-    session_id = resp.json()["session_id"]
+    order_id = resp.json()["data"]["order_id"]
+    session_id = resp.json()["data"]["session_id"]
 
     # 2. Start Session (updates order/session status)
     resp = c.post(f"/api/v1/clinical/sessions/{session_id}/start/",
            content_type="application/json",
            **{"HTTP_X_ORG_ID": str(org.id)})
     assert resp.status_code == 200
-    current_test_code = resp.json()["test_code"]
+    current_test_code = resp.json()["data"]["test_code"]
 
     # 3. Simulate completion (Directly submitting required tests to be faster, or mocking)
     # Using the existing flow from e2e test to be safe and integration-like
     
     # PHQ9 (Test 1)
     resp = c.post(f"/api/v1/clinical/sessions/{session_id}/submit_current/",
-           data={"raw_responses":[0]*8 + [1], "test_code": current_test_code}, # Last item > 0 triggers safety checks but completing is fine
+           data={"raw_responses":[0]*9, "test_code": current_test_code}, # Last item > 0 triggers safety checks but completing is fine
            content_type="application/json",
            **{"HTTP_X_ORG_ID": str(org.id)})
     assert resp.status_code == 200
-    current_test_code = resp.json().get("next_test_code")
+    current_test_code = resp.json()["data"].get("next_test_code")
            
     # MDQ (Test 2)
     resp = c.post(f"/api/v1/clinical/sessions/{session_id}/submit_current/",
@@ -51,7 +51,7 @@ def test_pdf_export_creates_at_audit_event():
            content_type="application/json",
            **{"HTTP_X_ORG_ID": str(org.id)})
     assert resp.status_code == 200
-    current_test_code = resp.json().get("next_test_code")
+    current_test_code = resp.json()["data"].get("next_test_code")
 
     # GAD7 (Test 3)
     resp = c.post(f"/api/v1/clinical/sessions/{session_id}/submit_current/",
@@ -59,7 +59,7 @@ def test_pdf_export_creates_at_audit_event():
            content_type="application/json",
            **{"HTTP_X_ORG_ID": str(org.id)})
     assert resp.status_code == 200
-    current_test_code = resp.json().get("next_test_code")
+    current_test_code = resp.json()["data"].get("next_test_code")
 
     # PSS10 (Test 4)
     resp = c.post(f"/api/v1/clinical/sessions/{session_id}/submit_current/",
@@ -67,7 +67,7 @@ def test_pdf_export_creates_at_audit_event():
            content_type="application/json",
            **{"HTTP_X_ORG_ID": str(org.id)})
     assert resp.status_code == 200
-    current_test_code = resp.json().get("next_test_code")
+    current_test_code = resp.json()["data"].get("next_test_code")
            
     # AUDIT (Test 5)
     resp = c.post(f"/api/v1/clinical/sessions/{session_id}/submit_current/",
@@ -75,7 +75,7 @@ def test_pdf_export_creates_at_audit_event():
            content_type="application/json",
            **{"HTTP_X_ORG_ID": str(org.id)})
     assert resp.status_code == 200
-    current_test_code = resp.json().get("next_test_code")
+    current_test_code = resp.json()["data"].get("next_test_code")
            
     # STOP_BANG (Test 6)
     # This should complete the session
@@ -88,7 +88,7 @@ def test_pdf_export_creates_at_audit_event():
         print(f"STOP_BANG submit failed: {resp.status_code} {resp.content}")
     
     assert resp.status_code == 200
-    assert resp.json().get("completed") is True
+    assert resp.json()["data"].get("completed") is True
     
     # 4. Generate Report
     resp = c.post(f"/api/v1/clinical/orders/{order_id}/generate_report/", 

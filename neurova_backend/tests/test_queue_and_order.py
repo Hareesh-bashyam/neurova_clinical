@@ -2,6 +2,7 @@ from django.test import TestCase
 from apps.clinical_ops.models import Org, Patient, AssessmentOrder
 import secrets
 from django.utils import timezone
+from datetime import timedelta
 
 class ClinicalOpsTests(TestCase):
     def test_create_order_and_queue(self):
@@ -12,6 +13,6 @@ class ClinicalOpsTests(TestCase):
             battery_code="MENTAL_HEALTH_CORE_V1",
             battery_version="1.0",
             public_token=secrets.token_urlsafe(16),
-            public_link_expires_at=timezone.now() + timezone.timedelta(days=2),
+            public_link_expires_at=timezone.now() + timedelta(hours=48),
         )
         self.assertEqual(order.status, AssessmentOrder.STATUS_CREATED)

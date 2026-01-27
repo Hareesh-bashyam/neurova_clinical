@@ -64,7 +64,7 @@ def build_report_json_v1(
         },
         "clinical_signoff": {
             "required": signoff["required"],
-            "status": signoff["status"],
+            "status": signoff["status"],  # now VALIDATION_PENDING / DATA_VALIDATED
             "reviewed_by": signoff.get("reviewed_by"),
             "reviewed_at": signoff.get("reviewed_at")
         },

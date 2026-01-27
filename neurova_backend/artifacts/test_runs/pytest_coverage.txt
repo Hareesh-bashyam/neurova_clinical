@@ -1,0 +1,334 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0
+django: version: 5.2.10, settings: neurova_backend.settings (from ini)
+rootdir: /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend
+configfile: pytest.ini
+plugins: cov-7.0.0, Faker-40.1.2, django-4.11.1
+collected 22 items
+
+apps/clinical_ops/tests/test_queue_and_order.py .                        [  4%]
+backend/clinical/reporting/tests/test_omega_e2e.py .                     [  9%]
+backend/clinical/reporting/tests/test_org_isolation.py .                 [ 13%]
+backend/clinical/reporting/tests/test_report_immutability.py .           [ 18%]
+backend/clinical/tests/test_pdf_audit.py .                               [ 22%]
+backend/clinical/tests/test_submission_integrity.py .                    [ 27%]
+tests/e2e/test_full_pathology_flow.py .                                  [ 31%]
+tests/integration/test_clinical_flow.py .                                [ 36%]
+tests/integration/test_consent.py .                                      [ 40%]
+tests/integration/test_report_release.py .                               [ 45%]
+tests/integration/test_state_violations.py .                             [ 50%]
+tests/security/test_audit_coverage.py .                                  [ 54%]
+tests/security/test_health_ready.py ...                                  [ 68%]
+tests/security/test_rbac.py ..                                           [ 77%]
+tests/test_queue_and_order.py .                                          [ 81%]
+backend/clinical/reporting/tests/test_report_pdf_v1.py ....              [100%]
+
+=============================== warnings summary ===============================
+backend/clinical/models.py:54
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/backend/clinical/models.py:54: PytestCollectionWarning: cannot collect test class 'TestRun' because it has a __init__ constructor (from: backend/clinical/reporting/tests/test_report_immutability.py)
+    class TestRun(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/e2e/test_full_pathology_flow.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/integration/test_clinical_flow.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/integration/test_consent.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/integration/test_report_release.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/integration/test_state_violations.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/security/test_audit_coverage.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/security/test_rbac.py)
+    class TestDefinition(models.Model):
+
+backend/clinical/reporting/tests/test_org_isolation.py::test_org_isolation_blocks_cross_org_access
+backend/clinical/tests/test_submission_integrity.py::test_submission_integrity_vulnerability
+tests/integration/test_report_release.py::test_report_release_logic
+tests/integration/test_report_release.py::test_report_release_logic
+tests/integration/test_report_release.py::test_report_release_logic
+tests/security/test_health_ready.py::test_readyz_fails_when_db_down
+tests/security/test_rbac.py::test_staff_cannot_release_report
+tests/security/test_rbac.py::test_staff_cannot_release_report
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/neurova_backend/settings.py:26: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "ts": datetime.utcnow().isoformat() + "Z",
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.3-final-0 ________________
+
+Name                                                                                    Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------------------------------------------------
+apps/__init__.py                                                                            1      0   100%
+apps/clinical_ops/__init__.py                                                               0      0   100%
+apps/clinical_ops/admin.py                                                                 24      0   100%
+apps/clinical_ops/api/v1/consent_views.py                                                  35     16    54%   19-21, 32-81
+apps/clinical_ops/api/v1/deletion_views.py                                                 22     13    41%   12-30
+apps/clinical_ops/api/v1/delivery_views.py                                                 22     14    36%   10-28
+apps/clinical_ops/api/v1/export_views.py                                                   18      9    50%   11-30
+apps/clinical_ops/api/v1/public_access_code_views.py                                       19      6    68%   16-35
+apps/clinical_ops/api/v1/public_submit_views.py                                            39     20    49%   25-86
+apps/clinical_ops/api/v1/public_views.py                                                   18      6    67%   15-24
+apps/clinical_ops/api/v1/report_download_views.py                                          51     34    33%   21-50, 65-104
+apps/clinical_ops/api/v1/report_views.py                                                   42     27    36%   21-98
+apps/clinical_ops/api/v1/serializers.py                                                    28      0   100%
+apps/clinical_ops/api/v1/signoff_views.py                                                  32     22    31%   25-64
+apps/clinical_ops/api/v1/urls.py                                                           13      0   100%
+apps/clinical_ops/api/v1/views.py                                                          72     53    26%   19, 26-141, 156-209, 225-265
+apps/clinical_ops/apps.py                                                                   3      0   100%
+apps/clinical_ops/audit/logger.py                                                           3      1    67%   6
+apps/clinical_ops/audit/models.py                                                          15      0   100%
+apps/clinical_ops/migrations/0001_initial.py                                                7      0   100%
+apps/clinical_ops/migrations/0002_assessmentorder_delivery_mode_and_more.py                 4      0   100%
+apps/clinical_ops/migrations/0003_responsequality.py                                        6      0   100%
+apps/clinical_ops/migrations/0004_assessmentresponse_assessmentresult.py                    6      0   100%
+apps/clinical_ops/migrations/0005_assessmentreport.py                                       6      0   100%
+apps/clinical_ops/migrations/0006_assessmentreport_signoff_method_and_more.py               4      0   100%
+apps/clinical_ops/migrations/0007_auditevent.py                                             6      0   100%
+apps/clinical_ops/migrations/0008_consentrecord.py                                          6      0   100%
+apps/clinical_ops/migrations/0009_assessmentorder_report_access_code_and_more.py            4      0   100%
+apps/clinical_ops/migrations/0010_assessmentorder_data_retention_until_and_more.py          4      0   100%
+apps/clinical_ops/migrations/0011_deletionrequest.py                                        6      0   100%
+apps/clinical_ops/migrations/__init__.py                                                    0      0   100%
+apps/clinical_ops/models.py                                                               103     16    84%   15, 40, 146-156, 159-165, 168-175
+apps/clinical_ops/models_assessment.py                                                     20      0   100%
+apps/clinical_ops/models_consent.py                                                        20      0   100%
+apps/clinical_ops/models_deletion.py                                                       13      0   100%
+apps/clinical_ops/models_report.py                                                         17      0   100%
+apps/clinical_ops/services/__init__.py                                                      0      0   100%
+apps/clinical_ops/services/access_code.py                                                  16     11    31%   6, 10-14, 18-22
+apps/clinical_ops/services/consent_text.py                                                  3      1    67%   17
+apps/clinical_ops/services/consent_views.py                                                33     33     0%   1-79
+apps/clinical_ops/services/data_exporter.py                                                16     12    25%   6-33
+apps/clinical_ops/services/deletion_executor.py                                            16     10    38%   8-23
+apps/clinical_ops/services/encryption_policy.py                                             2      2     0%   8-9
+apps/clinical_ops/services/pdf_report.py                                                  114    114     0%   1-157
+apps/clinical_ops/services/pdf_report_v2.py                                                98     89     9%   10-11, 17-234
+apps/clinical_ops/services/quality.py                                                      10      9    10%   5-16
+apps/clinical_ops/services/report_context.py                                               39     35    10%   7-109
+apps/clinical_ops/services/retention_policy.py                                              4      0   100%
+apps/clinical_ops/services/scoring_adapter.py                                               6      5    17%   17-27
+apps/clinical_ops/services/signoff_engine.py                                               38     30    21%   17-30, 41-95
+apps/clinical_ops/tests/test_queue_and_order.py                                            11      0   100%
+auditlogs/__init__.py                                                                       0      0   100%
+auditlogs/admin.py                                                                          6      0   100%
+auditlogs/apps.py                                                                           4      0   100%
+auditlogs/migrations/0001_initial.py                                                        8      0   100%
+auditlogs/migrations/0002_auditlog_auditlogs_a_organiz_d8849b_idx_and_more.py               5      0   100%
+auditlogs/migrations/__init__.py                                                            0      0   100%
+auditlogs/models.py                                                                        18      1    94%   25
+auditlogs/tests.py                                                                          1      1     0%   1
+auditlogs/utils.py                                                                         12      0   100%
+auditlogs/views.py                                                                          1      1     0%   1
+backend/__init__.py                                                                         0      0   100%
+backend/clinical/__init__.py                                                                0      0   100%
+backend/clinical/admin.py                                                                  46     14    70%   34-50, 55-67
+backend/clinical/apps.py                                                                    6      0   100%
+backend/clinical/audit/__init__.py                                                          0      0   100%
+backend/clinical/audit/admin.py                                                             7      0   100%
+backend/clinical/audit/migrations/0001_initial.py                                           6      0   100%
+backend/clinical/audit/migrations/__init__.py                                               0      0   100%
+backend/clinical/audit/models.py                                                           12      0   100%
+backend/clinical/audit/services.py                                                          3      0   100%
+backend/clinical/batteries/__init__.py                                                      0      0   100%
+backend/clinical/batteries/battery_runner.py                                               44      4    91%   18, 23, 36, 49
+backend/clinical/constants.py                                                               1      0   100%
+backend/clinical/migrations/0001_initial.py                                                 7      0   100%
+backend/clinical/migrations/0002_delete_clinicalreport.py                                   4      0   100%
+backend/clinical/migrations/0003_clinicalorder_phone_number.py                              4      0   100%
+backend/clinical/migrations/0004_idempotencykey.py                                          5      0   100%
+backend/clinical/migrations/__init__.py                                                     0      0   100%
+backend/clinical/models.py                                                                 56      4    93%   29, 51, 82, 103
+backend/clinical/org/admin.py                                                               6      0   100%
+backend/clinical/org/migrations/0001_initial.py                                             6      0   100%
+backend/clinical/org/migrations/__init__.py                                                 0      0   100%
+backend/clinical/org/models.py                                                              7      0   100%
+backend/clinical/policies/admin.py                                                          6      0   100%
+backend/clinical/policies/migrations/0001_initial.py                                        6      0   100%
+backend/clinical/policies/migrations/0002_orgclinicalpolicy_token_validity_hours.py         4      0   100%
+backend/clinical/policies/migrations/__init__.py                                            0      0   100%
+backend/clinical/policies/models.py                                                         9      0   100%
+backend/clinical/policies/services.py                                                      11      7    36%   5-10, 17
+backend/clinical/reporting/__init__.py                                                      0      0   100%
+backend/clinical/reporting/generate.py                                                      9      0   100%
+backend/clinical/reporting/normalizers_v1.py                                               31     22    29%   8-9, 17-27, 41-56, 64, 73-95
+backend/clinical/reporting/pdf.py                                                          42     42     0%   1-65
+backend/clinical/reporting/pdf_renderer_v1.py                                             120      6    95%   97-98, 172-175
+backend/clinical/reporting/report_builder_v1.py                                           111      8    93%   102, 112, 163-170
+backend/clinical/reporting/report_composer_v1.py                                           81      4    95%   27, 35, 208-209
+backend/clinical/reporting/report_schema_v1.py                                              8      3    62%   25-27, 88
+backend/clinical/reporting/report_sections_v1.py                                           58     58     0%   1-188
+backend/clinical/reporting/tests/test_omega_e2e.py                                         41      0   100%
+backend/clinical/reporting/tests/test_org_isolation.py                                     14      0   100%
+backend/clinical/reporting/tests/test_phase_d_e2e.py                                        0      0   100%
+backend/clinical/reporting/tests/test_report_immutability.py                               17      0   100%
+backend/clinical/reporting/tests/test_report_pdf_v1.py                                     21      0   100%
+backend/clinical/scoring/engine_v1.py                                                      12     11     8%   2-15
+backend/clinical/scoring/scoring_engine.py                                                 37     14    62%   24, 40, 57-104
+backend/clinical/scoring/test_runner.py                                                    16      0   100%
+backend/clinical/security/exceptions.py                                                     4      0   100%
+backend/clinical/security/org_guard.py                                                      9      2    78%   6, 11
+backend/clinical/serializers.py                                                             0      0   100%
+backend/clinical/signoff/__init__.py                                                        0      0   100%
+backend/clinical/signoff/admin.py                                                           7      0   100%
+backend/clinical/signoff/migrations/0001_initial.py                                         7      0   100%
+backend/clinical/signoff/migrations/__init__.py                                             0      0   100%
+backend/clinical/signoff/models.py                                                         11      0   100%
+backend/clinical/signoff/services.py                                                       11      8    27%   12-31
+backend/clinical/tests/test_pdf_audit.py                                                   47      1    98%   88
+backend/clinical/tests/test_submission_integrity.py                                        27      4    85%   66-71
+backend/clinical/urls.py                                                                    3      0   100%
+backend/clinical/views.py                                                                 150     34    77%   68, 75, 88-89, 95, 145, 177-188, 221-226, 242, 257, 284, 341, 376-408, 427, 442, 453
+catalog/__init__.py                                                                         0      0   100%
+catalog/admin.py                                                                           17      0   100%
+catalog/apps.py                                                                             4      0   100%
+catalog/importer.py                                                                        12     10    17%   10-64
+catalog/migrations/0001_initial.py                                                          6      0   100%
+catalog/migrations/__init__.py                                                              0      0   100%
+catalog/models.py                                                                          47      3    94%   20, 38, 52
+catalog/serializers.py                                                                      6      0   100%
+catalog/tests.py                                                                            1      1     0%   1
+catalog/urls.py                                                                             7      0   100%
+catalog/views.py                                                                           14      5    64%   14-32
+catalog/views_read.py                                                                       9      0   100%
+common/__init__.py                                                                          0      0   100%
+common/admin_readonly.py                                                                    7      3    57%   3, 6, 9
+common/api_exception_handler.py                                                            20      4    80%   27-30, 43
+common/auth/__init__.py                                                                     0      0   100%
+common/auth/serializers.py                                                                  5      2    60%   9-11
+common/auth/views.py                                                                       14      6    57%   13-27
+common/immutability.py                                                                      7      1    86%   8
+common/permissions.py                                                                      15      2    87%   8, 20
+common/request_id_middleware.py                                                            12      0   100%
+common/response_middleware.py                                                              10      0   100%
+common/tenancy.py                                                                          14      9    36%   11-15, 18-21
+common/versioning.py                                                                        5      0   100%
+core/__init__.py                                                                            1      0   100%
+core/admin.py                                                                              10      0   100%
+core/apps.py                                                                                4      0   100%
+core/health.py                                                                             12      0   100%
+core/migrations/0001_initial.py                                                             7      0   100%
+core/migrations/0002_organization_address.py                                                4      0   100%
+core/migrations/0003_organization_external_id.py                                            5      0   100%
+core/migrations/__init__.py                                                                 0      0   100%
+core/models.py                                                                             22      2    91%   41, 51
+core/serializers.py                                                                        20      5    75%   20-29
+core/signals.py                                                                             7      7     0%   1-9
+core/tests.py                                                                               1      1     0%   1
+core/urls.py                                                                                3      0   100%
+core/views.py                                                                              20      5    75%   14-15, 22-24
+manage.py                                                                                  11     11     0%   3-22
+neurova_backend/__init__.py                                                                 0      0   100%
+neurova_backend/asgi.py                                                                     4      4     0%   10-16
+neurova_backend/settings.py                                                                60      7    88%   197-202, 287
+neurova_backend/urls.py                                                                     9      0   100%
+neurova_backend/wsgi.py                                                                     4      4     0%   10-16
+orders/__init__.py                                                                          0      0   100%
+orders/admin.py                                                                             6      0   100%
+orders/apps.py                                                                              4      0   100%
+orders/migrations/0001_initial.py                                                           6      0   100%
+orders/migrations/__init__.py                                                               0      0   100%
+orders/models.py                                                                           13      1    92%   22
+orders/tests.py                                                                             1      1     0%   1
+orders/urls.py                                                                              3      0   100%
+orders/views.py                                                                            23      6    74%   43-66
+patients/__init__.py                                                                        0      0   100%
+patients/admin.py                                                                           7      0   100%
+patients/apps.py                                                                            4      0   100%
+patients/migrations/0001_initial.py                                                         6      0   100%
+patients/migrations/0002_patient_patients_pa_organiz_f38037_idx_and_more.py                 4      0   100%
+patients/migrations/__init__.py                                                             0      0   100%
+patients/models.py                                                                         15      1    93%   16
+patients/serializers.py                                                                     7      0   100%
+patients/tests.py                                                                           1      1     0%   1
+patients/urls.py                                                                            5      0   100%
+patients/views.py                                                                          13      2    85%   17-19
+reports/__init__.py                                                                         0      0   100%
+reports/admin.py                                                                            9      0   100%
+reports/apps.py                                                                             4      0   100%
+reports/migrations/0001_initial.py                                                          7      0   100%
+reports/migrations/0002_report_reports_rep_organiz_ae5072_idx_and_more.py                   4      0   100%
+reports/migrations/0003_alter_report_pdf_file.py                                            5      0   100%
+reports/migrations/0004_alter_report_pdf_file.py                                            5      0   100%
+reports/migrations/0005_alter_report_pdf_file.py                                            5      0   100%
+reports/migrations/0006_clinicalreport.py                                                   5      0   100%
+reports/migrations/0007_clinicalreport_status.py                                            4      0   100%
+reports/migrations/0008_clinicalreport_review_status_and_more.py                            4      0   100%
+reports/migrations/0009_clinicalreport_correction_reason_and_more.py                        5      0   100%
+reports/migrations/0010_clinicalreport_one_report_per_order_and_more.py                     4      0   100%
+reports/migrations/0011_clinicalreport_pdf_sha256.py                                        4      0   100%
+reports/migrations/__init__.py                                                              0      0   100%
+reports/models.py                                                                          87     21    76%   54, 59-61, 64-66, 71-78, 82-88, 109
+reports/pdf.py                                                                             62     11    82%   57, 64-74
+reports/storage_paths.py                                                                    2      1    50%   2
+reports/tests.py                                                                            1      1     0%   1
+reports/urls.py                                                                             3      0   100%
+reports/views.py                                                                           99     44    56%   37-105, 119-150, 166-167, 203-219, 258, 283-306
+safety/__init__.py                                                                          0      0   100%
+safety/admin.py                                                                             9      0   100%
+safety/apps.py                                                                              4      0   100%
+safety/migrations/0001_initial.py                                                           7      0   100%
+safety/migrations/0002_flagacknowledgement_safety_flag_organiz_050255_idx_and_more.py       4      0   100%
+safety/migrations/__init__.py                                                               0      0   100%
+safety/models.py                                                                           26      2    92%   29, 46
+safety/rules.py                                                                             7      7     0%   1-16
+safety/tests.py                                                                             1      1     0%   1
+safety/views.py                                                                             1      1     0%   1
+scoring/__init__.py                                                                         0      0   100%
+scoring/admin.py                                                                            6      0   100%
+scoring/apps.py                                                                             4      0   100%
+scoring/migrations/0001_initial.py                                                          7      0   100%
+scoring/migrations/0002_score_delete_scoreresult.py                                         5      0   100%
+scoring/migrations/0003_score_scoring_sco_session_c75173_idx_and_more.py                    4      0   100%
+scoring/migrations/__init__.py                                                              0      0   100%
+scoring/models.py                                                                          12      1    92%   22
+scoring/scoring.py                                                                          7      7     0%   1-17
+scoring/services.py                                                                        12     11     8%   5-18
+scoring/tests.py                                                                            1      1     0%   1
+scoring/urls.py                                                                             3      0   100%
+scoring/views.py                                                                           18     10    44%   13-43
+sessions/__init__.py                                                                        1      0   100%
+sessions/admin.py                                                                          13      0   100%
+sessions/apps.py                                                                            5      0   100%
+sessions/migrations/0001_initial.py                                                         6      0   100%
+sessions/migrations/0002_sessionevent.py                                                    5      0   100%
+sessions/migrations/0003_sessionconsent.py                                                  5      0   100%
+sessions/migrations/0004_consentrecord_clinical_se_organiz_411bc4_idx_and_more.py           4      0   100%
+sessions/migrations/0005_alter_consentrecord_capture_mode.py                                4      0   100%
+sessions/migrations/__init__.py                                                             0      0   100%
+sessions/models.py                                                                         52      3    94%   25, 52, 70
+sessions/tests.py                                                                           1      1     0%   1
+sessions/urls.py                                                                            3      0   100%
+sessions/views.py                                                                          19      8    58%   14-34, 40-59
+tests/__init__.py                                                                           0      0   100%
+tests/e2e/test_full_pathology_flow.py                                                      41      0   100%
+tests/integration/test_clinical_flow.py                                                    29      0   100%
+tests/integration/test_consent.py                                                          23      0   100%
+tests/integration/test_end_to_end_session.py                                                0      0   100%
+tests/integration/test_report_release.py                                                   38      0   100%
+tests/integration/test_state_violations.py                                                 30      0   100%
+tests/security/test_audit_coverage.py                                                      33      0   100%
+tests/security/test_health_ready.py                                                        22      0   100%
+tests/security/test_rbac.py                                                                47      0   100%
+tests/test_queue_and_order.py                                                              11      0   100%
+tests/unit/test_immutability.py                                                             0      0   100%
+tests/unit/test_pdf_generation.py                                                           0      0   100%
+tests/unit/test_safety_rules.py                                                             0      0   100%
+tests/unit/test_scoring_engine.py                                                           0      0   100%
+---------------------------------------------------------------------------------------------------------------------
+TOTAL                                                                                    3703   1072    71%
+================== 22 passed, 16 warnings in 64.09s (0:01:04) ==================

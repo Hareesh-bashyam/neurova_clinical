@@ -25,24 +25,24 @@ def test_submission_integrity_vulnerability():
                   **{"HTTP_X_ORG_ID": str(org.id)}
                   )
     assert resp.status_code == 201
-    session_id = resp.json()["session_id"]
+    session_id = resp.json()["data"]["session_id"]
 
     # 2. Start session
     resp = c.post(f"/api/v1/clinical/sessions/{session_id}/start/", 
            content_type="application/json", 
            **{"HTTP_X_ORG_ID": str(org.id)})
     assert resp.status_code == 200
-    assert resp.json()["test_code"] == "PHQ9"
+    assert resp.json()["data"]["test_code"] == "PHQ9"
 
     # 3. Submit PHQ9 (Valid)
-    phq9_payload = {"raw_responses": [0,0,0,0,0,0,0,0,0]}
+    phq9_payload = {"raw_responses": [0,0,0,0,0,0,0,0,0], "test_code": "PHQ9"}
     resp = c.post(f"/api/v1/clinical/sessions/{session_id}/submit_current/",
            data=phq9_payload,
            content_type="application/json",
            **{"HTTP_X_ORG_ID": str(org.id)})
     
     assert resp.status_code == 200
-    data = resp.json()
+    data = resp.json()["data"]
     assert data["next_test_code"] == "MDQ" 
     assert data["next_test_index"] == 1
 

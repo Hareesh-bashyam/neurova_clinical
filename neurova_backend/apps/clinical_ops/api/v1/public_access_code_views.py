@@ -5,10 +5,12 @@ from rest_framework import status
 from apps.clinical_ops.models import AssessmentOrder
 from apps.clinical_ops.services.access_code import issue_report_access_code
 from apps.clinical_ops.audit.logger import log_event
+from rest_framework.throttling import AnonRateThrottle
 
 class PublicRequestReportCode(APIView):
     authentication_classes = []
     permission_classes = []
+    throttle_classes = [AnonRateThrottle]
 
     def post(self, request, token):
         order = get_object_or_404(AssessmentOrder, public_token=token)

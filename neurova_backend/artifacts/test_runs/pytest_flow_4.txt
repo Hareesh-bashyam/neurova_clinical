@@ -1,0 +1,328 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.5, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Hareesh\Desktop\Main-Projects\neurova_backend_project\neurova_backend\venv_win\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 5.2.10, settings: neurova_backend.settings (from ini)
+rootdir: C:\Users\Hareesh\Desktop\Main-Projects\neurova_backend_project\neurova_backend
+configfile: pytest.ini
+plugins: Faker-40.1.2, cov-7.0.0, django-4.11.1
+collecting ... collected 1 item
+
+tests/e2e/test_full_pathology_flow.py::test_full_pathology_flow FAILED   [100%]
+
+================================== FAILURES ===================================
+__________________________ test_full_pathology_flow ___________________________
+
+tmp_path = WindowsPath('C:/Users/Hareesh/AppData/Local/Temp/pytest-of-Hareesh/pytest-33/test_full_pathology_flow0')
+
+    @pytest.mark.django_db
+    def test_full_pathology_flow(tmp_path):
+        """
+        PHASE A+B+C ù END-TO-END PROOF
+    
+        \u2714 Full workflow
+        \u2714 Immutability preserved
+        \u2714 PDF generation verified (internal)
+        \u2714 Audit trail verified
+        """
+    
+        client = APIClient()
+    
+        # -----------------------
+        # Org + Clinician
+        # -----------------------
+        org = Organization.objects.create(
+            name="E2E Clinic",
+            code="E2E_ORG",
+            signature_required=True
+        )
+    
+        clinician = User.objects.create_user(
+            username="doctor@e2e.com",
+            password="pass"
+        )
+    
+        UserProfile.objects.create(
+            user=clinician,
+            organization=org,
+            role="CLINICIAN"
+        )
+    
+        client.force_authenticate(user=clinician)
+    
+        # -----------------------
+        # Catalog
+        # -----------------------
+        instrument = Instrument.objects.create(
+            organization=org,
+            code="PHQ9",
+            name="PHQ-9"
+        )
+    
+        TestDefinition.objects.create(
+            organization=org,
+            instrument=instrument,
+            code="PHQ9_STD",
+            name="PHQ-9",
+            language="en",
+            json_schema={"type": "object"},
+            scoring_spec={},
+            is_active=True
+        )
+    
+        panel = Panel.objects.create(
+            organization=org,
+            code="PANEL_E2E",
+            name="Mental Health Panel"
+        )
+    
+        # -----------------------
+        # Patient
+        # -----------------------
+        patient = Patient.objects.create(
+            organization=org,
+            name="E2E Patient"
+        )
+    
+        # -----------------------
+        # Order
+        # -----------------------
+        order = Order.objects.create(
+            organization=org,
+            patient=patient,
+            panel=panel
+        )
+    
+        # -----------------------
+        # Session
+        # -----------------------
+        session = Session.objects.create(
+            organization=org,
+            order=order,
+            status="COMPLETED"
+        )
+    
+        # -----------------------
+        # Report (READY û immutable)
+        # -----------------------
+        report = Report.objects.create(
+            organization=org,
+            session=session,
+            status="READY",
+            report_json={"result": "ok"}
+        )
+    
+        # -----------------------
+        # Signature
+        # -----------------------
+        ReportSignature.objects.create(
+            organization=org,
+            report=report,
+            signer_name="Dr E2E",
+            signer_reg_no="E2E-001",
+            signer_role="CLINICIAN"
+        )
+    
+        # -----------------------
+        # Release
+        # -----------------------
+        resp = client.post(f"/api/v1/reports/{report.id}/release/")
+        assert resp.status_code == 200
+    
+        # Original report must remain immutable
+        report.refresh_from_db()
+        assert report.status == "READY"
+    
+        # Audit log must exist
+        assert AuditLog.objects.filter(
+            organization=org,
+            action="REPORT_RELEASED",
+            entity_type="Report",
+            entity_id=str(report.id),
+        ).exists()
+    
+        # -----------------------
+        # PDF GENERATION (INTERNAL)
+        # -----------------------
+        pdf_path = tmp_path / "report.pdf"
+    
+        context = {
+            "patient_name": patient.name,
+            "patient": {"name": patient.name, "age": 30, "gender": "Other"},
+            "session_id": session.id,
+            "encounter": {"type": "OPD", "mode": "IN_CLINIC", "date_time": "2026-01-01"},
+            "tests": [
+                {
+                    "test_code": "PHQ9",
+                    "score": 5,
+                    "severity": "Mild",
+                    "red_flags": [],
+                }
+            ],
+            "critical_self_harm": False,
+            "engine_version": "v1",
+            "report_schema_version": "1.0",
+            "organization": {"name": org.name, "address": "Some Address"},
+            "report_id": str(report.id),
+            "audit": {"created_at": "2026-01-08T23:15:00Z"},
+        }
+    
+>       generate_report_pdf(str(pdf_path), context)
+
+tests\e2e\test_full_pathology_flow.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+buffer = 'C:\\Users\\Hareesh\\AppData\\Local\\Temp\\pytest-of-Hareesh\\pytest-33\\test_full_pathology_flow0\\report.pdf'
+report_json = {'audit': {'created_at': '2026-01-08T23:15:00Z'}, 'critical_self_harm': False, 'encounter': {'date_time': '2026-01-01', 'mode': 'IN_CLINIC', 'type': 'OPD'}, 'engine_version': 'v1', ...}
+
+    def generate_report_pdf(buffer, report_json):
+        c = canvas.Canvas(buffer, pagesize=A4)
+        width, height = A4
+        y = height - 40
+    
+        # SECTION 1 ù HEADER
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(40, y, report_json["organization"]["name"])
+    
+        c.setFont("Helvetica", 9)
+        y -= 14
+        c.drawString(40, y, report_json["organization"]["address"] or "")
+    
+        c.setFont("Helvetica-Bold", 14)
+        c.drawRightString(width - 40, height - 40, "Psychiatric Assessment Report")
+    
+        y -= 30
+        c.setFont("Helvetica", 9)
+        c.drawString(40, y, f"Report ID: {report_json['report_id']}")
+        y -= 12
+        c.drawString(40, y, f"Report Date: {report_json['audit']['created_at']}")
+    
+        # SECTION 2 ù PATIENT & ENCOUNTER
+        y -= 30
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(40, y, "Patient & Encounter Details")
+    
+        y -= 16
+        c.setFont("Helvetica", 9)
+        p = report_json["patient"]
+        e = report_json["encounter"]
+    
+        c.drawString(40, y, f"Patient Name: {p['name']}")
+        y -= 12
+        c.drawString(40, y, f"Gender: {p['gender']}")
+        y -= 12
+        c.drawString(40, y, f"Encounter Type: {e['type']}")
+        y -= 12
+        c.drawString(40, y, f"Assessment Date: {e['date_time']}")
+    
+        # SECTION 3 ù ASSESSMENT SUMMARY
+        y -= 30
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(40, y, "Assessment Summary")
+    
+        y -= 16
+        c.setFont("Helvetica", 9)
+    
+        for t in report_json["tests"]:
+            if t["red_flags"]:
+                c.setFillColor(red)
+            c.drawString(40, y, f"{t['test_code']} ù Score: {t['score']} ù {t['severity']}")
+            c.setFillColor(black)
+            y -= 12
+    
+        # SECTION 5 ù SAFETY FLAGS
+>       if report_json["system_notes"]["red_flag_present"]:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'system_notes'
+
+reports\pdf.py:63: KeyError
+---------------------------- Captured stdout setup ----------------------------
+Operations to perform:
+  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying audit.0001_initial... OK
+  Applying core.0001_initial... OK
+  Applying auditlogs.0001_initial... OK
+  Applying auditlogs.0002_auditlog_auditlogs_a_organiz_d8849b_idx_and_more... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying catalog.0001_initial... OK
+  Applying clinical.0001_initial... OK
+  Applying clinical.0002_delete_clinicalreport... OK
+  Applying clinical.0003_clinicalorder_phone_number... OK
+  Applying clinical.0004_idempotencykey... OK
+  Applying clinical_ops.0001_initial... OK
+  Applying clinical_ops.0002_assessmentorder_delivery_mode_and_more... OK
+  Applying clinical_ops.0003_responsequality... OK
+  Applying clinical_ops.0004_assessmentresponse_assessmentresult... OK
+  Applying clinical_ops.0005_assessmentreport... OK
+  Applying clinical_ops.0006_assessmentreport_signoff_method_and_more... OK
+  Applying clinical_ops.0007_auditevent... OK
+  Applying clinical_ops.0008_consentrecord... OK
+  Applying clinical_ops.0009_assessmentorder_report_access_code_and_more... OK
+  Applying clinical_ops.0010_assessmentorder_data_retention_until_and_more... OK
+  Applying clinical_ops.0011_deletionrequest... OK
+  Applying patients.0001_initial... OK
+  Applying orders.0001_initial... OK
+  Applying clinical_sessions.0001_initial... OK
+  Applying clinical_sessions.0002_sessionevent... OK
+  Applying clinical_sessions.0003_sessionconsent... OK
+  Applying clinical_sessions.0004_consentrecord_clinical_se_organiz_411bc4_idx_and_more... OK
+  Applying clinical_sessions.0005_alter_consentrecord_capture_mode... OK
+  Applying core.0002_organization_address... OK
+  Applying core.0003_organization_external_id... OK
+  Applying org.0001_initial... OK
+  Applying patients.0002_patient_patients_pa_organiz_f38037_idx_and_more... OK
+  Applying policies.0001_initial... OK
+  Applying policies.0002_orgclinicalpolicy_token_validity_hours... OK
+  Applying reports.0001_initial... OK
+  Applying reports.0002_report_reports_rep_organiz_ae5072_idx_and_more... OK
+  Applying reports.0003_alter_report_pdf_file... OK
+  Applying reports.0004_alter_report_pdf_file... OK
+  Applying reports.0005_alter_report_pdf_file... OK
+  Applying reports.0006_clinicalreport... OK
+  Applying reports.0007_clinicalreport_status... OK
+  Applying reports.0008_clinicalreport_review_status_and_more... OK
+  Applying reports.0009_clinicalreport_correction_reason_and_more... OK
+  Applying reports.0010_clinicalreport_one_report_per_order_and_more... OK
+  Applying reports.0011_clinicalreport_pdf_sha256... OK
+  Applying safety.0001_initial... OK
+  Applying safety.0002_flagacknowledgement_safety_flag_organiz_050255_idx_and_more... OK
+  Applying scoring.0001_initial... OK
+  Applying scoring.0002_score_delete_scoreresult... OK
+  Applying scoring.0003_score_scoring_sco_session_c75173_idx_and_more... OK
+  Applying sessions.0001_initial... OK
+  Applying signoff.0001_initial... OK
+---------------------------- Captured stderr setup ----------------------------
+Creating test database for alias 'default' ('test_neurova_clinical')...
+
+-------------------------- Captured stderr teardown ---------------------------
+Destroying test database for alias 'default' ('test_neurova_clinical')...
+
+============================== warnings summary ===============================
+catalog\models.py:23
+  C:\Users\Hareesh\Desktop\Main-Projects\neurova_backend_project\neurova_backend\catalog\models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/e2e/test_full_pathology_flow.py)
+    class TestDefinition(models.Model):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/e2e/test_full_pathology_flow.py::test_full_pathology_flow - KeyError: 'system_notes'
+======================== 1 failed, 1 warning in 11.58s ========================

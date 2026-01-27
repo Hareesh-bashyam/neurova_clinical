@@ -1,0 +1,4 @@
+Operations to perform:
+  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+Running migrations:
+  No migrations to apply.

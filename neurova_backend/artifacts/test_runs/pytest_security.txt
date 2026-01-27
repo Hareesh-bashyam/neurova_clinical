@@ -1,0 +1,18 @@
+......                                                                   [100%]
+=============================== warnings summary ===============================
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/security/test_audit_coverage.py)
+    class TestDefinition(models.Model):
+
+catalog/models.py:23
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/catalog/models.py:23: PytestCollectionWarning: cannot collect test class 'TestDefinition' because it has a __init__ constructor (from: tests/security/test_rbac.py)
+    class TestDefinition(models.Model):
+
+tests/security/test_health_ready.py::test_readyz_fails_when_db_down
+tests/security/test_rbac.py::test_staff_cannot_release_report
+tests/security/test_rbac.py::test_staff_cannot_release_report
+  /mnt/c/Users/Hareesh/Desktop/Main-Projects/neurova_backend_project/neurova_backend/neurova_backend/settings.py:26: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "ts": datetime.utcnow().isoformat() + "Z",
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+6 passed, 5 warnings in 9.83s
