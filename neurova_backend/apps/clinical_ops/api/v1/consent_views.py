@@ -19,9 +19,13 @@ class PublicGetConsent(APIView):
         order = get_object_or_404(AssessmentOrder, public_token=token)
         text = get_consent_text(version="V1", lang="en")
         return Response({
-            "consent_version": "V1",
-            "consent_language": "en",
-            "consent_text": text
+            "success": True,
+            "message": "Consent text retrieved successfully",
+            "data": {
+                "consent_version": "V1",
+                "consent_language": "en",
+                "consent_text": text
+            }
         }, status=status.HTTP_200_OK)
 
 class PublicSubmitConsent(APIView):
@@ -78,10 +82,15 @@ class PublicSubmitConsent(APIView):
             }
         )
 
-        return Response({"ok": True,"consent_version": consent_version,
-                        "consent_language": consent_language,
-                        "consent_given_by": consent_given_by,
-                        "allow_patient_copy": allow_patient_copy,
-                        "consent_id": cr.id}, 
-                        status=status.HTTP_200_OK)
+        return Response({
+            "success": True,
+            "message": "Consent captured successfully",
+            "data": {
+                "consent_version": consent_version,
+                "consent_language": consent_language,
+                "consent_given_by": consent_given_by,
+                "allow_patient_copy": allow_patient_copy,
+                "consent_id": cr.id
+            }
+        }, status=status.HTTP_200_OK)
 

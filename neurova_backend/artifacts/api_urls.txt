@@ -1,0 +1,8 @@
+backend/clinical/urls.py:17:    path(
+backend/clinical/urls.py:26:    path(
+backend/clinical/urls.py:35:    path(
+backend/clinical/urls.py:44:    path(
+backend/clinical/urls.py:53:    path(
+backend/clinical/urls.py:62:    path(
+backend/clinical/urls.py:71:    path(
+backend/clinical/reporting/report_builder_v1.py:30:    path = os.path.normpath(path)
