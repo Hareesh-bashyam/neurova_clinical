@@ -17,6 +17,7 @@ from datetime import timedelta
 import json
 import logging
 from datetime import datetime
+import sentry_sdk 
 
 load_dotenv()
 
@@ -290,3 +291,13 @@ if SENTRY_DSN:
         send_default_pii=False,  # 🚫 no PHI
         traces_sample_rate=0.0,
     )
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=0.2,
+    send_default_pii=False,
+)

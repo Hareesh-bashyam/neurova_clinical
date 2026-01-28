@@ -10,7 +10,7 @@ def get_or_create_policy(org_id):
     return OrgClinicalPolicy.objects.create(
         organization_id=org_id,
         enabled_batteries=all_codes,
-        signoff_required_global=False
+        signoff_required=True,
     )
 
 def battery_enabled(pol, battery_code):

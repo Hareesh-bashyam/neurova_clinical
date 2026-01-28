@@ -176,7 +176,11 @@ class CreateOrder(APIView):
 
         token = _make_token()
         policy = get_or_create_policy(org.id)
-        hours = policy.token_validity_hours or 48
+        hours = (
+            policy.token_validity_hours
+            if policy and policy.token_validity_hours
+            else 48
+        )
         expires = timezone.now() + timedelta(hours=hours)
 
         order = AssessmentOrder.objects.create(
@@ -192,11 +196,11 @@ class CreateOrder(APIView):
             ),
             verified_by_staff=s.validated_data.get("verified_by_staff", True),
             status=AssessmentOrder.STATUS_CREATED,
-            created_by_user_id=(
-                str(request.user.id)
-                if getattr(request, "user", None) and request.user.is_authenticated
-                else None
-            ),
+            # created_by_user_id=(
+            #     str(request.user.id)
+            #     if getattr(request, "user", None) and request.user.is_authenticated
+            #     else None
+            # ),
             public_token=token,
             public_link_expires_at=expires,
         )

@@ -26,7 +26,12 @@ class PublicOrderBootstrap(APIView):
                 "success": True,
                 "message": "Order initialized successfully",
                 "data": {
+                    "org_id": order.org.id,
                     "order_id": order.id,
+                    "patient_id": order.patient.id,
+                    "patient_name": order.patient.full_name,
+                    "patient_age": order.patient.age, 
+                    "patient_gender": order.patient.sex,
                     "battery_code": order.battery_code,
                     "battery_version": order.battery_version,
                     "status": order.status,
