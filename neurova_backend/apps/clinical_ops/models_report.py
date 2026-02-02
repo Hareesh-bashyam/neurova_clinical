@@ -1,9 +1,10 @@
 from django.db import models
 from django.utils import timezone
-from apps.clinical_ops.models import AssessmentOrder, Org
+from apps.clinical_ops.models import AssessmentOrder
+from core.models import Organization
 
 class AssessmentReport(models.Model):
-    org = models.ForeignKey(Org, on_delete=models.CASCADE)
+    org = models.ForeignKey(Organization, on_delete=models.CASCADE)
     order = models.OneToOneField(AssessmentOrder, on_delete=models.CASCADE, related_name="report")
 
     pdf_file = models.FileField(upload_to="clinical_reports/%Y/%m/%d/", null=True, blank=True)

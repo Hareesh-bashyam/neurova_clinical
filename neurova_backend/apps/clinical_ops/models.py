@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from apps.clinical_ops.services.retention_policy import compute_retention_date
-
+from core.models import Organization    
 
 
 class Org(models.Model):
@@ -18,7 +18,7 @@ class Org(models.Model):
 class Patient(models.Model):
     # If you already have Patient model, DO NOT duplicate.
     # Instead, delete this model and import your existing Patient model everywhere.
-    org = models.ForeignKey(Org, on_delete=models.CASCADE, related_name="patients")
+    org = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="patients")
     mrn = models.CharField(max_length=64, blank=True, null=True)  # UHID/MRN optional
     full_name = models.CharField(max_length=255)
     age = models.PositiveIntegerField()
@@ -67,7 +67,7 @@ class AssessmentOrder(models.Model):
         (MODE_ASSISTED, "Assisted by staff"),
     ]
 
-    org = models.ForeignKey(Org, on_delete=models.CASCADE, related_name="orders")
+    org = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="orders")
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="orders")
 
     battery_code = models.CharField(max_length=64)     # ex: MENTAL_HEALTH_CORE_V1
@@ -176,7 +176,7 @@ class AssessmentOrder(models.Model):
 
 
 class ResponseQuality(models.Model):
-    org = models.ForeignKey(Org, on_delete=models.CASCADE)
+    org = models.ForeignKey(Organization, on_delete=models.CASCADE)
     order = models.OneToOneField(AssessmentOrder, on_delete=models.CASCADE, related_name="response_quality")
 
     duration_seconds = models.IntegerField(default=0)

@@ -1,0 +1,1000 @@
+openapi: 3.0.3
+info:
+  title: Neurova Clinical Engine API
+  version: 1.0.0
+paths:
+  /api/v1/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AppTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AppTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppTokenObtainPair'
+          description: ''
+  /api/v1/auth/refresh/:
+    post:
+      operationId: auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/catalog/import/:
+    post:
+      operationId: catalog_import_create
+      tags:
+      - catalog
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/admin/data-deletion/approve:
+    post:
+      operationId: clinical_ops_admin_data_deletion_approve_create
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/public/order/{token}:
+    get:
+      operationId: clinical_ops_public_order_retrieve
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - clinical-ops
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/public/order/{token}/consent:
+    get:
+      operationId: clinical_ops_public_order_consent_retrieve
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - clinical-ops
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/public/order/{token}/consent/submit:
+    post:
+      operationId: clinical_ops_public_order_consent_submit_create
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - clinical-ops
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/public/order/{token}/report.pdf:
+    get:
+      operationId: clinical_ops_public_order_report.pdf_retrieve
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - clinical-ops
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/public/order/{token}/report/access-code:
+    post:
+      operationId: clinical_ops_public_order_report_access_code_create
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - clinical-ops
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/public/order/{token}/submit:
+    post:
+      operationId: clinical_ops_public_order_submit_create
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - clinical-ops
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/staff/order/{order_id}/export:
+    get:
+      operationId: clinical_ops_staff_order_export_retrieve
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/staff/orders/create:
+    post:
+      operationId: clinical_ops_staff_orders_create_create
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/staff/orders/deliver:
+    post:
+      operationId: clinical_ops_staff_orders_deliver_create
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/staff/patients/create:
+    post:
+      operationId: clinical_ops_staff_patients_create_create
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/staff/queue:
+    get:
+      operationId: clinical_ops_staff_queue_retrieve
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/staff/reports/download:
+    get:
+      operationId: clinical_ops_staff_reports_download_retrieve
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/staff/reports/generate:
+    post:
+      operationId: clinical_ops_staff_reports_generate_create
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical-ops/staff/reports/signoff/override:
+    post:
+      operationId: clinical_ops_staff_reports_signoff_override_create
+      description: |-
+        Staff/Clinician can override system signoff:
+        payload:
+        {
+          "org_id": 1,
+          "order_id": 123,
+          "signoff_status": "SIGNED" or "REJECTED",
+          "signed_by_name": "Dr X",
+          "signed_by_role": "Psychiatrist" or "Clinical Psychologist",
+          "reason": "manual review completed"
+        }
+      tags:
+      - clinical-ops
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical/orders/:
+    post:
+      operationId: clinical_orders_create
+      tags:
+      - clinical
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical/orders/{order_id}/generate_report/:
+    post:
+      operationId: clinical_orders_generate_report_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - clinical
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical/orders/{order_id}/report/pdf/:
+    get:
+      operationId: clinical_orders_report_pdf_retrieve
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - clinical
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical/orders/{order_id}/status/:
+    post:
+      operationId: clinical_orders_status_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - clinical
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical/sessions/{session_id}/current/:
+    get:
+      operationId: clinical_sessions_current_retrieve
+      parameters:
+      - in: path
+        name: session_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - clinical
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical/sessions/{session_id}/start/:
+    post:
+      operationId: clinical_sessions_start_create
+      parameters:
+      - in: path
+        name: session_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - clinical
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/clinical/sessions/{session_id}/submit_current/:
+    post:
+      operationId: clinical_sessions_submit_current_create
+      parameters:
+      - in: path
+        name: session_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - clinical
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/:
+    post:
+      operationId: orders_create
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/{order_id}/start-session/:
+    post:
+      operationId: orders_start_session_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orgs/:
+    post:
+      operationId: orgs_create
+      tags:
+      - orgs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Organization'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Organization'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+          description: ''
+  /api/v1/panels/:
+    get:
+      operationId: panels_list
+      description: |-
+        Enforce organization scoping automatically for every ViewSet.
+        Models MUST have `organization` FK field.
+      tags:
+      - panels
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Panel'
+          description: ''
+  /api/v1/panels/{id}/:
+    get:
+      operationId: panels_retrieve
+      description: |-
+        Enforce organization scoping automatically for every ViewSet.
+        Models MUST have `organization` FK field.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this panel.
+        required: true
+      tags:
+      - panels
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Panel'
+          description: ''
+  /api/v1/patients/:
+    get:
+      operationId: patients_list
+      description: |-
+        Enforce organization scoping automatically for every ViewSet.
+        Models MUST have `organization` FK field.
+      tags:
+      - patients
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+          description: ''
+    post:
+      operationId: patients_create
+      description: |-
+        Enforce organization scoping automatically for every ViewSet.
+        Models MUST have `organization` FK field.
+      tags:
+      - patients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Patient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Patient'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+          description: ''
+  /api/v1/patients/{id}/:
+    get:
+      operationId: patients_retrieve
+      description: |-
+        Enforce organization scoping automatically for every ViewSet.
+        Models MUST have `organization` FK field.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this patient.
+        required: true
+      tags:
+      - patients
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+          description: ''
+    put:
+      operationId: patients_update
+      description: |-
+        Enforce organization scoping automatically for every ViewSet.
+        Models MUST have `organization` FK field.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this patient.
+        required: true
+      tags:
+      - patients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Patient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Patient'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+          description: ''
+    patch:
+      operationId: patients_partial_update
+      description: |-
+        Enforce organization scoping automatically for every ViewSet.
+        Models MUST have `organization` FK field.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this patient.
+        required: true
+      tags:
+      - patients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPatient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPatient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPatient'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+          description: ''
+    delete:
+      operationId: patients_destroy
+      description: |-
+        Enforce organization scoping automatically for every ViewSet.
+        Models MUST have `organization` FK field.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this patient.
+        required: true
+      tags:
+      - patients
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/reports/{report_id}/create-correction/:
+    post:
+      operationId: reports_create_correction_create
+      parameters:
+      - in: path
+        name: report_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/reports/{report_id}/mark-reviewed/:
+    post:
+      operationId: reports_mark_reviewed_create
+      description: |-
+        Marks a ClinicalReport as reviewed by a clinician/staff.
+        No UI dependency. No PDF generation. No recomputation.
+      parameters:
+      - in: path
+        name: report_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/reports/{report_id}/pdf/:
+    get:
+      operationId: reports_pdf_retrieve
+      parameters:
+      - in: path
+        name: report_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/reports/{report_id}/release/:
+    post:
+      operationId: reports_release_create
+      parameters:
+      - in: path
+        name: report_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/reports/{report_id}/sign/:
+    post:
+      operationId: reports_sign_create
+      parameters:
+      - in: path
+        name: report_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/sessions/{session_id}/consent/:
+    post:
+      operationId: sessions_consent_create
+      parameters:
+      - in: path
+        name: session_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - sessions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/sessions/{session_id}/events/:
+    post:
+      operationId: sessions_events_create
+      parameters:
+      - in: path
+        name: session_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - sessions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/sessions/{session_id}/report/:
+    post:
+      operationId: sessions_report_create
+      parameters:
+      - in: path
+        name: session_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - sessions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/sessions/{session_id}/score/:
+    post:
+      operationId: sessions_score_create
+      parameters:
+      - in: path
+        name: session_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - sessions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/users/:
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
+          description: ''
+components:
+  schemas:
+    AppTokenObtainPair:
+      type: object
+      description: Only responsible for generating tokens
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    DefaultReleasePolicyEnum:
+      enum:
+      - CLINICIAN_ONLY
+      - PATIENT_AND_CLINICIAN
+      type: string
+      description: |-
+        * `CLINICIAN_ONLY` - CLINICIAN_ONLY
+        * `PATIENT_AND_CLINICIAN` - PATIENT_AND_CLINICIAN
+    OrgTypeEnum:
+      enum:
+      - HOSPITAL
+      - DIAGNOSTIC
+      type: string
+      description: |-
+        * `HOSPITAL` - HOSPITAL
+        * `DIAGNOSTIC` - DIAGNOSTIC
+    Organization:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        external_id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: External clinical organization UUID
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 50
+        org_type:
+          $ref: '#/components/schemas/OrgTypeEnum'
+        signature_required:
+          type: boolean
+        default_release_policy:
+          $ref: '#/components/schemas/DefaultReleasePolicyEnum'
+        address:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - code
+      - created_at
+      - external_id
+      - id
+      - name
+      - org_type
+    Panel:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        is_active:
+          type: boolean
+      required:
+      - code
+      - id
+      - name
+    PatchedPatient:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        external_id:
+          type: string
+          maxLength: 80
+        name:
+          type: string
+          maxLength: 255
+        dob:
+          type: string
+          format: date
+          nullable: true
+        sex:
+          type: string
+          maxLength: 20
+        phone:
+          type: string
+          maxLength: 30
+        email:
+          type: string
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        external_id:
+          type: string
+          maxLength: 80
+        name:
+          type: string
+          maxLength: 255
+        dob:
+          type: string
+          format: date
+          nullable: true
+        sex:
+          type: string
+          maxLength: 20
+        phone:
+          type: string
+          maxLength: 30
+        email:
+          type: string
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    UserCreate:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        role:
+          type: string
+          writeOnly: true
+        organization_id:
+          type: integer
+          writeOnly: true
+      required:
+      - organization_id
+      - password
+      - role
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

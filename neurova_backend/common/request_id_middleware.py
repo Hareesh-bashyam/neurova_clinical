@@ -13,7 +13,8 @@ class RequestIDMiddleware:
 
     def __call__(self, request):
         rid = request.META.get(self.HEADER) or str(uuid.uuid4())
-        request.request_id = rid
+        request.id = rid                 
+        request.request_id = rid         
         response = self.get_response(request)
         response[self.RESPONSE_HEADER] = rid
         return response

@@ -1,0 +1,403 @@
+./docs/API_TRUTH.md:4:/api/v1/clinical-ops/* 
+./docs/API_MAP.md:2:- Endpoint: POST /api/v1/clinical-ops/staff/patients/create
+./docs/API_MAP.md:10:- Endpoint: POST /api/v1/clinical-ops/staff/orders/create
+./docs/API_MAP.md:18:- Endpoint: GET /api/v1/clinical-ops/staff/queue
+./docs/API_MAP.md:26:- Endpoint: GET /api/v1/clinical-ops/public/order/{token}
+./docs/API_MAP.md:34:- Endpoint: POST /api/v1/clinical-ops/staff/orders/deliver
+./docs/API_MAP.md:42:- Endpoint: GET /api/v1/clinical-ops/staff/order/{order_id}/export
+./docs/API_MAP.md:50:- Endpoint: POST /api/v1/clinical-ops/public/order/{token}/submit
+./docs/API_MAP.md:58:- Endpoint: POST /api/v1/clinical-ops/staff/reports/generate
+./docs/API_MAP.md:66:- Endpoint: GET /api/v1/clinical-ops/staff/reports/download
+./docs/API_MAP.md:74:- Endpoint: GET /api/v1/clinical-ops/public/order/{token}/report.pdf
+./docs/API_MAP.md:82:- Endpoint: POST /api/v1/clinical-ops/staff/reports/signoff/override
+./docs/API_MAP.md:90:- Endpoint: GET /api/v1/clinical-ops/public/order/{token}/consent
+./docs/API_MAP.md:98:- Endpoint: POST /api/v1/clinical-ops/public/order/{token}/consent/submit
+./docs/API_MAP.md:106:- Endpoint: POST /api/v1/clinical-ops/public/order/{token}/report/access-code
+./docs/API_MAP.md:114:- Endpoint: POST /api/v1/clinical-ops/admin/data-deletion/approve
+./neurova_backend/urls.py:44:    path("api/v1/clinical-ops/", include("apps.clinical_ops.api.v1.urls"))
+./neurova_backend/settings.py:99:    "apps.clinical_ops",
+./tests/test_queue_and_order.py:2:from apps.clinical_ops.models import Org, Patient, AssessmentOrder
+./apps/__init__.py:1:default_app_config = "apps.clinical_ops.apps.ClinicalOpsConfig"
+./artifacts/test_runs/seed_script_search.txt:47:./artifacts/test_runs/migrate.txt:2:  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+./apps/clinical_ops/tests/test_queue_and_order.py:2:from apps.clinical_ops.models import Org, Patient, AssessmentOrder
+./apps/clinical_ops/services/signoff_engine.py:2:from apps.clinical_ops.models_report import AssessmentReport
+./apps/clinical_ops/services/signoff_engine.py:3:from apps.clinical_ops.models_assessment import AssessmentResult
+./apps/clinical_ops/services/signoff_engine.py:4:from apps.clinical_ops.audit.logger import log_event
+./apps/clinical_ops/api/v1/views.py:7:from apps.clinical_ops.models import Org, Patient, AssessmentOrder
+./apps/clinical_ops/api/v1/views.py:8:from apps.clinical_ops.api.v1.serializers import (
+./apps/clinical_ops/api/v1/views.py:14:from apps.clinical_ops.services.retention_policy import compute_retention_date
+./apps/clinical_ops/management/commands/retention_sweep.py:3:from apps.clinical_ops.models import AssessmentOrder
+./apps/clinical_ops/management/commands/retention_sweep.py:4:from apps.clinical_ops.models_deletion import DeletionRequest
+./artifacts/test_runs/pytest_integrity.txt:92:  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+./artifacts/test_runs/pytest_integrity.txt:123:  Applying clinical_ops.0001_initial... OK
+./artifacts/test_runs/pytest_integrity.txt:124:  Applying clinical_ops.0002_assessmentorder_delivery_mode_and_more... OK
+./artifacts/test_runs/pytest_integrity.txt:125:  Applying clinical_ops.0003_responsequality... OK
+./artifacts/test_runs/pytest_integrity.txt:126:  Applying clinical_ops.0004_assessmentresponse_assessmentresult... OK
+./artifacts/test_runs/pytest_integrity.txt:127:  Applying clinical_ops.0005_assessmentreport... OK
+./artifacts/test_runs/pytest_integrity.txt:128:  Applying clinical_ops.0006_assessmentreport_signoff_method_and_more... OK
+./artifacts/test_runs/pytest_integrity.txt:129:  Applying clinical_ops.0007_auditevent... OK
+./artifacts/test_runs/pytest_integrity.txt:130:  Applying clinical_ops.0008_consentrecord... OK
+./artifacts/test_runs/pytest_integrity.txt:131:  Applying clinical_ops.0009_assessmentorder_report_access_code_and_more... OK
+./artifacts/test_runs/pytest_integrity.txt:132:  Applying clinical_ops.0010_assessmentorder_data_retention_until_and_more... OK
+./artifacts/test_runs/pytest_integrity.txt:133:  Applying clinical_ops.0011_deletionrequest... OK
+./apps/clinical_ops/management/commands/cleanup_expired_orders.py:4:from apps.clinical_ops.models import AssessmentOrder
+./apps/clinical_ops/api/v1/urls.py:2:from apps.clinical_ops.api.v1.views import CreatePatient, CreateOrder, ClinicQueue
+./apps/clinical_ops/api/v1/urls.py:3:from apps.clinical_ops.api.v1.public_views import PublicOrderBootstrap
+./apps/clinical_ops/api/v1/urls.py:4:from apps.clinical_ops.api.v1.delivery_views import SetDeliveryAndMarkDelivered
+./apps/clinical_ops/api/v1/urls.py:5:from apps.clinical_ops.api.v1.export_views import ExportOrderJSON
+./apps/clinical_ops/api/v1/urls.py:6:from apps.clinical_ops.api.v1.public_submit_views import PublicOrderSubmit
+./apps/clinical_ops/api/v1/urls.py:7:from apps.clinical_ops.api.v1.report_views import GenerateReportPDF
+./apps/clinical_ops/api/v1/urls.py:8:from apps.clinical_ops.api.v1.report_download_views import StaffDownloadReport, PublicDownloadReport
+./apps/clinical_ops/api/v1/urls.py:9:from apps.clinical_ops.api.v1.signoff_views import OverrideReportSignoff
+./apps/clinical_ops/api/v1/urls.py:10:from apps.clinical_ops.api.v1.consent_views import PublicGetConsent, PublicSubmitConsent
+./apps/clinical_ops/api/v1/urls.py:11:from apps.clinical_ops.api.v1.public_access_code_views import PublicRequestReportCode
+./apps/clinical_ops/api/v1/urls.py:12:from apps.clinical_ops.api.v1.deletion_views import AdminApproveDeletion
+./apps/clinical_ops/api/v1/signoff_views.py:7:from apps.clinical_ops.models import Org, AssessmentOrder
+./apps/clinical_ops/api/v1/signoff_views.py:8:from apps.clinical_ops.models_report import AssessmentReport
+./apps/clinical_ops/api/v1/signoff_views.py:9:from apps.clinical_ops.audit.logger import log_event
+./apps/clinical_ops/services/report_context.py:1:from apps.clinical_ops.models import AssessmentOrder
+./apps/clinical_ops/services/report_context.py:2:from apps.clinical_ops.models_assessment import AssessmentResult
+./apps/clinical_ops/services/report_context.py:3:from apps.clinical_ops.models_report import AssessmentReport
+./artifacts/test_runs/pytest_flow_4.txt:241:  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+./artifacts/test_runs/pytest_flow_4.txt:272:  Applying clinical_ops.0001_initial... OK
+./artifacts/test_runs/pytest_flow_4.txt:273:  Applying clinical_ops.0002_assessmentorder_delivery_mode_and_more... OK
+./artifacts/test_runs/pytest_flow_4.txt:274:  Applying clinical_ops.0003_responsequality... OK
+./artifacts/test_runs/pytest_flow_4.txt:275:  Applying clinical_ops.0004_assessmentresponse_assessmentresult... OK
+./artifacts/test_runs/pytest_flow_4.txt:276:  Applying clinical_ops.0005_assessmentreport... OK
+./artifacts/test_runs/pytest_flow_4.txt:277:  Applying clinical_ops.0006_assessmentreport_signoff_method_and_more... OK
+./artifacts/test_runs/pytest_flow_4.txt:278:  Applying clinical_ops.0007_auditevent... OK
+./artifacts/test_runs/pytest_flow_4.txt:279:  Applying clinical_ops.0008_consentrecord... OK
+./artifacts/test_runs/pytest_flow_4.txt:280:  Applying clinical_ops.0009_assessmentorder_report_access_code_and_more... OK
+./artifacts/test_runs/pytest_flow_4.txt:281:  Applying clinical_ops.0010_assessmentorder_data_retention_until_and_more... OK
+./artifacts/test_runs/pytest_flow_4.txt:282:  Applying clinical_ops.0011_deletionrequest... OK
+./apps/clinical_ops/api/v1/serializers.py:4:from apps.clinical_ops.models import Patient, AssessmentOrder, Org
+./apps/clinical_ops/api/v1/export_views.py:5:from apps.clinical_ops.models import AssessmentOrder, Org
+./apps/clinical_ops/api/v1/export_views.py:6:from apps.clinical_ops.services.data_exporter import export_order_data
+./apps/clinical_ops/api/v1/export_views.py:7:from apps.clinical_ops.audit.logger import log_event
+./apps/clinical_ops/api/v1/consent_views.py:7:from apps.clinical_ops.models import AssessmentOrder
+./apps/clinical_ops/api/v1/consent_views.py:8:from apps.clinical_ops.models_consent import ConsentRecord
+./apps/clinical_ops/api/v1/consent_views.py:9:from apps.clinical_ops.services.consent_text import get_consent_text
+./apps/clinical_ops/api/v1/consent_views.py:10:from apps.clinical_ops.audit.logger import log_event
+./artifacts/test_runs/pytest_flow_3.txt:236:  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+./artifacts/test_runs/pytest_flow_3.txt:267:  Applying clinical_ops.0001_initial... OK
+./artifacts/test_runs/pytest_flow_3.txt:268:  Applying clinical_ops.0002_assessmentorder_delivery_mode_and_more... OK
+./artifacts/test_runs/pytest_flow_3.txt:269:  Applying clinical_ops.0003_responsequality... OK
+./artifacts/test_runs/pytest_flow_3.txt:270:  Applying clinical_ops.0004_assessmentresponse_assessmentresult... OK
+./artifacts/test_runs/pytest_flow_3.txt:271:  Applying clinical_ops.0005_assessmentreport... OK
+./artifacts/test_runs/pytest_flow_3.txt:272:  Applying clinical_ops.0006_assessmentreport_signoff_method_and_more... OK
+./artifacts/test_runs/pytest_flow_3.txt:273:  Applying clinical_ops.0007_auditevent... OK
+./artifacts/test_runs/pytest_flow_3.txt:274:  Applying clinical_ops.0008_consentrecord... OK
+./artifacts/test_runs/pytest_flow_3.txt:275:  Applying clinical_ops.0009_assessmentorder_report_access_code_and_more... OK
+./artifacts/test_runs/pytest_flow_3.txt:276:  Applying clinical_ops.0010_assessmentorder_data_retention_until_and_more... OK
+./artifacts/test_runs/pytest_flow_3.txt:277:  Applying clinical_ops.0011_deletionrequest... OK
+./apps/clinical_ops/audit/models.py:3:from apps.clinical_ops.models import Org
+./apps/clinical_ops/api/v1/report_views.py:9:from apps.clinical_ops.models import Org, AssessmentOrder
+./apps/clinical_ops/api/v1/report_views.py:10:from apps.clinical_ops.models_report import AssessmentReport
+./apps/clinical_ops/api/v1/report_views.py:11:from apps.clinical_ops.models_assessment import AssessmentResult
+./apps/clinical_ops/api/v1/report_views.py:13:from apps.clinical_ops.services.report_context import build_report_context
+./apps/clinical_ops/api/v1/report_views.py:14:from apps.clinical_ops.services.pdf_report_v2 import generate_report_pdf_bytes_v2
+./apps/clinical_ops/api/v1/report_views.py:15:from apps.clinical_ops.services.signoff_engine import system_sign_report
+./apps/clinical_ops/api/v1/delivery_views.py:6:from apps.clinical_ops.models import AssessmentOrder, Org
+./artifacts/test_runs/pytest_flow_2.txt:233:  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+./artifacts/test_runs/pytest_flow_2.txt:264:  Applying clinical_ops.0001_initial... OK
+./artifacts/test_runs/pytest_flow_2.txt:265:  Applying clinical_ops.0002_assessmentorder_delivery_mode_and_more... OK
+./artifacts/test_runs/pytest_flow_2.txt:266:  Applying clinical_ops.0003_responsequality... OK
+./artifacts/test_runs/pytest_flow_2.txt:267:  Applying clinical_ops.0004_assessmentresponse_assessmentresult... OK
+./artifacts/test_runs/pytest_flow_2.txt:268:  Applying clinical_ops.0005_assessmentreport... OK
+./artifacts/test_runs/pytest_flow_2.txt:269:  Applying clinical_ops.0006_assessmentreport_signoff_method_and_more... OK
+./artifacts/test_runs/pytest_flow_2.txt:270:  Applying clinical_ops.0007_auditevent... OK
+./artifacts/test_runs/pytest_flow_2.txt:271:  Applying clinical_ops.0008_consentrecord... OK
+./artifacts/test_runs/pytest_flow_2.txt:272:  Applying clinical_ops.0009_assessmentorder_report_access_code_and_more... OK
+./artifacts/test_runs/pytest_flow_2.txt:273:  Applying clinical_ops.0010_assessmentorder_data_retention_until_and_more... OK
+./artifacts/test_runs/pytest_flow_2.txt:274:  Applying clinical_ops.0011_deletionrequest... OK
+./apps/clinical_ops/audit/logger.py:1:from apps.clinical_ops.audit.models import AuditEvent
+./apps/clinical_ops/api/v1/public_access_code_views.py:5:from apps.clinical_ops.models import AssessmentOrder
+./apps/clinical_ops/api/v1/public_access_code_views.py:6:from apps.clinical_ops.services.access_code import issue_report_access_code
+./apps/clinical_ops/api/v1/public_access_code_views.py:7:from apps.clinical_ops.audit.logger import log_event
+./apps/clinical_ops/api/v1/public_views.py:6:from apps.clinical_ops.models import AssessmentOrder
+./apps/clinical_ops/api/v1/report_download_views.py:11:from apps.clinical_ops.models import Org, AssessmentOrder
+./apps/clinical_ops/api/v1/report_download_views.py:12:from apps.clinical_ops.models_report import AssessmentReport
+./apps/clinical_ops/api/v1/report_download_views.py:13:from apps.clinical_ops.services.access_code import verify_report_access_code
+./apps/clinical_ops/apps.py:4:    name = "apps.clinical_ops"
+./apps/clinical_ops/api/v1/deletion_views.py:6:from apps.clinical_ops.models_deletion import DeletionRequest
+./apps/clinical_ops/api/v1/deletion_views.py:7:from apps.clinical_ops.services.deletion_executor import execute_deletion
+./apps/clinical_ops/api/v1/deletion_views.py:8:from apps.clinical_ops.audit.logger import log_event
+./apps/clinical_ops/api/v1/public_submit_views.py:7:from apps.clinical_ops.models import AssessmentOrder
+./apps/clinical_ops/api/v1/public_submit_views.py:8:from apps.clinical_ops.models_assessment import AssessmentResponse, AssessmentResult
+./apps/clinical_ops/api/v1/public_submit_views.py:9:from apps.clinical_ops.models import ResponseQuality
+./apps/clinical_ops/api/v1/public_submit_views.py:10:from apps.clinical_ops.models_consent import ConsentRecord
+./apps/clinical_ops/api/v1/public_submit_views.py:12:from apps.clinical_ops.services.quality import compute_quality
+./apps/clinical_ops/api/v1/public_submit_views.py:13:from apps.clinical_ops.services.scoring_adapter import score_battery
+./apps/clinical_ops/models_report.py:3:from apps.clinical_ops.models import AssessmentOrder, Org
+./apps/clinical_ops/services/consent_views.py:7:from apps.clinical_ops.models import AssessmentOrder
+./apps/clinical_ops/services/consent_views.py:8:from apps.clinical_ops.models_consent import ConsentRecord
+./apps/clinical_ops/services/consent_views.py:9:from apps.clinical_ops.services.consent_text import get_consent_text
+./apps/clinical_ops/services/consent_views.py:10:from apps.clinical_ops.audit.logger import log_event
+./artifacts/test_runs/pytest_flow.txt:222:  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+./artifacts/test_runs/pytest_flow.txt:253:  Applying clinical_ops.0001_initial... OK
+./artifacts/test_runs/pytest_flow.txt:254:  Applying clinical_ops.0002_assessmentorder_delivery_mode_and_more... OK
+./artifacts/test_runs/pytest_flow.txt:255:  Applying clinical_ops.0003_responsequality... OK
+./artifacts/test_runs/pytest_flow.txt:256:  Applying clinical_ops.0004_assessmentresponse_assessmentresult... OK
+./artifacts/test_runs/pytest_flow.txt:257:  Applying clinical_ops.0005_assessmentreport... OK
+./artifacts/test_runs/pytest_flow.txt:258:  Applying clinical_ops.0006_assessmentreport_signoff_method_and_more... OK
+./artifacts/test_runs/pytest_flow.txt:259:  Applying clinical_ops.0007_auditevent... OK
+./artifacts/test_runs/pytest_flow.txt:260:  Applying clinical_ops.0008_consentrecord... OK
+./artifacts/test_runs/pytest_flow.txt:261:  Applying clinical_ops.0009_assessmentorder_report_access_code_and_more... OK
+./artifacts/test_runs/pytest_flow.txt:262:  Applying clinical_ops.0010_assessmentorder_data_retention_until_and_more... OK
+./artifacts/test_runs/pytest_flow.txt:263:  Applying clinical_ops.0011_deletionrequest... OK
+./apps/clinical_ops/services/data_exporter.py:2:from apps.clinical_ops.models_assessment import AssessmentResponse, AssessmentResult
+./apps/clinical_ops/services/data_exporter.py:3:from apps.clinical_ops.models_report import AssessmentReport
+./apps/clinical_ops/services/deletion_executor.py:2:from apps.clinical_ops.models_deletion import DeletionRequest
+./apps/clinical_ops/services/deletion_executor.py:3:from apps.clinical_ops.models_assessment import AssessmentResponse, AssessmentResult
+./apps/clinical_ops/services/deletion_executor.py:4:from apps.clinical_ops.models_report import AssessmentReport
+./apps/clinical_ops/services/deletion_executor.py:5:from apps.clinical_ops.audit.logger import log_event
+./artifacts/test_runs/manage_help.txt:10:[clinical_ops]
+./apps/clinical_ops/models_deletion.py:3:from apps.clinical_ops.models import Org, AssessmentOrder
+./artifacts/test_runs/pytest_coverage.txt:9:apps/clinical_ops/tests/test_queue_and_order.py .                        [  4%]
+./artifacts/test_runs/pytest_coverage.txt:77:apps/clinical_ops/__init__.py                                                               0      0   100%
+./artifacts/test_runs/pytest_coverage.txt:78:apps/clinical_ops/admin.py                                                                 24      0   100%
+./artifacts/test_runs/pytest_coverage.txt:79:apps/clinical_ops/api/v1/consent_views.py                                                  35     16    54%   19-21, 32-81
+./artifacts/test_runs/pytest_coverage.txt:80:apps/clinical_ops/api/v1/deletion_views.py                                                 22     13    41%   12-30
+./artifacts/test_runs/pytest_coverage.txt:81:apps/clinical_ops/api/v1/delivery_views.py                                                 22     14    36%   10-28
+./artifacts/test_runs/pytest_coverage.txt:82:apps/clinical_ops/api/v1/export_views.py                                                   18      9    50%   11-30
+./artifacts/test_runs/pytest_coverage.txt:83:apps/clinical_ops/api/v1/public_access_code_views.py                                       19      6    68%   16-35
+./artifacts/test_runs/pytest_coverage.txt:84:apps/clinical_ops/api/v1/public_submit_views.py                                            39     20    49%   25-86
+./artifacts/test_runs/pytest_coverage.txt:85:apps/clinical_ops/api/v1/public_views.py                                                   18      6    67%   15-24
+./artifacts/test_runs/pytest_coverage.txt:86:apps/clinical_ops/api/v1/report_download_views.py                                          51     34    33%   21-50, 65-104
+./artifacts/test_runs/pytest_coverage.txt:87:apps/clinical_ops/api/v1/report_views.py                                                   42     27    36%   21-98
+./artifacts/test_runs/pytest_coverage.txt:88:apps/clinical_ops/api/v1/serializers.py                                                    28      0   100%
+./artifacts/test_runs/pytest_coverage.txt:89:apps/clinical_ops/api/v1/signoff_views.py                                                  32     22    31%   25-64
+./artifacts/test_runs/pytest_coverage.txt:90:apps/clinical_ops/api/v1/urls.py                                                           13      0   100%
+./artifacts/test_runs/pytest_coverage.txt:91:apps/clinical_ops/api/v1/views.py                                                          72     53    26%   19, 26-141, 156-209, 225-265
+./artifacts/test_runs/pytest_coverage.txt:92:apps/clinical_ops/apps.py                                                                   3      0   100%
+./artifacts/test_runs/pytest_coverage.txt:93:apps/clinical_ops/audit/logger.py                                                           3      1    67%   6
+./artifacts/test_runs/pytest_coverage.txt:94:apps/clinical_ops/audit/models.py                                                          15      0   100%
+./artifacts/test_runs/pytest_coverage.txt:95:apps/clinical_ops/migrations/0001_initial.py                                                7      0   100%
+./artifacts/test_runs/pytest_coverage.txt:96:apps/clinical_ops/migrations/0002_assessmentorder_delivery_mode_and_more.py                 4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:97:apps/clinical_ops/migrations/0003_responsequality.py                                        6      0   100%
+./artifacts/test_runs/pytest_coverage.txt:98:apps/clinical_ops/migrations/0004_assessmentresponse_assessmentresult.py                    6      0   100%
+./artifacts/test_runs/pytest_coverage.txt:99:apps/clinical_ops/migrations/0005_assessmentreport.py                                       6      0   100%
+./artifacts/test_runs/pytest_coverage.txt:100:apps/clinical_ops/migrations/0006_assessmentreport_signoff_method_and_more.py               4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:101:apps/clinical_ops/migrations/0007_auditevent.py                                             6      0   100%
+./artifacts/test_runs/pytest_coverage.txt:102:apps/clinical_ops/migrations/0008_consentrecord.py                                          6      0   100%
+./artifacts/test_runs/pytest_coverage.txt:103:apps/clinical_ops/migrations/0009_assessmentorder_report_access_code_and_more.py            4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:104:apps/clinical_ops/migrations/0010_assessmentorder_data_retention_until_and_more.py          4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:105:apps/clinical_ops/migrations/0011_deletionrequest.py                                        6      0   100%
+./artifacts/test_runs/pytest_coverage.txt:106:apps/clinical_ops/migrations/__init__.py                                                    0      0   100%
+./artifacts/test_runs/pytest_coverage.txt:107:apps/clinical_ops/models.py                                                               103     16    84%   15, 40, 146-156, 159-165, 168-175
+./artifacts/test_runs/pytest_coverage.txt:108:apps/clinical_ops/models_assessment.py                                                     20      0   100%
+./artifacts/test_runs/pytest_coverage.txt:109:apps/clinical_ops/models_consent.py                                                        20      0   100%
+./artifacts/test_runs/pytest_coverage.txt:110:apps/clinical_ops/models_deletion.py                                                       13      0   100%
+./artifacts/test_runs/pytest_coverage.txt:111:apps/clinical_ops/models_report.py                                                         17      0   100%
+./artifacts/test_runs/pytest_coverage.txt:112:apps/clinical_ops/services/__init__.py                                                      0      0   100%
+./artifacts/test_runs/pytest_coverage.txt:113:apps/clinical_ops/services/access_code.py                                                  16     11    31%   6, 10-14, 18-22
+./artifacts/test_runs/pytest_coverage.txt:114:apps/clinical_ops/services/consent_text.py                                                  3      1    67%   17
+./artifacts/test_runs/pytest_coverage.txt:115:apps/clinical_ops/services/consent_views.py                                                33     33     0%   1-79
+./artifacts/test_runs/pytest_coverage.txt:116:apps/clinical_ops/services/data_exporter.py                                                16     12    25%   6-33
+./artifacts/test_runs/pytest_coverage.txt:117:apps/clinical_ops/services/deletion_executor.py                                            16     10    38%   8-23
+./artifacts/test_runs/pytest_coverage.txt:118:apps/clinical_ops/services/encryption_policy.py                                             2      2     0%   8-9
+./artifacts/test_runs/pytest_coverage.txt:119:apps/clinical_ops/services/pdf_report.py                                                  114    114     0%   1-157
+./artifacts/test_runs/pytest_coverage.txt:120:apps/clinical_ops/services/pdf_report_v2.py                                                98     89     9%   10-11, 17-234
+./artifacts/test_runs/pytest_coverage.txt:121:apps/clinical_ops/services/quality.py                                                      10      9    10%   5-16
+./artifacts/test_runs/pytest_coverage.txt:122:apps/clinical_ops/services/report_context.py                                               39     35    10%   7-109
+./artifacts/test_runs/pytest_coverage.txt:123:apps/clinical_ops/services/retention_policy.py                                              4      0   100%
+./artifacts/test_runs/pytest_coverage.txt:124:apps/clinical_ops/services/scoring_adapter.py                                               6      5    17%   17-27
+./artifacts/test_runs/pytest_coverage.txt:125:apps/clinical_ops/services/signoff_engine.py                                               38     30    21%   17-30, 41-95
+./artifacts/test_runs/pytest_coverage.txt:126:apps/clinical_ops/tests/test_queue_and_order.py                                            11      0   100%
+./artifacts/api_views.txt:16:./apps/clinical_ops/api/v1/views.py:23:class CreatePatient(APIView):
+./artifacts/api_views.txt:17:./apps/clinical_ops/api/v1/views.py:153:class CreateOrder(APIView):
+./artifacts/api_views.txt:18:./apps/clinical_ops/api/v1/views.py:221:class ClinicQueue(APIView):
+./artifacts/api_views.txt:19:./apps/clinical_ops/api/v1/signoff_views.py:11:class OverrideReportSignoff(APIView):
+./artifacts/api_views.txt:20:./apps/clinical_ops/api/v1/report_views.py:19:class GenerateReportPDF(APIView):
+./artifacts/api_views.txt:23:./apps/clinical_ops/api/v1/report_download_views.py:19:class StaffDownloadReport(APIView):
+./artifacts/api_views.txt:24:./apps/clinical_ops/api/v1/report_download_views.py:59:class PublicDownloadReport(APIView):
+./artifacts/api_views.txt:25:./apps/clinical_ops/api/v1/consent_views.py:13:class PublicGetConsent(APIView):
+./artifacts/api_views.txt:26:./apps/clinical_ops/api/v1/consent_views.py:27:class PublicSubmitConsent(APIView):
+./artifacts/api_views.txt:27:./apps/clinical_ops/api/v1/public_views.py:9:class PublicOrderBootstrap(APIView):
+./artifacts/api_views.txt:29:./apps/clinical_ops/api/v1/public_submit_views.py:17:class PublicOrderSubmit(APIView):
+./artifacts/api_views.txt:30:./apps/clinical_ops/services/consent_views.py:12:class PublicGetConsent(APIView):
+./artifacts/api_views.txt:31:./apps/clinical_ops/services/consent_views.py:25:class PublicSubmitConsent(APIView):
+./artifacts/api_views.txt:32:./apps/clinical_ops/api/v1/deletion_views.py:10:class AdminApproveDeletion(APIView):
+./artifacts/api_views.txt:33:./apps/clinical_ops/api/v1/public_access_code_views.py:10:class PublicRequestReportCode(APIView):
+./artifacts/api_views.txt:34:./apps/clinical_ops/api/v1/delivery_views.py:8:class SetDeliveryAndMarkDelivered(APIView):
+./artifacts/api_views.txt:35:./apps/clinical_ops/api/v1/export_views.py:9:class ExportOrderJSON(APIView):
+./artifacts/test_runs/migrate.txt:2:  Apply all migrations: admin, audit, auditlogs, auth, catalog, clinical, clinical_ops, clinical_sessions, contenttypes, core, orders, org, patients, policies, reports, safety, scoring, sessions, signoff
+./artifacts/api_urls_rg.txt:29:./artifacts/test_runs/pdf_search.txt:577:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/api_urls_rg.txt:30:./artifacts/test_runs/pdf_search.txt:578:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/api_urls_rg.txt:31:./artifacts/test_runs/pdf_search.txt:579:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/api_urls_rg.txt:32:./artifacts/test_runs/pdf_search.txt:580:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_urls_rg.txt:50:./neurova_backend/urls.py:44:    path("api/v1/clinical-ops/", include("apps.clinical_ops.api.v1.urls"))
+./artifacts/api_urls_rg.txt:70:./apps/clinical_ops/api/v1/urls.py:16:    path("staff/patients/create", CreatePatient.as_view()),
+./artifacts/api_urls_rg.txt:71:./apps/clinical_ops/api/v1/urls.py:17:    path("staff/orders/create", CreateOrder.as_view()),
+./artifacts/api_urls_rg.txt:72:./apps/clinical_ops/api/v1/urls.py:18:    path("staff/queue", ClinicQueue.as_view()),
+./artifacts/api_urls_rg.txt:73:./apps/clinical_ops/api/v1/urls.py:19:    path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
+./artifacts/api_urls_rg.txt:74:./apps/clinical_ops/api/v1/urls.py:20:    path("staff/orders/deliver", SetDeliveryAndMarkDelivered.as_view()),
+./artifacts/api_urls_rg.txt:75:./apps/clinical_ops/api/v1/urls.py:21:    path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
+./artifacts/api_urls_rg.txt:76:./apps/clinical_ops/api/v1/urls.py:22:    path("public/order/<str:token>/submit", PublicOrderSubmit.as_view()),
+./artifacts/api_urls_rg.txt:77:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/api_urls_rg.txt:78:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/api_urls_rg.txt:79:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/api_urls_rg.txt:80:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_urls_rg.txt:81:./apps/clinical_ops/api/v1/urls.py:27:    path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
+./artifacts/api_urls_rg.txt:82:./apps/clinical_ops/api/v1/urls.py:28:    path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
+./artifacts/api_urls_rg.txt:83:./apps/clinical_ops/api/v1/urls.py:29:    path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
+./artifacts/api_urls_rg.txt:84:./apps/clinical_ops/api/v1/urls.py:30:    path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
+./apps/clinical_ops/models_consent.py:3:from apps.clinical_ops.models import AssessmentOrder, Org
+./artifacts/test_runs/pdf_search.txt:4:./artifacts/test_runs/pytest_coverage.txt:119:apps/clinical_ops/services/pdf_report.py                                                  114    114     0%   1-157
+./artifacts/test_runs/pdf_search.txt:5:./artifacts/test_runs/pytest_coverage.txt:120:apps/clinical_ops/services/pdf_report_v2.py                                                98     89     9%   10-11, 17-234
+./artifacts/test_runs/pdf_search.txt:241:./artifacts/test_runs/pdf_search.txt:4:./artifacts/test_runs/pytest_coverage.txt:119:apps/clinical_ops/services/pdf_report.py                                                  114    114     0%   1-157
+./artifacts/test_runs/pdf_search.txt:242:./artifacts/test_runs/pdf_search.txt:5:./artifacts/test_runs/pytest_coverage.txt:120:apps/clinical_ops/services/pdf_report_v2.py                                                98     89     9%   10-11, 17-234
+./artifacts/test_runs/pdf_search.txt:540:./apps/clinical_ops/api/v1/report_views.py:14:from apps.clinical_ops.services.pdf_report_v2 import generate_report_pdf_bytes_v2
+./artifacts/test_runs/pdf_search.txt:541:./apps/clinical_ops/api/v1/report_views.py:67:        pdf_bytes = generate_report_pdf_bytes_v2(ctx)
+./artifacts/test_runs/pdf_search.txt:542:./apps/clinical_ops/api/v1/report_views.py:69:        filename = f"NEUROVAX_REPORT_ORDER_{order.id}.pdf"
+./artifacts/test_runs/pdf_search.txt:543:./apps/clinical_ops/api/v1/report_views.py:71:        report.pdf_file.save(filename, ContentFile(pdf_bytes), save=True)
+./artifacts/test_runs/pdf_search.txt:544:./apps/clinical_ops/api/v1/report_views.py:74:        report.pdf_file.open("rb")
+./artifacts/test_runs/pdf_search.txt:545:./apps/clinical_ops/api/v1/report_views.py:75:        pdf_hash = hashlib.sha256(report.pdf_file.read()).hexdigest()
+./artifacts/test_runs/pdf_search.txt:546:./apps/clinical_ops/api/v1/report_views.py:76:        report.pdf_file.close()
+./artifacts/test_runs/pdf_search.txt:547:./apps/clinical_ops/api/v1/report_views.py:78:        report.pdf_sha256 = pdf_hash
+./artifacts/test_runs/pdf_search.txt:548:./apps/clinical_ops/api/v1/report_views.py:79:        report.save(update_fields=["pdf_file", "pdf_sha256"])
+./artifacts/test_runs/pdf_search.txt:549:./apps/clinical_ops/api/v1/report_views.py:96:        report.save(update_fields=["generated_at", "generated_by_user_id", "pdf_file"])
+./artifacts/test_runs/pdf_search.txt:550:./apps/clinical_ops/api/v1/report_views.py:102:                "pdf_url": report.pdf_file.url if report.pdf_file else None,
+./artifacts/test_runs/pdf_search.txt:551:./apps/clinical_ops/api/v1/report_download_views.py:34:        if not report.pdf_file:
+./artifacts/test_runs/pdf_search.txt:552:./apps/clinical_ops/api/v1/report_download_views.py:35:            return Response({"error": "pdf_not_generated"}, status=404)
+./artifacts/test_runs/pdf_search.txt:553:./apps/clinical_ops/api/v1/report_download_views.py:38:        report.pdf_file.open("rb")
+./artifacts/test_runs/pdf_search.txt:554:./apps/clinical_ops/api/v1/report_download_views.py:39:        pdf_bytes = report.pdf_file.read()
+./artifacts/test_runs/pdf_search.txt:555:./apps/clinical_ops/api/v1/report_download_views.py:40:        report.pdf_file.close()
+./artifacts/test_runs/pdf_search.txt:556:./apps/clinical_ops/api/v1/report_download_views.py:42:        current_hash = hashlib.sha256(pdf_bytes).hexdigest()
+./artifacts/test_runs/pdf_search.txt:557:./apps/clinical_ops/api/v1/report_download_views.py:44:        if report.pdf_sha256 and current_hash != report.pdf_sha256:
+./artifacts/test_runs/pdf_search.txt:558:./apps/clinical_ops/api/v1/report_download_views.py:46:                {"error": "pdf_integrity_check_failed"},
+./artifacts/test_runs/pdf_search.txt:559:./apps/clinical_ops/api/v1/report_download_views.py:51:            report.pdf_file.open("rb"),
+./artifacts/test_runs/pdf_search.txt:560:./apps/clinical_ops/api/v1/report_download_views.py:52:            content_type="application/pdf",
+./artifacts/test_runs/pdf_search.txt:561:./apps/clinical_ops/api/v1/report_download_views.py:88:        if not report.pdf_file:
+./artifacts/test_runs/pdf_search.txt:562:./apps/clinical_ops/api/v1/report_download_views.py:89:            return Response({"error": "pdf_not_generated"}, status=404)
+./artifacts/test_runs/pdf_search.txt:563:./apps/clinical_ops/api/v1/report_download_views.py:92:        report.pdf_file.open("rb")
+./artifacts/test_runs/pdf_search.txt:564:./apps/clinical_ops/api/v1/report_download_views.py:93:        pdf_bytes = report.pdf_file.read()
+./artifacts/test_runs/pdf_search.txt:565:./apps/clinical_ops/api/v1/report_download_views.py:94:        report.pdf_file.close()
+./artifacts/test_runs/pdf_search.txt:566:./apps/clinical_ops/api/v1/report_download_views.py:96:        current_hash = hashlib.sha256(pdf_bytes).hexdigest()
+./artifacts/test_runs/pdf_search.txt:567:./apps/clinical_ops/api/v1/report_download_views.py:98:        if report.pdf_sha256 and current_hash != report.pdf_sha256:
+./artifacts/test_runs/pdf_search.txt:568:./apps/clinical_ops/api/v1/report_download_views.py:100:                {"error": "pdf_integrity_check_failed"},
+./artifacts/test_runs/pdf_search.txt:569:./apps/clinical_ops/api/v1/report_download_views.py:105:            report.pdf_file.open("rb"),
+./artifacts/test_runs/pdf_search.txt:570:./apps/clinical_ops/api/v1/report_download_views.py:106:            content_type="application/pdf",
+./artifacts/test_runs/pdf_search.txt:577:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/test_runs/pdf_search.txt:578:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/test_runs/pdf_search.txt:579:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/test_runs/pdf_search.txt:580:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/test_runs/pdf_search.txt:581:./apps/clinical_ops/migrations/0005_assessmentreport.py:19:                ('pdf_file', models.FileField(blank=True, null=True, upload_to='clinical_reports/%Y/%m/%d/')),
+./artifacts/test_runs/pdf_search.txt:582:./apps/clinical_ops/services/pdf_report_v2.py:2:from reportlab.lib.pagesizes import A4
+./artifacts/test_runs/pdf_search.txt:583:./apps/clinical_ops/services/pdf_report_v2.py:3:from reportlab.lib.units import mm
+./artifacts/test_runs/pdf_search.txt:584:./apps/clinical_ops/services/pdf_report_v2.py:4:from reportlab.lib import colors
+./artifacts/test_runs/pdf_search.txt:585:./apps/clinical_ops/services/pdf_report_v2.py:5:from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+./artifacts/test_runs/pdf_search.txt:586:./apps/clinical_ops/services/pdf_report_v2.py:6:from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
+./artifacts/test_runs/pdf_search.txt:587:./apps/clinical_ops/services/pdf_report_v2.py:7:from reportlab.lib.enums import TA_LEFT, TA_RIGHT
+./artifacts/test_runs/pdf_search.txt:588:./apps/clinical_ops/services/pdf_report_v2.py:13:def generate_report_pdf_bytes_v2(report_context: dict) -> bytes:
+./artifacts/test_runs/pdf_search.txt:589:./apps/clinical_ops/services/pdf_report.py:2:from reportlab.lib.pagesizes import A4
+./artifacts/test_runs/pdf_search.txt:590:./apps/clinical_ops/services/pdf_report.py:3:from reportlab.pdfgen import canvas
+./artifacts/test_runs/pdf_search.txt:591:./apps/clinical_ops/services/pdf_report.py:4:from reportlab.lib.units import mm
+./artifacts/test_runs/pdf_search.txt:592:./apps/clinical_ops/services/pdf_report.py:12:def generate_report_pdf_bytes(report_context: dict) -> bytes:
+./artifacts/test_runs/pdf_search.txt:593:./apps/clinical_ops/models_report.py:9:    pdf_file = models.FileField(upload_to="clinical_reports/%Y/%m/%d/", null=True, blank=True)
+./apps/clinical_ops/models_assessment.py:3:from apps.clinical_ops.models import AssessmentOrder, Org
+./apps/clinical_ops/models.py:3:from apps.clinical_ops.services.retention_policy import compute_retention_date
+./apps/clinical_ops/models.py:132:        from apps.clinical_ops.services.retention_policy import compute_retention_date
+./apps/clinical_ops/models.py:192:from apps.clinical_ops.audit.models import AuditEvent
+./apps/clinical_ops/models.py:193:from apps.clinical_ops.models_consent import ConsentRecord
+./apps/clinical_ops/models.py:194:from apps.clinical_ops.models_deletion import DeletionRequest
+./artifacts/api_paths_rg.txt:41:./neurova_backend/urls.py:44:    path("api/v1/clinical-ops/", include("apps.clinical_ops.api.v1.urls"))
+./artifacts/api_paths_rg.txt:59:./artifacts/test_runs/pdf_search.txt:577:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/api_paths_rg.txt:60:./artifacts/test_runs/pdf_search.txt:578:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/api_paths_rg.txt:61:./artifacts/test_runs/pdf_search.txt:579:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/api_paths_rg.txt:62:./artifacts/test_runs/pdf_search.txt:580:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_paths_rg.txt:99:./artifacts/api_urls_rg.txt:29:./artifacts/test_runs/pdf_search.txt:577:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/api_paths_rg.txt:100:./artifacts/api_urls_rg.txt:30:./artifacts/test_runs/pdf_search.txt:578:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/api_paths_rg.txt:101:./artifacts/api_urls_rg.txt:31:./artifacts/test_runs/pdf_search.txt:579:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/api_paths_rg.txt:102:./artifacts/api_urls_rg.txt:32:./artifacts/test_runs/pdf_search.txt:580:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_paths_rg.txt:120:./artifacts/api_urls_rg.txt:50:./neurova_backend/urls.py:44:    path("api/v1/clinical-ops/", include("apps.clinical_ops.api.v1.urls"))
+./artifacts/api_paths_rg.txt:140:./artifacts/api_urls_rg.txt:70:./apps/clinical_ops/api/v1/urls.py:16:    path("staff/patients/create", CreatePatient.as_view()),
+./artifacts/api_paths_rg.txt:141:./artifacts/api_urls_rg.txt:71:./apps/clinical_ops/api/v1/urls.py:17:    path("staff/orders/create", CreateOrder.as_view()),
+./artifacts/api_paths_rg.txt:142:./artifacts/api_urls_rg.txt:72:./apps/clinical_ops/api/v1/urls.py:18:    path("staff/queue", ClinicQueue.as_view()),
+./artifacts/api_paths_rg.txt:143:./artifacts/api_urls_rg.txt:73:./apps/clinical_ops/api/v1/urls.py:19:    path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
+./artifacts/api_paths_rg.txt:144:./artifacts/api_urls_rg.txt:74:./apps/clinical_ops/api/v1/urls.py:20:    path("staff/orders/deliver", SetDeliveryAndMarkDelivered.as_view()),
+./artifacts/api_paths_rg.txt:145:./artifacts/api_urls_rg.txt:75:./apps/clinical_ops/api/v1/urls.py:21:    path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
+./artifacts/api_paths_rg.txt:146:./artifacts/api_urls_rg.txt:76:./apps/clinical_ops/api/v1/urls.py:22:    path("public/order/<str:token>/submit", PublicOrderSubmit.as_view()),
+./artifacts/api_paths_rg.txt:147:./artifacts/api_urls_rg.txt:77:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/api_paths_rg.txt:148:./artifacts/api_urls_rg.txt:78:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/api_paths_rg.txt:149:./artifacts/api_urls_rg.txt:79:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/api_paths_rg.txt:150:./artifacts/api_urls_rg.txt:80:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_paths_rg.txt:151:./artifacts/api_urls_rg.txt:81:./apps/clinical_ops/api/v1/urls.py:27:    path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
+./artifacts/api_paths_rg.txt:152:./artifacts/api_urls_rg.txt:82:./apps/clinical_ops/api/v1/urls.py:28:    path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
+./artifacts/api_paths_rg.txt:153:./artifacts/api_urls_rg.txt:83:./apps/clinical_ops/api/v1/urls.py:29:    path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
+./artifacts/api_paths_rg.txt:154:./artifacts/api_urls_rg.txt:84:./apps/clinical_ops/api/v1/urls.py:30:    path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
+./artifacts/api_paths_rg.txt:156:./apps/clinical_ops/api/v1/urls.py:16:    path("staff/patients/create", CreatePatient.as_view()),
+./artifacts/api_paths_rg.txt:157:./apps/clinical_ops/api/v1/urls.py:17:    path("staff/orders/create", CreateOrder.as_view()),
+./artifacts/api_paths_rg.txt:158:./apps/clinical_ops/api/v1/urls.py:18:    path("staff/queue", ClinicQueue.as_view()),
+./artifacts/api_paths_rg.txt:159:./apps/clinical_ops/api/v1/urls.py:19:    path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
+./artifacts/api_paths_rg.txt:160:./apps/clinical_ops/api/v1/urls.py:20:    path("staff/orders/deliver", SetDeliveryAndMarkDelivered.as_view()),
+./artifacts/api_paths_rg.txt:161:./apps/clinical_ops/api/v1/urls.py:21:    path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
+./artifacts/api_paths_rg.txt:162:./apps/clinical_ops/api/v1/urls.py:22:    path("public/order/<str:token>/submit", PublicOrderSubmit.as_view()),
+./artifacts/api_paths_rg.txt:163:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/api_paths_rg.txt:164:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/api_paths_rg.txt:165:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/api_paths_rg.txt:166:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_paths_rg.txt:167:./apps/clinical_ops/api/v1/urls.py:27:    path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
+./artifacts/api_paths_rg.txt:168:./apps/clinical_ops/api/v1/urls.py:28:    path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
+./artifacts/api_paths_rg.txt:169:./apps/clinical_ops/api/v1/urls.py:29:    path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
+./artifacts/api_paths_rg.txt:170:./apps/clinical_ops/api/v1/urls.py:30:    path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
+./artifacts/api_views_rg.txt:17:./apps/clinical_ops/services/consent_views.py:12:class PublicGetConsent(APIView):
+./artifacts/api_views_rg.txt:18:./apps/clinical_ops/services/consent_views.py:25:class PublicSubmitConsent(APIView):
+./artifacts/api_views_rg.txt:19:./apps/clinical_ops/api/v1/public_views.py:9:class PublicOrderBootstrap(APIView):
+./artifacts/api_views_rg.txt:20:./apps/clinical_ops/api/v1/views.py:23:class CreatePatient(APIView):
+./artifacts/api_views_rg.txt:21:./apps/clinical_ops/api/v1/views.py:153:class CreateOrder(APIView):
+./artifacts/api_views_rg.txt:22:./apps/clinical_ops/api/v1/views.py:225:class ClinicQueue(APIView):
+./artifacts/api_views_rg.txt:25:./apps/clinical_ops/api/v1/public_submit_views.py:17:class PublicOrderSubmit(APIView):
+./artifacts/api_views_rg.txt:26:./apps/clinical_ops/api/v1/delivery_views.py:8:class SetDeliveryAndMarkDelivered(APIView):
+./artifacts/api_views_rg.txt:27:./apps/clinical_ops/api/v1/signoff_views.py:11:class OverrideReportSignoff(APIView):
+./artifacts/api_views_rg.txt:28:./apps/clinical_ops/api/v1/public_access_code_views.py:10:class PublicRequestReportCode(APIView):
+./artifacts/api_views_rg.txt:31:./apps/clinical_ops/api/v1/deletion_views.py:10:class AdminApproveDeletion(APIView):
+./artifacts/api_views_rg.txt:32:./apps/clinical_ops/api/v1/export_views.py:9:class ExportOrderJSON(APIView):
+./artifacts/api_views_rg.txt:34:./apps/clinical_ops/api/v1/consent_views.py:13:class PublicGetConsent(APIView):
+./artifacts/api_views_rg.txt:35:./apps/clinical_ops/api/v1/consent_views.py:31:class PublicSubmitConsent(APIView):
+./artifacts/api_views_rg.txt:36:./apps/clinical_ops/api/v1/report_views.py:19:class GenerateReportPDF(APIView):
+./artifacts/api_views_rg.txt:39:./apps/clinical_ops/api/v1/report_download_views.py:19:class StaffDownloadReport(APIView):
+./artifacts/api_views_rg.txt:40:./apps/clinical_ops/api/v1/report_download_views.py:71:class PublicDownloadReport(APIView):
+./artifacts/api_views_rg.txt:63:./artifacts/api_views.txt:16:./apps/clinical_ops/api/v1/views.py:23:class CreatePatient(APIView):
+./artifacts/api_views_rg.txt:64:./artifacts/api_views.txt:17:./apps/clinical_ops/api/v1/views.py:153:class CreateOrder(APIView):
+./artifacts/api_views_rg.txt:65:./artifacts/api_views.txt:18:./apps/clinical_ops/api/v1/views.py:221:class ClinicQueue(APIView):
+./artifacts/api_views_rg.txt:66:./artifacts/api_views.txt:19:./apps/clinical_ops/api/v1/signoff_views.py:11:class OverrideReportSignoff(APIView):
+./artifacts/api_views_rg.txt:67:./artifacts/api_views.txt:20:./apps/clinical_ops/api/v1/report_views.py:19:class GenerateReportPDF(APIView):
+./artifacts/api_views_rg.txt:70:./artifacts/api_views.txt:23:./apps/clinical_ops/api/v1/report_download_views.py:19:class StaffDownloadReport(APIView):
+./artifacts/api_views_rg.txt:71:./artifacts/api_views.txt:24:./apps/clinical_ops/api/v1/report_download_views.py:59:class PublicDownloadReport(APIView):
+./artifacts/api_views_rg.txt:72:./artifacts/api_views.txt:25:./apps/clinical_ops/api/v1/consent_views.py:13:class PublicGetConsent(APIView):
+./artifacts/api_views_rg.txt:73:./artifacts/api_views.txt:26:./apps/clinical_ops/api/v1/consent_views.py:27:class PublicSubmitConsent(APIView):
+./artifacts/api_views_rg.txt:74:./artifacts/api_views.txt:27:./apps/clinical_ops/api/v1/public_views.py:9:class PublicOrderBootstrap(APIView):
+./artifacts/api_views_rg.txt:76:./artifacts/api_views.txt:29:./apps/clinical_ops/api/v1/public_submit_views.py:17:class PublicOrderSubmit(APIView):
+./artifacts/api_views_rg.txt:77:./artifacts/api_views.txt:30:./apps/clinical_ops/services/consent_views.py:12:class PublicGetConsent(APIView):
+./artifacts/api_views_rg.txt:78:./artifacts/api_views.txt:31:./apps/clinical_ops/services/consent_views.py:25:class PublicSubmitConsent(APIView):
+./artifacts/api_views_rg.txt:79:./artifacts/api_views.txt:32:./apps/clinical_ops/api/v1/deletion_views.py:10:class AdminApproveDeletion(APIView):
+./artifacts/api_views_rg.txt:80:./artifacts/api_views.txt:33:./apps/clinical_ops/api/v1/public_access_code_views.py:10:class PublicRequestReportCode(APIView):
+./artifacts/api_views_rg.txt:81:./artifacts/api_views.txt:34:./apps/clinical_ops/api/v1/delivery_views.py:8:class SetDeliveryAndMarkDelivered(APIView):
+./artifacts/api_views_rg.txt:82:./artifacts/api_views.txt:35:./apps/clinical_ops/api/v1/export_views.py:9:class ExportOrderJSON(APIView):
+./apps/clinical_ops/migrations/0006_assessmentreport_signoff_method_and_more.py:9:        ('clinical_ops', '0005_assessmentreport'),
+./apps/clinical_ops/migrations/0009_assessmentorder_report_access_code_and_more.py:9:        ('clinical_ops', '0008_consentrecord'),
+./apps/clinical_ops/migrations/0007_auditevent.py:11:        ('clinical_ops', '0006_assessmentreport_signoff_method_and_more'),
+./apps/clinical_ops/migrations/0007_auditevent.py:27:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0003_responsequality.py:11:        ('clinical_ops', '0002_assessmentorder_delivery_mode_and_more'),
+./apps/clinical_ops/migrations/0003_responsequality.py:25:                ('order', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='response_quality', to='clinical_ops.assessmentorder')),
+./apps/clinical_ops/migrations/0003_responsequality.py:26:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0008_consentrecord.py:11:        ('clinical_ops', '0007_auditevent'),
+./apps/clinical_ops/migrations/0008_consentrecord.py:31:                ('order', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='consent', to='clinical_ops.assessmentorder')),
+./apps/clinical_ops/migrations/0008_consentrecord.py:32:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0010_assessmentorder_data_retention_until_and_more.py:9:        ('clinical_ops', '0009_assessmentorder_report_access_code_and_more'),
+./apps/clinical_ops/migrations/0011_deletionrequest.py:11:        ('clinical_ops', '0010_assessmentorder_data_retention_until_and_more'),
+./apps/clinical_ops/migrations/0011_deletionrequest.py:24:                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clinical_ops.assessmentorder')),
+./apps/clinical_ops/migrations/0011_deletionrequest.py:25:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0005_assessmentreport.py:11:        ('clinical_ops', '0004_assessmentresponse_assessmentresult'),
+./apps/clinical_ops/migrations/0005_assessmentreport.py:26:                ('order', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='report', to='clinical_ops.assessmentorder')),
+./apps/clinical_ops/migrations/0005_assessmentreport.py:27:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0002_assessmentorder_delivery_mode_and_more.py:9:        ('clinical_ops', '0001_initial'),
+./apps/clinical_ops/migrations/0004_assessmentresponse_assessmentresult.py:11:        ('clinical_ops', '0003_responsequality'),
+./apps/clinical_ops/migrations/0004_assessmentresponse_assessmentresult.py:22:                ('order', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='response', to='clinical_ops.assessmentorder')),
+./apps/clinical_ops/migrations/0004_assessmentresponse_assessmentresult.py:23:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0004_assessmentresponse_assessmentresult.py:37:                ('order', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='result', to='clinical_ops.assessmentorder')),
+./apps/clinical_ops/migrations/0004_assessmentresponse_assessmentresult.py:38:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0001_initial.py:36:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='patients', to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0001_initial.py:57:                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders', to='clinical_ops.org')),
+./apps/clinical_ops/migrations/0001_initial.py:58:                ('patient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders', to='clinical_ops.patient')),

@@ -1,0 +1,170 @@
+./core/urls.py:5:    path("orgs/", OrganizationCreateView.as_view()),
+./core/urls.py:6:    path("users/", UserCreateView.as_view()),
+./reports/urls.py:6:    path(
+./reports/urls.py:10:    path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
+./reports/urls.py:11:    path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+./reports/urls.py:12:    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
+./reports/urls.py:13:    path("reports/<int:report_id>/mark-reviewed/", MarkReportReviewedView.as_view()),
+./reports/urls.py:14:    path("reports/<int:report_id>/create-correction/", CreateReportCorrectionView.as_view()),
+./catalog/urls.py:10:    path("catalog/import/", CatalogImportView.as_view()),
+./catalog/urls.py:11:    path("", include(router.urls)),
+./reports/storage_paths.py:1:def report_upload_path(instance, filename):
+./backend/clinical/urls.py:17:    path(
+./backend/clinical/urls.py:26:    path(
+./backend/clinical/urls.py:35:    path(
+./backend/clinical/urls.py:44:    path(
+./backend/clinical/urls.py:53:    path(
+./backend/clinical/urls.py:62:    path(
+./backend/clinical/urls.py:71:    path(
+./reports/models.py:81:    def safe_pdf_path(self):
+./artifacts/test_runs/seed_script_search.txt:2:./neurova_backend/urls.py:35:    path("api/v1/", include("catalog.urls")),
+./artifacts/test_runs/seed_script_search.txt:22:./artifacts/test_runs/seed_script_search.txt:2:./neurova_backend/urls.py:35:    path("api/v1/", include("catalog.urls")),
+./artifacts/test_runs/seed_script_search.txt:49:./catalog/urls.py:10:    path("catalog/import/", CatalogImportView.as_view()),
+./orders/urls.py:6:    path("orders/", OrderCreateView.as_view()),
+./orders/urls.py:7:    path("orders/<int:order_id>/start-session/", StartSessionView.as_view()),
+./neurova_backend/urls.py:9:    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+./neurova_backend/urls.py:12:    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+./neurova_backend/urls.py:15:    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+./neurova_backend/urls.py:30:    path("admin/", admin.site.urls),
+./neurova_backend/urls.py:32:    path("api/v1/auth/login/", AppTokenObtainPairView.as_view()),
+./neurova_backend/urls.py:33:    path("api/v1/auth/refresh/", TokenRefreshView.as_view()),
+./neurova_backend/urls.py:34:    path("api/v1/", include("patients.urls")),
+./neurova_backend/urls.py:35:    path("api/v1/", include("catalog.urls")),
+./neurova_backend/urls.py:36:    path("api/v1/", include("core.urls")),
+./neurova_backend/urls.py:37:    path("api/v1/", include("orders.urls")),
+./neurova_backend/urls.py:38:    path("api/v1/sessions/", include("sessions.urls")),
+./neurova_backend/urls.py:39:    path("api/v1/", include("scoring.urls")),
+./neurova_backend/urls.py:40:    path("api/v1/", include("reports.urls")),
+./neurova_backend/urls.py:41:    path("api/v1/clinical/", include("backend.clinical.urls")),
+./neurova_backend/urls.py:42:    path("healthz/", healthz),
+./neurova_backend/urls.py:43:    path("readyz/", readyz),
+./neurova_backend/urls.py:44:    path("api/v1/clinical-ops/", include("apps.clinical_ops.api.v1.urls"))
+./neurova_backend/settings.py:245:BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+./sessions/urls.py:5:    path("<int:session_id>/events/", SessionEventCreateView.as_view()),
+./sessions/urls.py:6:    path("<int:session_id>/consent/", SessionConsentCreateView.as_view()),
+./scoring/urls.py:5:    path(
+./backend/clinical/reporting/report_builder_v1.py:30:    path = os.path.normpath(path)
+./artifacts/test_runs/pdf_search.txt:87:./reports/urls.py:10:    path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
+./artifacts/test_runs/pdf_search.txt:88:./reports/urls.py:11:    path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+./artifacts/test_runs/pdf_search.txt:89:./reports/urls.py:12:    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
+./artifacts/test_runs/pdf_search.txt:90:./reports/urls.py:13:    path("reports/<int:report_id>/mark-reviewed/", MarkReportReviewedView.as_view()),
+./artifacts/test_runs/pdf_search.txt:91:./reports/urls.py:14:    path("reports/<int:report_id>/create-correction/", CreateReportCorrectionView.as_view()),
+./artifacts/test_runs/pdf_search.txt:231:./reports/models.py:81:    def safe_pdf_path(self):
+./artifacts/test_runs/pdf_search.txt:324:./artifacts/test_runs/pdf_search.txt:87:./reports/urls.py:10:    path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
+./artifacts/test_runs/pdf_search.txt:325:./artifacts/test_runs/pdf_search.txt:88:./reports/urls.py:11:    path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+./artifacts/test_runs/pdf_search.txt:326:./artifacts/test_runs/pdf_search.txt:89:./reports/urls.py:12:    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
+./artifacts/test_runs/pdf_search.txt:327:./artifacts/test_runs/pdf_search.txt:90:./reports/urls.py:13:    path("reports/<int:report_id>/mark-reviewed/", MarkReportReviewedView.as_view()),
+./artifacts/test_runs/pdf_search.txt:328:./artifacts/test_runs/pdf_search.txt:91:./reports/urls.py:14:    path("reports/<int:report_id>/create-correction/", CreateReportCorrectionView.as_view()),
+./artifacts/test_runs/pdf_search.txt:468:./artifacts/test_runs/pdf_search.txt:231:./reports/models.py:81:    def safe_pdf_path(self):
+./artifacts/test_runs/pdf_search.txt:577:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/test_runs/pdf_search.txt:578:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/test_runs/pdf_search.txt:579:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/test_runs/pdf_search.txt:580:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_urls.txt:1:backend/clinical/urls.py:17:    path(
+./artifacts/api_urls.txt:2:backend/clinical/urls.py:26:    path(
+./artifacts/api_urls.txt:3:backend/clinical/urls.py:35:    path(
+./artifacts/api_urls.txt:4:backend/clinical/urls.py:44:    path(
+./artifacts/api_urls.txt:5:backend/clinical/urls.py:53:    path(
+./artifacts/api_urls.txt:6:backend/clinical/urls.py:62:    path(
+./artifacts/api_urls.txt:7:backend/clinical/urls.py:71:    path(
+./artifacts/api_urls.txt:8:backend/clinical/reporting/report_builder_v1.py:30:    path = os.path.normpath(path)
+./artifacts/api_urls_rg.txt:1:./orders/urls.py:6:    path("orders/", OrderCreateView.as_view()),
+./artifacts/api_urls_rg.txt:2:./orders/urls.py:7:    path("orders/<int:order_id>/start-session/", StartSessionView.as_view()),
+./artifacts/api_urls_rg.txt:3:./reports/urls.py:6:    path(
+./artifacts/api_urls_rg.txt:4:./reports/urls.py:10:    path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
+./artifacts/api_urls_rg.txt:5:./reports/urls.py:11:    path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+./artifacts/api_urls_rg.txt:6:./reports/urls.py:12:    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
+./artifacts/api_urls_rg.txt:7:./reports/urls.py:13:    path("reports/<int:report_id>/mark-reviewed/", MarkReportReviewedView.as_view()),
+./artifacts/api_urls_rg.txt:8:./reports/urls.py:14:    path("reports/<int:report_id>/create-correction/", CreateReportCorrectionView.as_view()),
+./artifacts/api_urls_rg.txt:9:./core/urls.py:5:    path("orgs/", OrganizationCreateView.as_view()),
+./artifacts/api_urls_rg.txt:10:./core/urls.py:6:    path("users/", UserCreateView.as_view()),
+./artifacts/api_urls_rg.txt:11:./catalog/urls.py:10:    path("catalog/import/", CatalogImportView.as_view()),
+./artifacts/api_urls_rg.txt:12:./catalog/urls.py:11:    path("", include(router.urls)),
+./artifacts/api_urls_rg.txt:13:./reports/storage_paths.py:1:def report_upload_path(instance, filename):
+./artifacts/api_urls_rg.txt:14:./artifacts/test_runs/seed_script_search.txt:2:./neurova_backend/urls.py:35:    path("api/v1/", include("catalog.urls")),
+./artifacts/api_urls_rg.txt:15:./artifacts/test_runs/seed_script_search.txt:22:./artifacts/test_runs/seed_script_search.txt:2:./neurova_backend/urls.py:35:    path("api/v1/", include("catalog.urls")),
+./artifacts/api_urls_rg.txt:16:./artifacts/test_runs/seed_script_search.txt:49:./catalog/urls.py:10:    path("catalog/import/", CatalogImportView.as_view()),
+./artifacts/api_urls_rg.txt:17:./artifacts/test_runs/pdf_search.txt:87:./reports/urls.py:10:    path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
+./artifacts/api_urls_rg.txt:18:./artifacts/test_runs/pdf_search.txt:88:./reports/urls.py:11:    path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+./artifacts/api_urls_rg.txt:19:./artifacts/test_runs/pdf_search.txt:89:./reports/urls.py:12:    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
+./artifacts/api_urls_rg.txt:20:./artifacts/test_runs/pdf_search.txt:90:./reports/urls.py:13:    path("reports/<int:report_id>/mark-reviewed/", MarkReportReviewedView.as_view()),
+./artifacts/api_urls_rg.txt:21:./artifacts/test_runs/pdf_search.txt:91:./reports/urls.py:14:    path("reports/<int:report_id>/create-correction/", CreateReportCorrectionView.as_view()),
+./artifacts/api_urls_rg.txt:22:./artifacts/test_runs/pdf_search.txt:231:./reports/models.py:81:    def safe_pdf_path(self):
+./artifacts/api_urls_rg.txt:23:./artifacts/test_runs/pdf_search.txt:324:./artifacts/test_runs/pdf_search.txt:87:./reports/urls.py:10:    path("reports/<int:report_id>/sign/", ReportSignView.as_view()),
+./artifacts/api_urls_rg.txt:24:./artifacts/test_runs/pdf_search.txt:325:./artifacts/test_runs/pdf_search.txt:88:./reports/urls.py:11:    path("reports/<int:report_id>/release/", ReportReleaseView.as_view()),
+./artifacts/api_urls_rg.txt:25:./artifacts/test_runs/pdf_search.txt:326:./artifacts/test_runs/pdf_search.txt:89:./reports/urls.py:12:    path("reports/<int:report_id>/pdf/", ReportPDFView.as_view()),
+./artifacts/api_urls_rg.txt:26:./artifacts/test_runs/pdf_search.txt:327:./artifacts/test_runs/pdf_search.txt:90:./reports/urls.py:13:    path("reports/<int:report_id>/mark-reviewed/", MarkReportReviewedView.as_view()),
+./artifacts/api_urls_rg.txt:27:./artifacts/test_runs/pdf_search.txt:328:./artifacts/test_runs/pdf_search.txt:91:./reports/urls.py:14:    path("reports/<int:report_id>/create-correction/", CreateReportCorrectionView.as_view()),
+./artifacts/api_urls_rg.txt:28:./artifacts/test_runs/pdf_search.txt:468:./artifacts/test_runs/pdf_search.txt:231:./reports/models.py:81:    def safe_pdf_path(self):
+./artifacts/api_urls_rg.txt:29:./artifacts/test_runs/pdf_search.txt:577:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/api_urls_rg.txt:30:./artifacts/test_runs/pdf_search.txt:578:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/api_urls_rg.txt:31:./artifacts/test_runs/pdf_search.txt:579:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/api_urls_rg.txt:32:./artifacts/test_runs/pdf_search.txt:580:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_urls_rg.txt:33:./neurova_backend/settings.py:244:BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+./artifacts/api_urls_rg.txt:34:./neurova_backend/urls.py:9:    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+./artifacts/api_urls_rg.txt:35:./neurova_backend/urls.py:12:    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+./artifacts/api_urls_rg.txt:36:./neurova_backend/urls.py:15:    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+./artifacts/api_urls_rg.txt:37:./neurova_backend/urls.py:30:    path("admin/", admin.site.urls),
+./artifacts/api_urls_rg.txt:38:./neurova_backend/urls.py:32:    path("api/v1/auth/login/", AppTokenObtainPairView.as_view()),
+./artifacts/api_urls_rg.txt:39:./neurova_backend/urls.py:33:    path("api/v1/auth/refresh/", TokenRefreshView.as_view()),
+./artifacts/api_urls_rg.txt:40:./neurova_backend/urls.py:34:    path("api/v1/", include("patients.urls")),
+./artifacts/api_urls_rg.txt:41:./neurova_backend/urls.py:35:    path("api/v1/", include("catalog.urls")),
+./artifacts/api_urls_rg.txt:42:./neurova_backend/urls.py:36:    path("api/v1/", include("core.urls")),
+./artifacts/api_urls_rg.txt:43:./neurova_backend/urls.py:37:    path("api/v1/", include("orders.urls")),
+./artifacts/api_urls_rg.txt:44:./neurova_backend/urls.py:38:    path("api/v1/sessions/", include("sessions.urls")),
+./artifacts/api_urls_rg.txt:45:./neurova_backend/urls.py:39:    path("api/v1/", include("scoring.urls")),
+./artifacts/api_urls_rg.txt:46:./neurova_backend/urls.py:40:    path("api/v1/", include("reports.urls")),
+./artifacts/api_urls_rg.txt:47:./neurova_backend/urls.py:41:    path("api/v1/clinical/", include("backend.clinical.urls")),
+./artifacts/api_urls_rg.txt:48:./neurova_backend/urls.py:42:    path("healthz/", healthz),
+./artifacts/api_urls_rg.txt:49:./neurova_backend/urls.py:43:    path("readyz/", readyz),
+./artifacts/api_urls_rg.txt:50:./neurova_backend/urls.py:44:    path("api/v1/clinical-ops/", include("apps.clinical_ops.api.v1.urls"))
+./artifacts/api_urls_rg.txt:51:./reports/models.py:81:    def safe_pdf_path(self):
+./artifacts/api_urls_rg.txt:52:./scoring/urls.py:5:    path(
+./artifacts/api_urls_rg.txt:53:./artifacts/api_urls.txt:1:backend/clinical/urls.py:17:    path(
+./artifacts/api_urls_rg.txt:54:./artifacts/api_urls.txt:2:backend/clinical/urls.py:26:    path(
+./artifacts/api_urls_rg.txt:55:./artifacts/api_urls.txt:3:backend/clinical/urls.py:35:    path(
+./artifacts/api_urls_rg.txt:56:./artifacts/api_urls.txt:4:backend/clinical/urls.py:44:    path(
+./artifacts/api_urls_rg.txt:57:./artifacts/api_urls.txt:5:backend/clinical/urls.py:53:    path(
+./artifacts/api_urls_rg.txt:58:./artifacts/api_urls.txt:6:backend/clinical/urls.py:62:    path(
+./artifacts/api_urls_rg.txt:59:./artifacts/api_urls.txt:7:backend/clinical/urls.py:71:    path(
+./artifacts/api_urls_rg.txt:60:./artifacts/api_urls.txt:8:backend/clinical/reporting/report_builder_v1.py:30:    path = os.path.normpath(path)
+./artifacts/api_urls_rg.txt:61:./backend/clinical/urls.py:17:    path(
+./artifacts/api_urls_rg.txt:62:./backend/clinical/urls.py:26:    path(
+./artifacts/api_urls_rg.txt:63:./backend/clinical/urls.py:35:    path(
+./artifacts/api_urls_rg.txt:64:./backend/clinical/urls.py:44:    path(
+./artifacts/api_urls_rg.txt:65:./backend/clinical/urls.py:53:    path(
+./artifacts/api_urls_rg.txt:66:./backend/clinical/urls.py:62:    path(
+./artifacts/api_urls_rg.txt:67:./backend/clinical/urls.py:71:    path(
+./artifacts/api_urls_rg.txt:68:./sessions/urls.py:5:    path("<int:session_id>/events/", SessionEventCreateView.as_view()),
+./artifacts/api_urls_rg.txt:69:./sessions/urls.py:6:    path("<int:session_id>/consent/", SessionConsentCreateView.as_view()),
+./artifacts/api_urls_rg.txt:70:./apps/clinical_ops/api/v1/urls.py:16:    path("staff/patients/create", CreatePatient.as_view()),
+./artifacts/api_urls_rg.txt:71:./apps/clinical_ops/api/v1/urls.py:17:    path("staff/orders/create", CreateOrder.as_view()),
+./artifacts/api_urls_rg.txt:72:./apps/clinical_ops/api/v1/urls.py:18:    path("staff/queue", ClinicQueue.as_view()),
+./artifacts/api_urls_rg.txt:73:./apps/clinical_ops/api/v1/urls.py:19:    path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
+./artifacts/api_urls_rg.txt:74:./apps/clinical_ops/api/v1/urls.py:20:    path("staff/orders/deliver", SetDeliveryAndMarkDelivered.as_view()),
+./artifacts/api_urls_rg.txt:75:./apps/clinical_ops/api/v1/urls.py:21:    path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
+./artifacts/api_urls_rg.txt:76:./apps/clinical_ops/api/v1/urls.py:22:    path("public/order/<str:token>/submit", PublicOrderSubmit.as_view()),
+./artifacts/api_urls_rg.txt:77:./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./artifacts/api_urls_rg.txt:78:./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./artifacts/api_urls_rg.txt:79:./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./artifacts/api_urls_rg.txt:80:./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./artifacts/api_urls_rg.txt:81:./apps/clinical_ops/api/v1/urls.py:27:    path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
+./artifacts/api_urls_rg.txt:82:./apps/clinical_ops/api/v1/urls.py:28:    path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
+./artifacts/api_urls_rg.txt:83:./apps/clinical_ops/api/v1/urls.py:29:    path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
+./artifacts/api_urls_rg.txt:84:./apps/clinical_ops/api/v1/urls.py:30:    path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
+./artifacts/api_urls_rg.txt:85:./backend/clinical/reporting/report_builder_v1.py:30:    path = os.path.normpath(path)
+./apps/clinical_ops/api/v1/urls.py:16:    path("staff/patients/create", CreatePatient.as_view()),
+./apps/clinical_ops/api/v1/urls.py:17:    path("staff/orders/create", CreateOrder.as_view()),
+./apps/clinical_ops/api/v1/urls.py:18:    path("staff/queue", ClinicQueue.as_view()),
+./apps/clinical_ops/api/v1/urls.py:19:    path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
+./apps/clinical_ops/api/v1/urls.py:20:    path("staff/orders/deliver", SetDeliveryAndMarkDelivered.as_view()),
+./apps/clinical_ops/api/v1/urls.py:21:    path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
+./apps/clinical_ops/api/v1/urls.py:22:    path("public/order/<str:token>/submit", PublicOrderSubmit.as_view()),
+./apps/clinical_ops/api/v1/urls.py:23:    path("staff/reports/generate", GenerateReportPDF.as_view()),
+./apps/clinical_ops/api/v1/urls.py:24:    path("staff/reports/download", StaffDownloadReport.as_view()),
+./apps/clinical_ops/api/v1/urls.py:25:    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+./apps/clinical_ops/api/v1/urls.py:26:    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+./apps/clinical_ops/api/v1/urls.py:27:    path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
+./apps/clinical_ops/api/v1/urls.py:28:    path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
+./apps/clinical_ops/api/v1/urls.py:29:    path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
+./apps/clinical_ops/api/v1/urls.py:30:    path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),

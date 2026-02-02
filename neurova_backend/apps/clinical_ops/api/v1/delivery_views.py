@@ -25,4 +25,10 @@ class SetDeliveryAndMarkDelivered(APIView):
         order.delivered_at = timezone.now()
         order.save(update_fields=["delivery_mode","delivery_target","status","delivered_at"])
 
-        return Response({"ok": True, "status": order.status}, status=status.HTTP_200_OK)
+        return Response({
+            "success": True,
+            "message": "Delivery mode set successfully",
+            "data":{
+                "status": order.status
+            }
+        }, status=status.HTTP_200_OK)

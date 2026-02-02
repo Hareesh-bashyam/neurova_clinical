@@ -1,0 +1,1 @@
+{"success":true,"message":"Order initialized successfully","data":{"org_id":1,"order_id":8,"patient_id":13,"patient_name":"Jay","patient_age":29,"patient_gender":"MALE","battery_code":"MENTAL_HEALTH_CORE_V1","battery_version":"1.0","status":"IN_PROGRESS"}}

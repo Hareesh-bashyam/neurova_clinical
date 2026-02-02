@@ -1,0 +1,150 @@
+{
+    "id": "phq-9",
+    "title": "Patient Health Questionnaire-9",
+    "questions": [
+        {
+            "id": "q1",
+            "text": "Little interest or pleasure in doing things",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        },
+        {
+            "id": "q2",
+            "text": "Feeling down, depressed or hopeless",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        },
+        {
+            "id": "q3",
+            "text": "Trouble falling asleep, staying asleep, or sleeping too much",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        },
+        {
+            "id": "q4",
+            "text": "Feeling tired or having little energy",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        },
+        {
+            "id": "q5",
+            "text": "Poor appetite or overeating",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        },
+        {
+            "id": "q6",
+            "text": "Feeling bad about yourself \u2014 or that you are a failure",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        },
+        {
+            "id": "q7",
+            "text": "Trouble concentrating on things",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        },
+        {
+            "id": "q8",
+            "text": "Moving or speaking so slowly... or the opposite",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        },
+        {
+            "id": "q9",
+            "text": "Thoughts that you would be better off dead",
+            "scale": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "labels": [
+                "Not at all",
+                "Several days",
+                "More than half the days",
+                "Nearly every day"
+            ]
+        }
+    ]
+}

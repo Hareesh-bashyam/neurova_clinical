@@ -17,7 +17,11 @@ class PublicRequestReportCode(APIView):
 
         # only if patient copy allowed
         if order.delivery_mode != AssessmentOrder.DELIVERY_ALLOW_PATIENT_DOWNLOAD:
-            return Response({"error":"patient_download_not_allowed"}, status=403)
+            return Response({
+                "success": False,
+                "message": "Patient download not allowed",
+                "data":None
+            }, status=403)
 
         code = issue_report_access_code(order, minutes_valid=15)
 
@@ -32,4 +36,11 @@ class PublicRequestReportCode(APIView):
             details={"expires_minutes": 15}
         )
 
-        return Response({"ok": True, "access_code": code, "expires_in_minutes": 15}, status=status.HTTP_200_OK)
+        return Response({
+            "success": True,
+            "message": "Report access code issued successfully",
+            "data":{
+                "access_code": code,
+                "expires_in_minutes": 15
+            }
+        }, status=status.HTTP_200_OK)

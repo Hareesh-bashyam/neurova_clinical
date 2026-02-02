@@ -1,0 +1,14 @@
+40 objects imported automatically (use -v 2 for details).
+
+api-root
+clinical-current-test
+clinical-generate-report
+clinical-order-create
+clinical-order-status-update
+clinical-report-pdf
+clinical-session-start
+clinical-submit-current-test
+panels-detail
+panels-list
+patients-detail
+patients-list

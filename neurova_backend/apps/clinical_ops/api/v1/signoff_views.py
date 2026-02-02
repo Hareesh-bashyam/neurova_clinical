@@ -31,10 +31,18 @@ class OverrideReportSignoff(APIView):
         reason = request.data.get("reason")
 
         if not all([org_id, order_id, signoff_status, signed_by_name, signed_by_role, reason]):
-            return Response({"error":"org_id, order_id, signoff_status, signed_by_name, signed_by_role, reason required"}, status=400)
+            return Response({
+                "success": False,
+                "message": "org_id, order_id, signoff_status, signed_by_name, signed_by_role, reason required",
+                "data":None
+            }, status=400)
 
         if signoff_status not in ["SIGNED", "REJECTED"]:
-            return Response({"error":"signoff_status must be SIGNED or REJECTED"}, status=400)
+            return Response({
+                "success": False,
+                "message": "signoff_status must be SIGNED or REJECTED",
+                "data":None
+            }, status=400)
 
         org = get_object_or_404(Org, id=org_id, is_active=True)
         order = get_object_or_404(AssessmentOrder, id=order_id, org=org)
@@ -61,4 +69,11 @@ class OverrideReportSignoff(APIView):
             details={"status": signoff_status, "reason": reason, "method": "CLINICIAN"}
         )
 
-        return Response({"ok": True, "signoff_status": report.signoff_status, "method": report.signoff_method}, status=200)
+        return Response({
+            "success": True,
+            "message": "Report signoff overridden successfully",
+            "data":{
+                "signoff_status": report.signoff_status,
+                "method": report.signoff_method
+            }
+        }, status=200)

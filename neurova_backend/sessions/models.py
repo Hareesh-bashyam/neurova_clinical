@@ -6,7 +6,12 @@ from catalog.models import TestDefinition
 
 
 class ConsentRecord(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name="clinical_session_consents"
+    )
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     consent_version = models.CharField(max_length=20)  # e.g. "v1"
     consent_text = models.TextField()

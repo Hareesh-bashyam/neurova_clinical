@@ -23,7 +23,11 @@ class StaffDownloadReport(APIView):
 
         if not org_id or not order_id:
             return Response(
-                {"error": "org_id_and_order_id_required"},
+                {
+                    "success": False,
+                    "message": "org_id and order_id required",
+                    "data":None
+                },
                 status=400,
             )
 
@@ -32,7 +36,11 @@ class StaffDownloadReport(APIView):
         report = get_object_or_404(AssessmentReport, order=order, org=org)
 
         if not report.pdf_file:
-            return Response({"error": "pdf_not_generated"}, status=404)
+            return Response({
+                "success": False,
+                "message": "PDF not generated",
+                "data":None
+            }, status=404)
 
         # 🔐 ANTI-TAMPER CHECK
         report.pdf_file.open("rb")
@@ -43,7 +51,11 @@ class StaffDownloadReport(APIView):
 
         if report.pdf_sha256 and current_hash != report.pdf_sha256:
             return Response(
-                {"error": "pdf_integrity_check_failed"},
+                {
+                    "success": False,
+                    "message": "PDF integrity check failed",
+                    "data":None
+                },
                 status=409,
             )
 
@@ -66,12 +78,20 @@ class PublicDownloadReport(APIView):
 
         # ⏳ Expiry check
         if order.public_link_expires_at and timezone.now() > order.public_link_expires_at:
-            return Response({"error": "link_expired"}, status=403)
+            return Response({
+                "success": False,
+                "message": "Link expired",
+                "data":None
+            }, status=403)
 
         # 🚫 Patient download policy
         if order.delivery_mode != AssessmentOrder.DELIVERY_ALLOW_PATIENT_DOWNLOAD:
             return Response(
-                {"error": "patient_download_not_allowed"},
+                {
+                    "success": False,
+                    "message": "Patient download not allowed",
+                    "data":None
+                },
                 status=403,
             )
 
@@ -86,7 +106,11 @@ class PublicDownloadReport(APIView):
         report = get_object_or_404(AssessmentReport, order=order)
 
         if not report.pdf_file:
-            return Response({"error": "pdf_not_generated"}, status=404)
+            return Response({
+                "success": False,
+                "message": "PDF not generated",
+                "data":None
+            }, status=404)
 
         # 🔐 ANTI-TAMPER CHECK
         report.pdf_file.open("rb")
@@ -97,7 +121,11 @@ class PublicDownloadReport(APIView):
 
         if report.pdf_sha256 and current_hash != report.pdf_sha256:
             return Response(
-                {"error": "pdf_integrity_check_failed"},
+                {
+                    "success": False,
+                    "message": "PDF integrity check failed",
+                    "data":None
+                },
                 status=409,
             )
 

@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils import timezone
-from apps.clinical_ops.models import Org
+from core.models import Organization
 
 class AuditEvent(models.Model):
-    org = models.ForeignKey(Org, on_delete=models.CASCADE)
+    org = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
     event_type = models.CharField(max_length=64)  # REPORT_SIGNED, REPORT_REJECTED, etc
     entity_type = models.CharField(max_length=64)  # AssessmentOrder/AssessmentReport

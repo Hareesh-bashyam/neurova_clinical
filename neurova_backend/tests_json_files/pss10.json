@@ -1,0 +1,186 @@
+{
+    "id": "pss-10",
+    "title": "Perceived Stress Scale-10",
+    "questions": [
+        {
+            "id": "q1",
+            "text": "Upset because of something unexpected",
+            "scale": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q2",
+            "text": "Unable to control important things",
+            "scale": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q3",
+            "text": "Felt nervous and stressed",
+            "scale": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q4",
+            "text": "Confident about handling personal problems",
+            "scale": [
+                4,
+                3,
+                2,
+                1,
+                0
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q5",
+            "text": "Felt things were going your way",
+            "scale": [
+                4,
+                3,
+                2,
+                1,
+                0
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q6",
+            "text": "Could not cope with all things to do",
+            "scale": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q7",
+            "text": "Control irritations in life",
+            "scale": [
+                4,
+                3,
+                2,
+                1,
+                0
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q8",
+            "text": "Felt you were on top of things",
+            "scale": [
+                4,
+                3,
+                2,
+                1,
+                0
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q9",
+            "text": "Angered because of things outside control",
+            "scale": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        },
+        {
+            "id": "q10",
+            "text": "Difficulties piling up too high",
+            "scale": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "labels": [
+                "Never",
+                "Almost Never",
+                "Sometimes",
+                "Fairly Often",
+                "Very Often"
+            ]
+        }
+    ]
+}

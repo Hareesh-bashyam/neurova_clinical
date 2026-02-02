@@ -6,6 +6,7 @@ from rest_framework import status
 from sessions.models import Session
 from .models import Score
 from .services import compute_score
+from .validators import validate_answers
 
 
 class SessionScoreCreateView(APIView):
@@ -30,7 +31,8 @@ class SessionScoreCreateView(APIView):
                 {"error": "answers are required"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
+        
+        validate_answers(session.test_code, answers)
         result = compute_score(answers)
 
         score = Score.objects.create(

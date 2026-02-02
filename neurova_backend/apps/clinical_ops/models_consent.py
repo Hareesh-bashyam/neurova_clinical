@@ -1,9 +1,15 @@
 from django.db import models
 from django.utils import timezone
-from apps.clinical_ops.models import AssessmentOrder, Org
+from apps.clinical_ops.models import AssessmentOrder
+from core.models import Organization
 
 class ConsentRecord(models.Model):
-    org = models.ForeignKey(Org, on_delete=models.CASCADE)
+    org = models.ForeignKey(
+    Organization,
+    on_delete=models.CASCADE,
+    related_name="clinical_ops_consents"
+    )
+
     order = models.OneToOneField(AssessmentOrder, on_delete=models.CASCADE, related_name="consent")
 
     # versioning of consent text

@@ -27,4 +27,10 @@ class AdminApproveDeletion(APIView):
         dr.save(update_fields=["status"])
         execute_deletion(dr)
 
-        return Response({"ok": True, "status":"EXECUTED"})
+        return Response({
+            "success": True,
+            "message": "Deletion approved successfully",
+            "data":{
+                "status":"EXECUTED"
+            }
+        }, status=status.HTTP_200_OK)

@@ -1,18 +1,15 @@
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.throttling import AnonRateThrottle
 
-from apps.clinical_ops.models import AssessmentOrder
+from apps.clinical_ops.models import AssessmentOrder, ResponseQuality
 from apps.clinical_ops.models_assessment import AssessmentResponse, AssessmentResult
-from apps.clinical_ops.models import ResponseQuality
-from apps.clinical_ops.models_consent import ConsentRecord
-
 from apps.clinical_ops.services.quality import compute_quality
 from apps.clinical_ops.services.scoring_adapter import score_battery
-from rest_framework.throttling import AnonRateThrottle
-from django.db import transaction
+
 
 class PublicOrderSubmit(APIView):
     authentication_classes = []
@@ -21,7 +18,7 @@ class PublicOrderSubmit(APIView):
 
     @transaction.atomic
     def post(self, request, token):
-        # 🔒 Lock order row
+        # 🔒 Lock order
         order = (
             AssessmentOrder.objects
             .select_for_update()
@@ -30,60 +27,98 @@ class PublicOrderSubmit(APIView):
 
         if order.status != AssessmentOrder.STATUS_IN_PROGRESS:
             return Response(
-                {"error": "order_not_in_progress"},
-                status=status.HTTP_409_CONFLICT,
+                {
+                    "success": False,
+                    "message": "Order not in progress",
+                    "data": None
+                },
+                status=status.HTTP_409_CONFLICT
             )
 
         if order.public_link_expires_at and timezone.now() > order.public_link_expires_at:
             return Response(
-                {"error": "link_expired"},
-                status=status.HTTP_403_FORBIDDEN,
+                {
+                    "success": False,
+                    "message": "Link expired",
+                    "data": None
+                },
+                status=status.HTTP_403_FORBIDDEN
             )
 
-        # 🔁 STEP 7 — IDEMPOTENCY GUARD
-        idem_key = request.headers.get("X-Idempotency-Key")
-        if idem_key:
-            obj, created = IdempotencyKey.objects.get_or_create(
-                session=order.session,
-                key=idem_key,
+        # 🔁 Deduplication
+        if hasattr(order, "response"):
+            return Response(
+                {
+                    "success": True,
+                    "message": "Duplicate submission ignored",
+                    "data": {"order_id": order.id}
+                },
+                status=status.HTTP_200_OK
             )
-            if not created:
-                return Response(
-                    {
-                        "ok": True,
-                        "deduped": True,
-                        "message": "Duplicate submission ignored",
-                    },
-                    status=status.HTTP_200_OK,
-                )
 
-        answers = request.data.get("answers") or []
+        answers = request.data.get("answers")
+        duration_seconds = int(request.data.get("duration_seconds", 0))
+
         if not isinstance(answers, list) or not answers:
             return Response(
-                {"error": "answers_required"},
-                status=status.HTTP_400_BAD_REQUEST,
+                {
+                    "success": False,
+                    "message": "Answers required",
+                    "data": None
+                },
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-        # 🔁 Existing safety (keep this!)
-        if hasattr(order, "assessmentresponse"):
-            return Response(
-                {"ok": True, "deduped": True},
-                status=status.HTTP_200_OK,
-            )
-
-        answers_json = {"answers": answers}
-
-        AssessmentResponse.objects.create(
-            order=order,
+        # ✅ Save raw answers
+        response = AssessmentResponse.objects.create(
             org=order.org,
-            answers_json=answers_json,
+            order=order,
+            answers_json={"answers": answers},
+            duration_seconds=duration_seconds,
             submitted_at=timezone.now(),
         )
 
-        order.status = AssessmentOrder.STATUS_COMPLETED
-        order.save(update_fields=["status"])
+        # ✅ Compute response quality (DICT!)
+        quality = compute_quality(
+            answers=answers,
+            duration_seconds=duration_seconds
+        )
+
+        ResponseQuality.objects.create(
+            org=order.org,
+            order=order,
+            duration_seconds=duration_seconds,
+            straight_lining_flag=quality["straight_lining_flag"],
+            too_fast_flag=quality["too_fast_flag"],
+            inconsistency_flag=quality["inconsistency_flag"],
+            notes=quality.get("notes"),
+        )
+
+        # ✅ Score full battery (MULTI TEST SAFE)
+        result_payload = score_battery(
+            battery_code=order.battery_code,
+            battery_version=order.battery_version,
+            answers_json=response.answers_json,
+        )
+
+        AssessmentResult.objects.create(
+            org=order.org,
+            order=order,
+            result_json=result_payload,
+            primary_severity=result_payload["summary"]["primary_severity"],
+            has_red_flags=result_payload["summary"]["has_red_flags"],
+        )
+
+        # ✅ Finalize order
+        order.mark_completed()
 
         return Response(
-            {"ok": True},
-            status=status.HTTP_200_OK,
+            {
+                "success": True,
+                "message": "Assessment submitted successfully",
+                "data": {
+                    "order_id": order.id
+                }
+            },
+            status=status.HTTP_200_OK
         )

@@ -1,40 +1,70 @@
+import secrets
+import re
+from datetime import timedelta
+
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
-from apps.clinical_ops.models import Org, Patient, AssessmentOrder
+from apps.clinical_ops.models import Patient, AssessmentOrder
 from apps.clinical_ops.api.v1.serializers import (
-    PatientCreateSerializer,
     OrderCreateSerializer,
     QueueListSerializer,
 )
-import secrets
+
 from apps.clinical_ops.services.retention_policy import compute_retention_date
-from datetime import timedelta
 from backend.clinical.policies.services import get_or_create_policy
+
+
+VALID_GENDERS = {"MALE", "FEMALE", "OTHER"}
+
 
 def _make_token():
     return secrets.token_urlsafe(32)[:64]
 
-VALID_GENDERS = {"MALE", "FEMALE", "OTHER"}
 
+# ============================================================
+# CREATE PATIENT
+# ============================================================
 class CreatePatient(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         data = request.data
 
-        # ---- STEP 1: Required fields ----
-        required = [
-            "org_id",
-            "full_name",
-            "age",
-            "sex",
-        ]
+        # 🔐 Logged-in user's organization (TRUSTED)
+        user_org = request.user.profile.organization
 
-        for field in required:
-            if field not in data:
+        # 🔒 Validate org_id from request (UUID / external_id)
+        req_org_id = data.get("org_id")
+        if not req_org_id:
+            return Response(
+                {
+                    "success": False,
+                    "message": "org_id is required",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if str(user_org.external_id) != str(req_org_id):
+            return Response(
+                {
+                    "success": False,
+                    "message": "Unauthorized organization access",
+                    "data": None,
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # ---- Required fields ----
+        required_fields = ["full_name", "age", "sex", "phone", "email"]
+        for field in required_fields:
+            if field not in data or not str(data[field]).strip():
                 return Response(
                     {
                         "success": False,
@@ -44,24 +74,8 @@ class CreatePatient(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-        # ---- STEP 2: Organization validation ----
-        org = Org.objects.filter(
-            id=data["org_id"],
-            is_active=True
-        ).first()
-
-        if not org:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Invalid or inactive organization",
-                    "data": None,
-                },
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
-
-        # ---- STEP 3: full_name validation ----
-        full_name = str(data.get("full_name")).strip()
+        # ---- full_name ----
+        full_name = data["full_name"].strip()
         if len(full_name) < 3:
             return Response(
                 {
@@ -72,20 +86,12 @@ class CreatePatient(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # ---- STEP 4: age validation ----
+        # ---- age ----
         try:
-            age = int(data.get("age"))
-        except (TypeError, ValueError):
-            return Response(
-                {
-                    "success": False,
-                    "message": "age must be an integer",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if age < 0 or age > 120:
+            age = int(data["age"])
+            if age < 0 or age > 120:
+                raise ValueError
+        except Exception:
             return Response(
                 {
                     "success": False,
@@ -95,21 +101,8 @@ class CreatePatient(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # ---- sex validation ----
-        sex = data.get("sex")
-
-        if not sex:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Missing field: sex",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        sex = str(sex).strip().upper()
-
+        # ---- sex ----
+        sex = data["sex"].strip().upper()
         if sex not in VALID_GENDERS:
             return Response(
                 {
@@ -120,14 +113,35 @@ class CreatePatient(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # ---- STEP 6: optional fields ----
-        mrn = data.get("mrn") or None
-        phone = data.get("phone") or None
-        email = data.get("email") or None
+        # ---- phone ----
+        phone = data["phone"].strip()
+        if not phone.isdigit() or not (8 <= len(phone) <= 15):
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid phone number",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        # ---- STEP 7: create patient ----
+        # ---- email ----
+        email = data["email"].strip().lower()
+        email_regex = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
+        if not re.match(email_regex, email):
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid email address",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        mrn = data.get("mrn") or None
+
         patient = Patient.objects.create(
-            org=org,
+            org=user_org,  # 🔥 ENFORCED
             mrn=mrn,
             full_name=full_name,
             age=age,
@@ -136,71 +150,84 @@ class CreatePatient(APIView):
             email=email,
         )
 
-        # ---- STEP 8: success response ----
         return Response(
             {
                 "success": True,
                 "message": "Patient created successfully",
-                "data": {
-                    "patient_id": patient.id,
-                },
+                "data": {"patient_id": patient.id},
             },
             status=status.HTTP_201_CREATED,
         )
 
-    
 
+# ============================================================
+# CREATE ORDER
+# ============================================================
 class CreateOrder(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
-        s = OrderCreateSerializer(data=request.data)
-
-        # ---- VALIDATION HANDLING (FIX) ----
-        if not s.is_valid():
-            first_field, errors = next(iter(s.errors.items()))
-            first_error = errors[0]
-
+        serializer = OrderCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            field, errors = next(iter(serializer.errors.items()))
             return Response(
                 {
                     "success": False,
-                    "message": f"{first_field}: {first_error}",
+                    "message": f"{field}: {errors[0]}",
                     "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # ---- BUSINESS LOGIC ----
-        org = get_object_or_404(Org, id=s.validated_data["org_id"], is_active=True)
+        user_org = request.user.profile.organization
+
+        # 🔒 Validate org_id (UUID)
+        req_org_id = request.data.get("org_id")
+        if not req_org_id:
+            return Response(
+                {
+                    "success": False,
+                    "message": "org_id is required",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if str(user_org.external_id) != str(req_org_id):
+            return Response(
+                {
+                    "success": False,
+                    "message": "Unauthorized organization access",
+                    "data": None,
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         patient = get_object_or_404(
-            Patient, id=s.validated_data["patient_id"], org=org
+            Patient,
+            id=serializer.validated_data["patient_id"],
+            org=user_org,  # 🔥 ENFORCED
         )
 
         token = _make_token()
-        policy = get_or_create_policy(org.id)
-        hours = (
-            policy.token_validity_hours
-            if policy and policy.token_validity_hours
-            else 48
+        policy = get_or_create_policy(user_org.id)
+        expires = timezone.now() + timedelta(
+            hours=policy.token_validity_hours if policy else 48
         )
-        expires = timezone.now() + timedelta(hours=hours)
 
         order = AssessmentOrder.objects.create(
-            org=org,
+            org=user_org,
             patient=patient,
-            battery_code=s.validated_data["battery_code"],
-            battery_version=s.validated_data.get("battery_version") or "1.0",
-            encounter_type=s.validated_data.get("encounter_type") or "OPD",
-            referring_unit=s.validated_data.get("referring_unit") or None,
-            administration_mode=(
-                s.validated_data.get("administration_mode")
-                or AssessmentOrder.MODE_KIOSK
+            battery_code=serializer.validated_data["battery_code"],
+            battery_version=serializer.validated_data.get("battery_version", "1.0"),
+            encounter_type=serializer.validated_data.get("encounter_type", "OPD"),
+            referring_unit=serializer.validated_data.get("referring_unit"),
+            administration_mode=serializer.validated_data.get(
+                "administration_mode", AssessmentOrder.MODE_KIOSK
             ),
-            verified_by_staff=s.validated_data.get("verified_by_staff", True),
-            status=AssessmentOrder.STATUS_CREATED,
-            # created_by_user_id=(
-            #     str(request.user.id)
-            #     if getattr(request, "user", None) and request.user.is_authenticated
-            #     else None
-            # ),
+            verified_by_staff=serializer.validated_data.get("verified_by_staff", True),
+            status=AssessmentOrder.STATUS_IN_PROGRESS,
+            created_by_user_id=str(request.user.id),
             public_token=token,
             public_link_expires_at=expires,
         )
@@ -222,54 +249,28 @@ class CreateOrder(APIView):
         )
 
 
+# ============================================================
+# CLINIC QUEUE
+# ============================================================
 class ClinicQueue(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
-        org_id = request.query_params.get("org_id")
+        user_org = request.user.profile.organization
 
-        # ---- STEP 1: required param ----
-        if not org_id:
-            return Response(
-                {
-                    "success": False,
-                    "message": "org_id is required",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # ---- STEP 2: org validation (NO get_object_or_404) ----
-        org = Org.objects.filter(
-            id=org_id,
-            is_active=True
-        ).first()
-
-        if not org:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Invalid or inactive organization",
-                    "data": None,
-                },
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
-
-        # ---- STEP 3: fetch queue ----
         qs = (
             AssessmentOrder.objects
-            .filter(org=org)
+            .filter(org=user_org)  # 🔥 ALREADY ISOLATED
             .order_by("-created_at")[:200]
         )
 
         data = QueueListSerializer(qs, many=True).data
 
-        # ---- STEP 4: success response ----
         return Response(
             {
                 "success": True,
                 "message": "Queue fetched successfully",
-                "data": {
-                    "results": data,
-                },
+                "data": {"results": data},
             },
             status=status.HTTP_200_OK,
         )

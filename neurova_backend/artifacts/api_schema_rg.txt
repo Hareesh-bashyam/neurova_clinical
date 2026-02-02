@@ -1,0 +1,42 @@
+./requirements.txt:4:drf-spectacular>=0.27
+./artifacts/api_schema.txt:1:./neurova_backend/settings.py:82:    'drf_spectacular',
+./artifacts/api_schema.txt:2:./neurova_backend/settings.py:113:    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+./artifacts/api_schema.txt:3:./artifacts/test_runs/pip_install.txt:4:Requirement already satisfied: drf-spectacular>=0.27 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 4)) (0.29.0)
+./artifacts/api_schema.txt:4:./artifacts/test_runs/pip_install.txt:16:Requirement already satisfied: uritemplate>=2.0.0 in ./.venv/lib/python3.12/site-packages (from drf-spectacular>=0.27->-r requirements.txt (line 4)) (4.2.0)
+./artifacts/api_schema.txt:5:./artifacts/test_runs/pip_install.txt:17:Requirement already satisfied: PyYAML>=5.1 in ./.venv/lib/python3.12/site-packages (from drf-spectacular>=0.27->-r requirements.txt (line 4)) (6.0.3)
+./artifacts/api_schema.txt:6:./artifacts/test_runs/pip_install.txt:18:Requirement already satisfied: jsonschema>=2.6.0 in ./.venv/lib/python3.12/site-packages (from drf-spectacular>=0.27->-r requirements.txt (line 4)) (4.25.1)
+./artifacts/api_schema.txt:7:./artifacts/test_runs/pip_install.txt:19:Requirement already satisfied: inflection>=0.3.1 in ./.venv/lib/python3.12/site-packages (from drf-spectacular>=0.27->-r requirements.txt (line 4)) (0.5.1)
+./artifacts/api_schema.txt:8:./artifacts/test_runs/pip_install.txt:30:Collecting attrs>=22.2.0 (from jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4))
+./artifacts/api_schema.txt:9:./artifacts/test_runs/pip_install.txt:32:Requirement already satisfied: jsonschema-specifications>=2023.03.6 in ./.venv/lib/python3.12/site-packages (from jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4)) (2025.9.1)
+./artifacts/api_schema.txt:10:./artifacts/test_runs/pip_install.txt:33:Requirement already satisfied: referencing>=0.28.4 in ./.venv/lib/python3.12/site-packages (from jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4)) (0.37.0)
+./artifacts/api_schema.txt:11:./artifacts/test_runs/pip_install.txt:34:Requirement already satisfied: rpds-py>=0.7.1 in ./.venv/lib/python3.12/site-packages (from jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4)) (0.30.0)
+./artifacts/api_schema.txt:12:./artifacts/test_runs/pip_install.txt:35:Requirement already satisfied: typing-extensions>=4.4.0 in ./.venv/lib/python3.12/site-packages (from referencing>=0.28.4->jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4)) (4.15.0)
+./artifacts/api_schema.txt:13:./artifacts/test_runs/pip_freeze.txt:27:drf-spectacular==0.29.0
+./artifacts/api_schema.txt:14:./requirements.txt:4:drf-spectacular>=0.27
+./artifacts/api_schema.txt:15:./artifacts/test_runs/pytest_integrity.txt:91:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/api_schema.txt:16:./artifacts/test_runs/pytest_flow_4.txt:240:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/api_schema.txt:17:./artifacts/test_runs/manage_help.txt:43:[drf_spectacular]
+./artifacts/api_schema.txt:18:./artifacts/test_runs/manage_help.txt:44:    spectacular
+./artifacts/api_schema.txt:19:./artifacts/test_runs/pytest_flow_3.txt:235:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/api_schema.txt:20:./artifacts/test_runs/pytest_flow_2.txt:232:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/api_schema.txt:21:./artifacts/test_runs/pytest_flow.txt:221:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/test_runs/pip_freeze.txt:27:drf-spectacular==0.29.0
+./artifacts/test_runs/manage_help.txt:43:[drf_spectacular]
+./artifacts/test_runs/manage_help.txt:44:    spectacular
+./artifacts/test_runs/pytest_integrity.txt:91:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/test_runs/pip_install.txt:4:Requirement already satisfied: drf-spectacular>=0.27 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 4)) (0.29.0)
+./artifacts/test_runs/pip_install.txt:16:Requirement already satisfied: uritemplate>=2.0.0 in ./.venv/lib/python3.12/site-packages (from drf-spectacular>=0.27->-r requirements.txt (line 4)) (4.2.0)
+./artifacts/test_runs/pip_install.txt:17:Requirement already satisfied: PyYAML>=5.1 in ./.venv/lib/python3.12/site-packages (from drf-spectacular>=0.27->-r requirements.txt (line 4)) (6.0.3)
+./artifacts/test_runs/pip_install.txt:18:Requirement already satisfied: jsonschema>=2.6.0 in ./.venv/lib/python3.12/site-packages (from drf-spectacular>=0.27->-r requirements.txt (line 4)) (4.25.1)
+./artifacts/test_runs/pip_install.txt:19:Requirement already satisfied: inflection>=0.3.1 in ./.venv/lib/python3.12/site-packages (from drf-spectacular>=0.27->-r requirements.txt (line 4)) (0.5.1)
+./artifacts/test_runs/pip_install.txt:30:Collecting attrs>=22.2.0 (from jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4))
+./artifacts/test_runs/pip_install.txt:32:Requirement already satisfied: jsonschema-specifications>=2023.03.6 in ./.venv/lib/python3.12/site-packages (from jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4)) (2025.9.1)
+./artifacts/test_runs/pip_install.txt:33:Requirement already satisfied: referencing>=0.28.4 in ./.venv/lib/python3.12/site-packages (from jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4)) (0.37.0)
+./artifacts/test_runs/pip_install.txt:34:Requirement already satisfied: rpds-py>=0.7.1 in ./.venv/lib/python3.12/site-packages (from jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4)) (0.30.0)
+./artifacts/test_runs/pip_install.txt:35:Requirement already satisfied: typing-extensions>=4.4.0 in ./.venv/lib/python3.12/site-packages (from referencing>=0.28.4->jsonschema>=2.6.0->drf-spectacular>=0.27->-r requirements.txt (line 4)) (4.15.0)
+./artifacts/test_runs/pytest_flow_2.txt:232:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/test_runs/pytest_flow_4.txt:240:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/test_runs/pytest_flow_3.txt:235:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./artifacts/test_runs/pytest_flow.txt:221:  Synchronize unmigrated apps: django_filters, drf_spectacular, messages, rest_framework, staticfiles
+./neurova_backend/settings.py:83:    'drf_spectacular',
+./neurova_backend/settings.py:114:    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",

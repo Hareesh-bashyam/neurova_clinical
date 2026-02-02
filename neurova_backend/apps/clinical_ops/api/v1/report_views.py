@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from apps.clinical_ops.models import Org, AssessmentOrder
+from apps.clinical_ops.models import AssessmentOrder
+from core.models import Organization
 from apps.clinical_ops.models_report import AssessmentReport
 from apps.clinical_ops.models_assessment import AssessmentResult
 
@@ -23,83 +24,92 @@ class GenerateReportPDF(APIView):
 
         if not org_id or not order_id:
             return Response(
-                {"error": "org_id and order_id required"},
+                {
+                    "success": False,
+                    "message": "org_id and order_id required",
+                    "data": None
+                },
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        org = get_object_or_404(Org, id=org_id, is_active=True)
-        order = get_object_or_404(AssessmentOrder, id=order_id, org=org)
+        # 🔐 Resolve org via external_id
+        org = get_object_or_404(Organization, external_id=org_id)
 
-        # Allowed states only
+        # 🔒 Enforce user belongs to org
+        if request.user.profile.organization_id != org.id:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Unauthorized organization access",
+                    "data": None
+                },
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        order = get_object_or_404(
+            AssessmentOrder,
+            id=order_id,
+            org=org
+        )
+
         if order.status not in ["AWAITING_REVIEW", "DELIVERED", "COMPLETED"]:
             return Response(
-                {"error": f"order status not allowed: {order.status}"},
+                {
+                    "success": False,
+                    "message": f"order status not allowed: {order.status}",
+                    "data": None
+                },
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Create or fetch report row
         report, _ = AssessmentReport.objects.get_or_create(
-            org_id=org.id,
+            org=org,
             order=order,
             defaults={
-                "generated_by_user_id": (
-                    str(request.user.id)
-                    if request.user and request.user.is_authenticated
-                    else None
-                ),
+                "generated_by_user_id": str(request.user.id),
                 "generated_at": timezone.now(),
             }
         )
 
-        # =========================================================
-        # 🔒 CRITICAL FIX — NORMALIZE RESULT JSON BEFORE SIGN-OFF
-        # =========================================================
-        result = AssessmentResult.objects.get(order=order)
+        result = AssessmentResult.objects.filter(order=order).first()
+        if not result:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Assessment result not available yet",
+                    "data": None
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         summary = result.result_json.setdefault("summary", {})
         summary.setdefault("has_red_flags", [])
         result.save(update_fields=["result_json"])
-        # =========================================================
 
-        # Build context AFTER normalization
         ctx = build_report_context(order)
-
-        # Generate PDF
         pdf_bytes = generate_report_pdf_bytes_v2(ctx)
 
         filename = f"NEUROVAX_REPORT_ORDER_{order.id}.pdf"
-
         report.pdf_file.save(filename, ContentFile(pdf_bytes), save=True)
 
-        # 🔐 Compute hash from FINAL saved bytes
         report.pdf_file.open("rb")
-        pdf_hash = hashlib.sha256(report.pdf_file.read()).hexdigest()
+        report.pdf_sha256 = hashlib.sha256(report.pdf_file.read()).hexdigest()
         report.pdf_file.close()
 
-        report.pdf_sha256 = pdf_hash
-        report.save(update_fields=["pdf_file", "pdf_sha256"])
-
-
-        # Automated data validation confirmation
-
-        system_sign_report(
-            report,
-            actor_user=request.user if request.user.is_authenticated else None
-        )
-
-        # Update generation metadata
         report.generated_at = timezone.now()
-        report.generated_by_user_id = (
-            str(request.user.id)
-            if request.user and request.user.is_authenticated
-            else report.generated_by_user_id
-        )
-        report.save(update_fields=["generated_at", "generated_by_user_id", "pdf_file"])
+        report.generated_by_user_id = str(request.user.id)
+        report.save()
+
+        system_sign_report(report, actor_user=request.user)
 
         return Response(
             {
-                "ok": True,
-                "report_id": report.id,
-                "pdf_url": report.pdf_file.url if report.pdf_file else None,
+                "success": True,
+                "message": "Report generated successfully",
+                "data": {
+                    "report_id": report.id,
+                    "pdf_url": report.pdf_file.url
+                }
             },
             status=status.HTTP_200_OK
         )

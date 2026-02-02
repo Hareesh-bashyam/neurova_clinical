@@ -1,0 +1,78 @@
+{
+  "id": "mdq",
+  "title": "Mood Disorder Questionnaire",
+  "questions": [
+    {
+      "id": "q1",
+      "text": "Has there ever been a period when you felt so good or hyper that other people thought you were not your normal self?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q2",
+      "text": "You were so irritable that you shouted at people or started fights?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q3",
+      "text": "You felt much more self-confident than usual?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q4",
+      "text": "You got much less sleep than usual and didn’t really miss it?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q5",
+      "text": "You were more talkative or spoke faster than usual?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q6",
+      "text": "Thoughts raced through your head or you couldn’t slow your mind down?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q7",
+      "text": "You were so easily distracted by things around you?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q8",
+      "text": "You had much more energy than usual?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q9",
+      "text": "You were much more active or did many more things than usual?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q10",
+      "text": "You were much more social or outgoing than usual?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q11",
+      "text": "If you checked YES to more than one, did these happen during the same period of time?",
+      "scale": [0, 1],
+      "labels": ["No", "Yes"]
+    },
+    {
+      "id": "q12",
+      "text": "How much of a problem did these cause (work, family, social, legal)?",
+      "scale": [0, 1, 2, 3],
+      "labels": ["No problem", "Minor problem", "Moderate problem", "Serious problem"]
+    }
+  ]
+}
