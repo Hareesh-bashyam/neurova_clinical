@@ -1,11 +1,15 @@
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.throttling import AnonRateThrottle
+
 from apps.clinical_ops.models import AssessmentOrder
 from apps.clinical_ops.services.access_code import issue_report_access_code
 from apps.clinical_ops.audit.logger import log_event
-from rest_framework.throttling import AnonRateThrottle
+
 
 class PublicRequestReportCode(APIView):
     authentication_classes = []
@@ -13,34 +17,55 @@ class PublicRequestReportCode(APIView):
     throttle_classes = [AnonRateThrottle]
 
     def post(self, request, token):
-        order = get_object_or_404(AssessmentOrder, public_token=token)
+        order = get_object_or_404(
+            AssessmentOrder,
+            public_token=token,
+            deletion_status="ACTIVE",
+        )
 
-        # only if patient copy allowed
+        # ⏳ Public link expiry check
+        if order.public_link_expires_at and timezone.now() > order.public_link_expires_at:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Link expired",
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # 🚫 Patient download policy
         if order.delivery_mode != AssessmentOrder.DELIVERY_ALLOW_PATIENT_DOWNLOAD:
-            return Response({
-                "success": False,
-                "message": "Patient download not allowed",
-                "data":None
-            }, status=403)
+            return Response(
+                {
+                    "success": False,
+                    "message": "Patient download not allowed",
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
+        # 🔐 Issue short-lived access code
         code = issue_report_access_code(order, minutes_valid=15)
 
-        # NOTE: We return code for now (dev).
-        # Later: send via SMS/email gateway. For approvals, keep audit event.
+        # 🧾 Audit event
         log_event(
-            org_id=order.org_id,
+            org_id=order.org.id,
             event_type="REPORT_ACCESS_CODE_ISSUED",
             entity_type="AssessmentOrder",
             entity_id=order.id,
             actor_role="Patient",
-            details={"expires_minutes": 15}
+            details={
+                "expires_minutes": 15,
+            },
         )
 
-        return Response({
-            "success": True,
-            "message": "Report access code issued successfully",
-            "data":{
-                "access_code": code,
-                "expires_in_minutes": 15
-            }
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "success": True,
+                "message": "Report access code issued successfully",
+                "data": {
+                    "access_code": code,          # ⚠️ dev-only (remove in prod)
+                    "expires_in_minutes": 15,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )

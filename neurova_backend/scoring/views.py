@@ -39,7 +39,7 @@ class SessionScoreCreateView(APIView):
             session=session,
             score=result["score"],
             severity=result["severity"],
-            breakdown=answers,   # ✅ REQUIRED BY MODEL
+            breakdown=answers,   # REQUIRED BY MODEL
         )
 
         return Response(

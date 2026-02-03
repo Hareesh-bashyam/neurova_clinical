@@ -278,7 +278,7 @@ def generate_report_for_order_v1(order: ClinicalOrder) -> ClinicalReport:
         # legacy lifecycle remains GENERATED
         status="GENERATED",
 
-        # ✅ TASK 4: validation lifecycle (NO system signing)
+        # TASK 4: validation lifecycle (NO system signing)
         validation_status=ClinicalReport.DATA_VALIDATED,
         review_status=ClinicalReport.REVIEW_DRAFT,
     )

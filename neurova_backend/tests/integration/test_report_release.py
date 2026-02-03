@@ -102,14 +102,14 @@ def test_report_release_logic():
     release_url = f"/api/v1/reports/{report.id}/release/"
 
     # --------------------------------------------------
-    # ❌ STAFF cannot release
+    # STAFF cannot release
     # --------------------------------------------------
     client.force_authenticate(user=staff)
     resp = client.post(release_url)
     assert resp.status_code == 403
 
     # --------------------------------------------------
-    # ❌ CLINICIAN without signature → FAIL
+    # CLINICIAN without signature → FAIL
     # --------------------------------------------------
     client.force_authenticate(user=clinician)
     resp = client.post(release_url)
@@ -117,7 +117,7 @@ def test_report_release_logic():
     assert "Signature required" in str(resp.data)
 
     # --------------------------------------------------
-    # ✅ Add signature
+    # Add signature
     # --------------------------------------------------
     ReportSignature.objects.create(
         organization=org,
@@ -128,7 +128,7 @@ def test_report_release_logic():
     )
 
     # --------------------------------------------------
-    # ✅ CLINICIAN with signature → PASS
+    # CLINICIAN with signature → PASS
     # --------------------------------------------------
     resp = client.post(release_url)
     assert resp.status_code == 200

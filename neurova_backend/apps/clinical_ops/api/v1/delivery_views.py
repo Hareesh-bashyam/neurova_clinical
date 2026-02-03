@@ -1,34 +1,75 @@
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from apps.clinical_ops.models import AssessmentOrder, Org
+
+from apps.clinical_ops.models import AssessmentOrder
+
 
 class SetDeliveryAndMarkDelivered(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
-        org_id = request.data.get("org_id")
+        org = request.user.profile.organization  
+
         order_id = request.data.get("order_id")
         delivery_mode = request.data.get("delivery_mode")
         delivery_target = request.data.get("delivery_target")
 
-        if not all([org_id, order_id, delivery_mode]):
-            return Response({"error":"org_id, order_id, delivery_mode required"}, status=400)
+        if not all([order_id, delivery_mode]):
+            return Response(
+                {
+                    "success": False,
+                    "message": "order_id and delivery_mode are required",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        org = get_object_or_404(Org, id=org_id, is_active=True)
-        order = get_object_or_404(AssessmentOrder, id=order_id, org=org)
+        order = get_object_or_404(
+            AssessmentOrder,
+            id=order_id,
+            org=org,
+            deletion_status="ACTIVE",
+        )
+
+        # 🔒 Lifecycle guard
+        if order.status not in {
+            AssessmentOrder.STATUS_COMPLETED,
+            AssessmentOrder.STATUS_AWAITING_REVIEW,
+        }:
+            return Response(
+                {
+                    "success": False,
+                    "message": f"Cannot deliver order in status {order.status}",
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
 
         order.delivery_mode = delivery_mode
         order.delivery_target = delivery_target
-
         order.status = AssessmentOrder.STATUS_DELIVERED
         order.delivered_at = timezone.now()
-        order.save(update_fields=["delivery_mode","delivery_target","status","delivered_at"])
 
-        return Response({
-            "success": True,
-            "message": "Delivery mode set successfully",
-            "data":{
-                "status": order.status
-            }
-        }, status=status.HTTP_200_OK)
+        order.save(
+            update_fields=[
+                "delivery_mode",
+                "delivery_target",
+                "status",
+                "delivered_at",
+            ]
+        )
+
+        return Response(
+            {
+                "success": True,
+                "message": "Report delivered successfully",
+                "data": {
+                    "order_id": order.id,
+                    "status": order.status,
+                    "delivery_mode": order.delivery_mode,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )

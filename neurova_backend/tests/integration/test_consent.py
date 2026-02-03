@@ -85,7 +85,7 @@ def test_consent_enforcement():
     )
 
     # --------------------------------------------------
-    # ❌ 1. Response without consent SHOULD exist (no enforcement yet)
+    # 1. Response without consent SHOULD exist (no enforcement yet)
     # --------------------------------------------------
     response = Response.objects.create(
         organization=org,
@@ -97,7 +97,7 @@ def test_consent_enforcement():
     assert response.id is not None
 
     # --------------------------------------------------
-    # ✅ 2. Consent record exists and is linked
+    # 2. Consent record exists and is linked
     # --------------------------------------------------
     consent = ConsentRecord.objects.create(
         organization=org,

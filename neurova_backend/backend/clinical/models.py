@@ -11,7 +11,7 @@ class ClinicalOrder(models.Model):
     patient_age = models.IntegerField(null=True, blank=True)
     patient_gender = models.CharField(max_length=20, null=True, blank=True)
 
-    # ✅ NEW FIELD
+    # NEW FIELD
     phone_number = models.CharField(max_length=15, null=True, blank=True)
 
     encounter_type = models.CharField(max_length=20)  # OPD|IPD|DIAGNOSTIC

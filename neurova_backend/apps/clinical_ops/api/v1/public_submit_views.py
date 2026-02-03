@@ -71,7 +71,7 @@ class PublicOrderSubmit(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # ✅ Save raw answers
+        # Save raw answers
         response = AssessmentResponse.objects.create(
             org=order.org,
             order=order,
@@ -80,7 +80,7 @@ class PublicOrderSubmit(APIView):
             submitted_at=timezone.now(),
         )
 
-        # ✅ Compute response quality (DICT!)
+        # Compute response quality (DICT!)
         quality = compute_quality(
             answers=answers,
             duration_seconds=duration_seconds
@@ -96,7 +96,7 @@ class PublicOrderSubmit(APIView):
             notes=quality.get("notes"),
         )
 
-        # ✅ Score full battery (MULTI TEST SAFE)
+        # Score full battery (MULTI TEST SAFE)
         result_payload = score_battery(
             battery_code=order.battery_code,
             battery_version=order.battery_version,
@@ -111,7 +111,7 @@ class PublicOrderSubmit(APIView):
             has_red_flags=result_payload["summary"]["has_red_flags"],
         )
 
-        # ✅ Finalize order
+        # Finalize order
         order.mark_completed()
 
         return Response(

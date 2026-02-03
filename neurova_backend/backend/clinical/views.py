@@ -312,7 +312,7 @@ class SubmitCurrentTestView(APIView):
             session.completed_at = timezone.now()
             session.save(update_fields=["status", "completed_at"])
 
-            # ✅ ALSO COMPLETE ORDER (THIS WAS MISSING)
+            # ALSO COMPLETE ORDER (THIS WAS MISSING)
             order = session.order
             order.status = "COMPLETED"
             order.save(update_fields=["status"])
@@ -454,7 +454,7 @@ class GetClinicalReportPDFView(APIView):
         # --- END PHASE FINAL-1 ---
 
 
-        # ✅ STEP 3: block export until validated
+        # STEP 3: block export until validated
         if report.validation_status != ClinicalReport.DATA_VALIDATED:
             return Response(
                 {
@@ -467,7 +467,7 @@ class GetClinicalReportPDFView(APIView):
 
         pdf_bytes = render_pdf_from_report_json_v1(report.report_json)
 
-        # ✅ STEP 4: AUDIT LOG (Was Missing!)
+        # STEP 4: AUDIT LOG (Was Missing!)
         from backend.clinical.audit.models import ClinicalAuditEvent
         ClinicalAuditEvent.objects.create(
             organization_id=order.organization_id,

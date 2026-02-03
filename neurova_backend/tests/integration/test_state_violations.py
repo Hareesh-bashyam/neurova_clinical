@@ -97,7 +97,7 @@ def test_state_machine_violations():
     )
 
     # --------------------------------------------------
-    # ✅ 1. Report BEFORE scoring → ALLOWED
+    # 1. Report BEFORE scoring → ALLOWED
     # --------------------------------------------------
     Report.objects.create(
         organization=org,
@@ -107,7 +107,7 @@ def test_state_machine_violations():
     )
 
     # --------------------------------------------------
-    # ✅ 2. Score BEFORE response → ALLOWED
+    # 2. Score BEFORE response → ALLOWED
     # --------------------------------------------------
     Score.objects.create(
         session=session,
@@ -117,7 +117,7 @@ def test_state_machine_violations():
     )
 
     # --------------------------------------------------
-    # ✅ 3. First response → OK
+    # 3. First response → OK
     # --------------------------------------------------
     Response.objects.create(
         organization=org,
@@ -127,7 +127,7 @@ def test_state_machine_violations():
     )
 
     # --------------------------------------------------
-    # ❌ 4. Submit response twice → FAIL
+    # 4. Submit response twice → FAIL
     # --------------------------------------------------
     with pytest.raises(Exception):
         Response.objects.create(
@@ -138,7 +138,7 @@ def test_state_machine_violations():
         )
 
     # --------------------------------------------------
-    # ❌ 5. Create second report for same session → FAIL
+    # 5. Create second report for same session → FAIL
     # --------------------------------------------------
     with pytest.raises(Exception):
         Report.objects.create(

@@ -128,7 +128,7 @@ class ClinicalReport(models.Model):
 
     is_frozen = models.BooleanField(default=True)
 
-    # ✅ ADD THIS (Phase Ω only)
+    # ADD THIS (Phase Ω only)
     status = models.CharField(
         max_length=20,
         choices=STATUS,
