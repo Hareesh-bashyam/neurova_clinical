@@ -164,15 +164,18 @@ class AssessmentOrder(models.Model):
         self.status = self.STATUS_AWAITING_REVIEW
         self.save(update_fields=["status"])
 
-    def mark_started(self):
-        if self.status != self.STATUS_CREATED:
-            raise ValidationError(
-                f"Cannot start order from state {self.status}"
-            )
 
-        self.status = self.STATUS_IN_PROGRESS
+    def mark_started(self):
+        """
+        Ensure started_at is set exactly once.
+        Safe to call multiple times.
+        """
+        if self.started_at:
+            return  # idempotent
+
         self.started_at = timezone.now()
         self.save(update_fields=["status", "started_at"])
+
 
 
 class ResponseQuality(models.Model):

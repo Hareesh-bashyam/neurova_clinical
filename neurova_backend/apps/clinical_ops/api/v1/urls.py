@@ -10,7 +10,8 @@ from apps.clinical_ops.api.v1.signoff_views import OverrideReportSignoff
 from apps.clinical_ops.api.v1.consent_views import PublicGetConsent, PublicSubmitConsent
 from apps.clinical_ops.api.v1.public_access_code_views import PublicRequestReportCode
 from apps.clinical_ops.api.v1.deletion_views import AdminApproveDeletion
-
+from apps.clinical_ops.api.v1.inbox_views import ClinicalInboxView
+from apps.clinical_ops.api.v1.clinical_review import ClinicalReviewDetailView
 
 urlpatterns = [
     path("staff/patients/create", CreatePatient.as_view()),
@@ -28,6 +29,7 @@ urlpatterns = [
     path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
     path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
     path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
-    
+    path("staff/inbox", ClinicalInboxView.as_view()),
+    path("staff/order/<int:order_id>/review", ClinicalReviewDetailView.as_view()),
 ]
 

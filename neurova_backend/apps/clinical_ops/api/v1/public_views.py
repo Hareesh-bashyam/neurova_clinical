@@ -18,7 +18,7 @@ class PublicOrderBootstrap(APIView):
             return Response({"message":"link_expired"}, status=403)
 
         # Mark started if not started
-        if order.status == AssessmentOrder.STATUS_CREATED:
+        if order.status == AssessmentOrder.STATUS_IN_PROGRESS:
             order.mark_started()
 
         return Response(

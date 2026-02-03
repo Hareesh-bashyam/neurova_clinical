@@ -26,9 +26,11 @@ class PublicOrderSubmit(APIView):
         )
 
         if order.status != AssessmentOrder.STATUS_IN_PROGRESS:
+            order_status = order.status
             return Response(
                 {
                     "success": False,
+                    "status": order_status,
                     "message": "Order not in progress",
                     "data": None
                 },
