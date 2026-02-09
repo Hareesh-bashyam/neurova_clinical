@@ -1,9 +1,15 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
-from .serializers import AppTokenObtainPairSerializer
+from .serializers import (
+    AppTokenObtainPairSerializer,
+    AppTokenRefreshSerializer,
+)
 
 
 class AppTokenObtainPairView(TokenObtainPairView):
@@ -13,7 +19,7 @@ class AppTokenObtainPairView(TokenObtainPairView):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            
+
             return Response(
                 {
                     "success": True,
@@ -30,6 +36,36 @@ class AppTokenObtainPairView(TokenObtainPairView):
                     "status": "ERROR",
                     "status_code": 401,
                     "message": "Invalid username or password",
+                    "data": None,
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+
+class AppTokenRefreshView(TokenRefreshView):
+    serializer_class = AppTokenRefreshSerializer
+
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Token refreshed successfully",
+                    "data": serializer.validated_data,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except (AuthenticationFailed, ValidationError):
+            return Response(
+                {
+                    "success": False,
+                    "status": "ERROR",
+                    "status_code": 401,
+                    "message": "Invalid or expired refresh token",
                     "data": None,
                 },
                 status=status.HTTP_401_UNAUTHORIZED,

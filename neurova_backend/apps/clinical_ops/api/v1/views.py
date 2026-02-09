@@ -45,7 +45,7 @@ class CreatePatient(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "org_id is required",
+                    "message": "organization id is required",
                     "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -80,7 +80,7 @@ class CreatePatient(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "full_name must be at least 3 characters",
+                    "message": "Full Name must be at least 3 characters",
                     "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -95,7 +95,7 @@ class CreatePatient(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "age must be between 0 and 120",
+                    "message": "Age must be between 0 and 120",
                     "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -107,7 +107,7 @@ class CreatePatient(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "Invalid sex. Allowed: MALE, FEMALE, OTHER",
+                    "message": "Invalid Gender. Allowed: MALE, FEMALE, OTHER",
                     "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -119,7 +119,7 @@ class CreatePatient(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "Invalid phone number",
+                    "message": "Invalid Phone Number",
                     "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -132,7 +132,7 @@ class CreatePatient(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "Invalid email address",
+                    "message": "Invalid Email Address",
                     "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -187,7 +187,7 @@ class CreateOrder(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "org_id is required",
+                    "message": "Organization id is required",
                     "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -206,7 +206,7 @@ class CreateOrder(APIView):
         patient = get_object_or_404(
             Patient,
             id=serializer.validated_data["patient_id"],
-            org=user_org,  # 🔥 ENFORCED
+            org=user_org,  # ENFORCED
         )
 
         token = _make_token()
@@ -238,7 +238,7 @@ class CreateOrder(APIView):
         return Response(
             {
                 "success": True,
-                "message": "Order created successfully",
+                "message": "Patient Registered successfully",
                 "data": {
                     "order_id": order.id,
                     "public_token": order.public_token,

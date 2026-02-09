@@ -18,7 +18,7 @@ class PublicOrderSubmit(APIView):
 
     @transaction.atomic
     def post(self, request, token):
-        # 🔒 Lock order
+        # Lock order
         order = (
             AssessmentOrder.objects
             .select_for_update()
@@ -47,7 +47,7 @@ class PublicOrderSubmit(APIView):
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # 🔁 Deduplication
+        # Deduplication
         if hasattr(order, "response"):
             return Response(
                 {
@@ -80,7 +80,7 @@ class PublicOrderSubmit(APIView):
             submitted_at=timezone.now(),
         )
 
-        # Compute response quality (DICT!)
+        # Compute response quality
         quality = compute_quality(
             answers=answers,
             duration_seconds=duration_seconds
@@ -96,7 +96,7 @@ class PublicOrderSubmit(APIView):
             notes=quality.get("notes"),
         )
 
-        # Score full battery (MULTI TEST SAFE)
+        # Score full battery
         result_payload = score_battery(
             battery_code=order.battery_code,
             battery_version=order.battery_version,

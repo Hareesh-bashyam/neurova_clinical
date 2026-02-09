@@ -23,30 +23,32 @@ class PublicRequestReportCode(APIView):
             deletion_status="ACTIVE",
         )
 
-        # ⏳ Public link expiry check
+        # Public link expiry check
         if order.public_link_expires_at and timezone.now() > order.public_link_expires_at:
             return Response(
                 {
                     "success": False,
                     "message": "Link expired",
+                    "data": None
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # 🚫 Patient download policy
+        # Patient download policy
         if order.delivery_mode != AssessmentOrder.DELIVERY_ALLOW_PATIENT_DOWNLOAD:
             return Response(
                 {
                     "success": False,
                     "message": "Patient download not allowed",
+                    "data": None
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # 🔐 Issue short-lived access code
+        # Issue short-lived access code
         code = issue_report_access_code(order, minutes_valid=15)
 
-        # 🧾 Audit event
+        # Audit event
         log_event(
             org_id=order.org.id,
             event_type="REPORT_ACCESS_CODE_ISSUED",
@@ -63,7 +65,7 @@ class PublicRequestReportCode(APIView):
                 "success": True,
                 "message": "Report access code issued successfully",
                 "data": {
-                    "access_code": code,          # ⚠️ dev-only (remove in prod)
+                    "access_code": code,          # dev-only (remove in prod)
                     "expires_in_minutes": 15,
                 },
             },

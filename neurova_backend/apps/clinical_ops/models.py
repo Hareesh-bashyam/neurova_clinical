@@ -195,3 +195,4 @@ from .models_report import AssessmentReport
 from apps.clinical_ops.audit.models import AuditEvent
 from apps.clinical_ops.models_consent import ConsentRecord
 from apps.clinical_ops.models_deletion import DeletionRequest
+from apps.clinical_ops.battery_assessment_model import Assessment, Battery, BatteryAssessment

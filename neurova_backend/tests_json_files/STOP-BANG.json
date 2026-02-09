@@ -1,54 +1,16 @@
 {
-  "id": "stop-bang",
+  "test_code": "STOP_BANG",
   "title": "STOP-BANG Questionnaire",
+  "version": "1.0",
+  "description": "Screens for obstructive sleep apnea risk",
   "questions": [
-    {
-      "id": "q1",
-      "text": "Do you snore loudly?",
-      "scale": [0, 1],
-      "labels": ["No", "Yes"]
-    },
-    {
-      "id": "q2",
-      "text": "Do you often feel tired, fatigued, or sleepy during daytime?",
-      "scale": [0, 1],
-      "labels": ["No", "Yes"]
-    },
-    {
-      "id": "q3",
-      "text": "Has anyone observed you stop breathing during sleep?",
-      "scale": [0, 1],
-      "labels": ["No", "Yes"]
-    },
-    {
-      "id": "q4",
-      "text": "Do you have or are you being treated for high blood pressure?",
-      "scale": [0, 1],
-      "labels": ["No", "Yes"]
-    },
-    {
-      "id": "q5",
-      "text": "Is your BMI more than 35 kg/m²?",
-      "scale": [0, 1],
-      "labels": ["No", "Yes"]
-    },
-    {
-      "id": "q6",
-      "text": "Are you over 50 years old?",
-      "scale": [0, 1],
-      "labels": ["No", "Yes"]
-    },
-    {
-      "id": "q7",
-      "text": "Is your neck circumference greater than 40 cm?",
-      "scale": [0, 1],
-      "labels": ["No", "Yes"]
-    },
-    {
-      "id": "q8",
-      "text": "Are you male?",
-      "scale": [0, 1],
-      "labels": ["No", "Yes"]
-    }
+    { "question_id": "stop_bang_snoring", "order": 1, "text": "Do you snore loudly?", "scale": [0,1], "labels": ["No","Yes"] },
+    { "question_id": "stop_bang_tired", "order": 2, "text": "Do you often feel tired, fatigued, or sleepy during daytime?", "scale": [0,1], "labels": ["No","Yes"] },
+    { "question_id": "stop_bang_observed", "order": 3, "text": "Has anyone observed you stop breathing during sleep?", "scale": [0,1], "labels": ["No","Yes"] },
+    { "question_id": "stop_bang_pressure", "order": 4, "text": "Do you have or are you being treated for high blood pressure?", "scale": [0,1], "labels": ["No","Yes"] },
+    { "question_id": "stop_bang_bmi", "order": 5, "text": "Is your BMI more than 35 kg/m²?", "scale": [0,1], "labels": ["No","Yes"] },
+    { "question_id": "stop_bang_age", "order": 6, "text": "Are you over 50 years old?", "scale": [0,1], "labels": ["No","Yes"] },
+    { "question_id": "stop_bang_neck", "order": 7, "text": "Is your neck circumference greater than 40 cm?", "scale": [0,1], "labels": ["No","Yes"] },
+    { "question_id": "stop_bang_gender", "order": 8, "text": "Are you male?", "scale": [0,1], "labels": ["No","Yes"] }
   ]
 }

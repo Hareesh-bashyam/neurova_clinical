@@ -1,66 +1,32 @@
 {
-  "id": "audit",
+  "test_code": "AUDIT",
   "title": "Alcohol Use Disorders Identification Test",
+  "version": "1.0",
+  "description": "Identifies risky and harmful alcohol use",
   "questions": [
+    { "question_id": "audit_q1", "order": 1, "text": "How often do you have a drink containing alcohol?", "scale": [0,1,2,3,4], "labels": ["Never","Monthly or less","2–4 times a month","2–3 times a week","4+ times a week"] },
+    { "question_id": "audit_q2", "order": 2, "text": "How many drinks do you have on a typical day when drinking?", "scale": [0,1,2,3,4], "labels": ["1–2","3–4","5–6","7–9","10+"] },
+    { "question_id": "audit_q3", "order": 3, "text": "How often do you have six or more drinks on one occasion?", "scale": [0,1,2,3,4], "labels": ["Never","Less than monthly","Monthly","Weekly","Daily or almost daily"] },
+    { "question_id": "audit_q4", "order": 4, "text": "How often during the last year have you found you were not able to stop drinking once you had started?", "scale": [0,1,2,3,4], "labels": ["Never","Less than monthly","Monthly","Weekly","Daily or almost daily"] },
+    { "question_id": "audit_q5", "order": 5, "text": "How often during the last year have you failed to do what was expected because of drinking?", "scale": [0,1,2,3,4], "labels": ["Never","Less than monthly","Monthly","Weekly","Daily or almost daily"] },
+    { "question_id": "audit_q6", "order": 6, "text": "How often during the last year have you needed a drink in the morning to get going?", "scale": [0,1,2,3,4], "labels": ["Never","Less than monthly","Monthly","Weekly","Daily or almost daily"] },
+    { "question_id": "audit_q7", "order": 7, "text": "How often during the last year have you had guilt or remorse after drinking?", "scale": [0,1,2,3,4], "labels": ["Never","Less than monthly","Monthly","Weekly","Daily or almost daily"] },
+    { "question_id": "audit_q8", "order": 8, "text": "How often during the last year have you been unable to remember what happened the night before?", "scale": [0,1,2,3,4], "labels": ["Never","Less than monthly","Monthly","Weekly","Daily or almost daily"] },
     {
-      "id": "q1",
-      "text": "How often do you have a drink containing alcohol?",
-      "scale": [0, 1, 2, 3, 4],
-      "labels": ["Never", "Monthly or less", "2–4 times a month", "2–3 times a week", "4+ times a week"]
-    },
-    {
-      "id": "q2",
-      "text": "How many drinks do you have on a typical day when drinking?",
-      "scale": [0, 1, 2, 3, 4],
-      "labels": ["1–2", "3–4", "5–6", "7–9", "10+"]
-    },
-    {
-      "id": "q3",
-      "text": "How often do you have six or more drinks on one occasion?",
-      "scale": [0, 1, 2, 3, 4],
-      "labels": ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"]
-    },
-    {
-      "id": "q4",
-      "text": "How often during the last year have you found you were not able to stop drinking once you had started?",
-      "scale": [0, 1, 2, 3, 4],
-      "labels": ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"]
-    },
-    {
-      "id": "q5",
-      "text": "How often during the last year have you failed to do what was expected because of drinking?",
-      "scale": [0, 1, 2, 3, 4],
-      "labels": ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"]
-    },
-    {
-      "id": "q6",
-      "text": "How often during the last year have you needed a drink in the morning to get going?",
-      "scale": [0, 1, 2, 3, 4],
-      "labels": ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"]
-    },
-    {
-      "id": "q7",
-      "text": "How often during the last year have you had guilt or remorse after drinking?",
-      "scale": [0, 1, 2, 3, 4],
-      "labels": ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"]
-    },
-    {
-      "id": "q8",
-      "text": "How often during the last year have you been unable to remember what happened the night before?",
-      "scale": [0, 1, 2, 3, 4],
-      "labels": ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"]
-    },
-    {
-      "id": "q9",
+      "question_id": "audit_q9",
+      "order": 9,
       "text": "Have you or someone else been injured because of your drinking?",
-      "scale": [0, 2, 4],
-      "labels": ["No", "Yes, but not in the last year", "Yes, during the last year"]
+      "scale": [0,2,4],
+      "labels": ["No","Yes, but not in the last year","Yes, during the last year"],
+      "critical_item": true
     },
     {
-      "id": "q10",
+      "question_id": "audit_q10",
+      "order": 10,
       "text": "Has a relative, friend, or doctor suggested you cut down on drinking?",
-      "scale": [0, 2, 4],
-      "labels": ["No", "Yes, but not in the last year", "Yes, during the last year"]
+      "scale": [0,2,4],
+      "labels": ["No","Yes, but not in the last year","Yes, during the last year"],
+      "critical_item": true
     }
   ]
 }

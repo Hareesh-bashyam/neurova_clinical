@@ -1,150 +1,72 @@
 {
-    "id": "phq-9",
-    "title": "Patient Health Questionnaire-9",
-    "questions": [
-        {
-            "id": "q1",
-            "text": "Little interest or pleasure in doing things",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        },
-        {
-            "id": "q2",
-            "text": "Feeling down, depressed or hopeless",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        },
-        {
-            "id": "q3",
-            "text": "Trouble falling asleep, staying asleep, or sleeping too much",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        },
-        {
-            "id": "q4",
-            "text": "Feeling tired or having little energy",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        },
-        {
-            "id": "q5",
-            "text": "Poor appetite or overeating",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        },
-        {
-            "id": "q6",
-            "text": "Feeling bad about yourself \u2014 or that you are a failure",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        },
-        {
-            "id": "q7",
-            "text": "Trouble concentrating on things",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        },
-        {
-            "id": "q8",
-            "text": "Moving or speaking so slowly... or the opposite",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        },
-        {
-            "id": "q9",
-            "text": "Thoughts that you would be better off dead",
-            "scale": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "labels": [
-                "Not at all",
-                "Several days",
-                "More than half the days",
-                "Nearly every day"
-            ]
-        }
-    ]
+  "test_code": "PHQ9",
+  "title": "Patient Health Questionnaire-9",
+  "version": "1.0",
+  "description": "Measures severity of depressive symptoms",
+  "questions": [
+    {
+      "question_id": "phq9_q1",
+      "order": 1,
+      "text": "Little interest or pleasure in doing things",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"]
+    },
+    {
+      "question_id": "phq9_q2",
+      "order": 2,
+      "text": "Feeling down, depressed, or hopeless",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"]
+    },
+    {
+      "question_id": "phq9_q3",
+      "order": 3,
+      "text": "Trouble falling or staying asleep, or sleeping too much",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"]
+    },
+    {
+      "question_id": "phq9_q4",
+      "order": 4,
+      "text": "Feeling tired or having little energy",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"]
+    },
+    {
+      "question_id": "phq9_q5",
+      "order": 5,
+      "text": "Poor appetite or overeating",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"]
+    },
+    {
+      "question_id": "phq9_q6",
+      "order": 6,
+      "text": "Feeling bad about yourself — or that you are a failure",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"]
+    },
+    {
+      "question_id": "phq9_q7",
+      "order": 7,
+      "text": "Trouble concentrating on things",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"]
+    },
+    {
+      "question_id": "phq9_q8",
+      "order": 8,
+      "text": "Moving or speaking slowly or being restless",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"]
+    },
+    {
+      "question_id": "phq9_q9",
+      "order": 9,
+      "text": "Thoughts that you would be better off dead or of hurting yourself",
+      "scale": [0,1,2,3],
+      "labels": ["Not at all","Several days","More than half the days","Nearly every day"],
+      "suicide_item": true
+    }
+  ]
 }

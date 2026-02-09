@@ -22,7 +22,8 @@ class SetDeliveryAndMarkDelivered(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "order_id and delivery_mode are required",
+                    "message": "Order id and delivery mode are required",
+                    "data": None,
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -42,7 +43,8 @@ class SetDeliveryAndMarkDelivered(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": f"Cannot deliver order in status {order.status}",
+                    "message": f"Cannot Deliver Order in status {order.status}",
+                    "data": None,
                 },
                 status=status.HTTP_409_CONFLICT,
             )
@@ -64,7 +66,7 @@ class SetDeliveryAndMarkDelivered(APIView):
         return Response(
             {
                 "success": True,
-                "message": "Report delivered successfully",
+                "message": "Report Delivered Successfully",
                 "data": {
                     "order_id": order.id,
                     "status": order.status,

@@ -21,7 +21,7 @@ class AdminApproveDeletion(APIView):
 
         if not dr_id or action not in ["APPROVE", "REJECT"]:
             return Response(
-                {"success": False, "message": "invalid_payload"},
+                {"success": False, "message": "invalid payload", "data": None},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -40,6 +40,7 @@ class AdminApproveDeletion(APIView):
                 {
                     "success": False,
                     "message": f"Deletion request already {dr.status}",
+                    "data": None
                 },
                 status=status.HTTP_409_CONFLICT,
             )
@@ -62,6 +63,7 @@ class AdminApproveDeletion(APIView):
             return Response(
                 {
                     "success": True,
+                    "message": "Deletion request rejected successfully",
                     "data": {"status": "REJECTED"},
                 },
                 status=status.HTTP_200_OK,

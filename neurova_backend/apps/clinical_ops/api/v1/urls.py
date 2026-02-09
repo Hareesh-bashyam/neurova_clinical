@@ -12,6 +12,8 @@ from apps.clinical_ops.api.v1.public_access_code_views import PublicRequestRepor
 from apps.clinical_ops.api.v1.deletion_views import AdminApproveDeletion
 from apps.clinical_ops.api.v1.inbox_views import ClinicalInboxView
 from apps.clinical_ops.api.v1.clinical_review import ClinicalReviewDetailView
+from apps.clinical_ops.api.v1.display_questions import PublicQuestionDisplay
+
 
 urlpatterns = [
     path("staff/patients/create", CreatePatient.as_view()),
@@ -31,5 +33,6 @@ urlpatterns = [
     path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
     path("staff/inbox", ClinicalInboxView.as_view()),
     path("staff/order/<int:order_id>/review", ClinicalReviewDetailView.as_view()),
+    path("public/order/<str:token>/questions", PublicQuestionDisplay.as_view()),
 ]
 

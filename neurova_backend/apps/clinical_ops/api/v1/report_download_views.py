@@ -29,7 +29,8 @@ class StaffDownloadReport(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "order_id required",
+                    "message": "Order id required",
+                    "data": None
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -52,11 +53,12 @@ class StaffDownloadReport(APIView):
                 {
                     "success": False,
                     "message": "PDF not generated",
+                    "data": None
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        # 🔐 ANTI-TAMPER CHECK
+        # ANTI-TAMPER CHECK
         with report.pdf_file.open("rb") as f:
             pdf_bytes = f.read()
 
@@ -67,6 +69,7 @@ class StaffDownloadReport(APIView):
                 {
                     "success": False,
                     "message": "PDF integrity check failed",
+                    "data": None
                 },
                 status=status.HTTP_409_CONFLICT,
             )
@@ -98,7 +101,7 @@ class PublicDownloadReport(APIView):
             deletion_status="ACTIVE",
         )
 
-        # ⏳ EXPIRY CHECK
+        # EXPIRY CHECK
         if order.public_link_expires_at and timezone.now() > order.public_link_expires_at:
             return Response(
                 {
@@ -108,23 +111,25 @@ class PublicDownloadReport(APIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # 🚫 DELIVERY POLICY CHECK
+        # DELIVERY POLICY CHECK
         if order.delivery_mode != AssessmentOrder.DELIVERY_ALLOW_PATIENT_DOWNLOAD:
             return Response(
                 {
                     "success": False,
                     "message": "Patient download not allowed",
+                    "data": None
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # 🔐 ACCESS CODE CHECK
+        # ACCESS CODE CHECK
         code = request.query_params.get("code")
         if not code or not verify_report_access_code(order, code):
             return Response(
                 {
                     "success": False,
                     "message": "Invalid or missing access code",
+                    "data": None
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
@@ -138,12 +143,13 @@ class PublicDownloadReport(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "PDF not generated",
+                    "message": "PDF not found",
+                    "data": None
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        # 🔐 ANTI-TAMPER CHECK
+        #  ANTI-TAMPER CHECK
         with report.pdf_file.open("rb") as f:
             pdf_bytes = f.read()
 
@@ -154,6 +160,7 @@ class PublicDownloadReport(APIView):
                 {
                     "success": False,
                     "message": "PDF integrity check failed",
+                    "data": None
                 },
                 status=status.HTTP_409_CONFLICT,
             )

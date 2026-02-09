@@ -26,7 +26,7 @@ class GenerateReportPDF(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "org_id and order_id required",
+                    "message": "Organization and order id required",
                     "data": None
                 },
                 status=status.HTTP_400_BAD_REQUEST
@@ -56,7 +56,7 @@ class GenerateReportPDF(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": f"order status not allowed: {order.status}",
+                    "message": f"Order status not allowed: {order.status}",
                     "data": None
                 },
                 status=status.HTTP_400_BAD_REQUEST
@@ -105,7 +105,7 @@ class GenerateReportPDF(APIView):
         return Response(
             {
                 "success": True,
-                "message": "Report generated successfully",
+                "message": "Report Generated Successfully",
                 "data": {
                     "report_id": report.id,
                     "pdf_url": report.pdf_file.url

@@ -15,6 +15,8 @@ from apps.clinical_ops.models_assessment import (
 from apps.clinical_ops.models_report import AssessmentReport
 from apps.clinical_ops.models_consent import ConsentRecord
 from apps.clinical_ops.models_deletion import DeletionRequest
+from apps.clinical_ops.battery_assessment_model import Assessment, Battery, BatteryAssessment
+
 
 
 # =========================
@@ -179,3 +181,68 @@ class DeletionRequestAdmin(admin.ModelAdmin):
     list_filter = ("org", "status")
     readonly_fields = ("requested_at", "processed_at")
     autocomplete_fields = ("org", "order")
+
+
+class BatteryAssessmentInline(admin.TabularInline):
+    model = BatteryAssessment
+    extra = 1
+    autocomplete_fields = ("assessment",)
+    fields = ("assessment", "display_order")
+
+
+@admin.register(Battery)
+class BatteryAdmin(admin.ModelAdmin):
+    list_display = (
+        "battery_code",
+        "name",
+        "version",
+        "signoff_required",
+        "is_active",
+    )
+    search_fields = ("battery_code", "name")
+
+    inlines = [BatteryAssessmentInline]
+
+    fieldsets = (
+        ("Basic Info", {
+            "fields": (
+                "battery_code",
+                "name",
+                "version",
+                "screening_label",
+                "signoff_required",
+                "is_active",
+            )
+        }),
+    )
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ("battery_code",)
+        return ()
+
+
+@admin.register(Assessment)
+class AssessmentAdmin(admin.ModelAdmin):
+    list_display = ("test_code", "title", "version", "is_active")
+    search_fields = ("test_code", "title")
+
+    fieldsets = (
+        ("Basic Info", {
+            "fields": (
+                "test_code",
+                "title",
+                "version",
+                "description",
+                "is_active",
+            )
+        }),
+        ("Questions JSON", {
+            "fields": ("questions_json",),
+        }),
+    )
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ("test_code",)
+        return ()

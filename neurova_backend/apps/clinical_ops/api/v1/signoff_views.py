@@ -40,7 +40,8 @@ class OverrideReportSignoff(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "order_id, signoff_status, signed_by_name, signed_by_role, reason required",
+                    "message": "order id, signoff status, signed by name, signed by role, reason required",
+                    "data": None
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -49,7 +50,8 @@ class OverrideReportSignoff(APIView):
             return Response(
                 {
                     "success": False,
-                    "message": "signoff_status must be SIGNED or REJECTED",
+                    "message": "signoff status must be SIGNED or REJECTED",
+                    "data": None
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -61,7 +63,7 @@ class OverrideReportSignoff(APIView):
             deletion_status="ACTIVE",
         )
 
-        # 🔒 Lifecycle guard
+        # Lifecycle guard
         if order.status not in {
             AssessmentOrder.STATUS_COMPLETED,
             AssessmentOrder.STATUS_AWAITING_REVIEW,
@@ -71,6 +73,7 @@ class OverrideReportSignoff(APIView):
                 {
                     "success": False,
                     "message": f"Cannot override signoff for order in status {order.status}",
+                    "data": None
                 },
                 status=status.HTTP_409_CONFLICT,
             )
@@ -99,7 +102,7 @@ class OverrideReportSignoff(APIView):
             ]
         )
 
-        # 🧾 AUDIT LOG (KEEP THIS — VERY GOOD)
+        # AUDIT LOG (KEEP THIS — VERY GOOD)
         log_event(
             org_id=org.id,
             event_type="REPORT_SIGNOFF_OVERRIDE",

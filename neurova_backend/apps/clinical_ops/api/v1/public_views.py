@@ -15,7 +15,9 @@ class PublicOrderBootstrap(APIView):
         order = get_object_or_404(AssessmentOrder, public_token=token)
 
         if order.public_link_expires_at and timezone.now() > order.public_link_expires_at:
-            return Response({"message":"link_expired"}, status=403)
+            return Response({"success": False,
+                            "message":"Link Expired", 
+                            "data": None}, status=403)
 
         # Mark started if not started
         if order.status == AssessmentOrder.STATUS_IN_PROGRESS:
