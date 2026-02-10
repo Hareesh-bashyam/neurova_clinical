@@ -7,6 +7,8 @@ from rest_framework_simplejwt.serializers import (
     TokenRefreshSerializer,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
+from rest_framework import serializers
 
 User = get_user_model()
 
@@ -82,3 +84,19 @@ class AppTokenRefreshSerializer(TokenRefreshSerializer):
             "org_id": str(organization.external_id),
             "role": profile.role,
         }
+
+
+class AppLogoutSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField()
+
+    def validate(self, attrs):
+        try:
+            self.token = RefreshToken(attrs["refresh_token"])
+        except Exception:
+            raise AuthenticationFailed("Invalid refresh token")
+
+        return attrs
+
+    def save(self, **kwargs):
+        # Blacklist refresh token
+        self.token.blacklist()

@@ -20,19 +20,25 @@ urlpatterns = [
     path("staff/orders/create", CreateOrder.as_view()),
     path("staff/queue", ClinicQueue.as_view()),
     path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
-    path("staff/orders/deliver", SetDeliveryAndMarkDelivered.as_view()),
+    
     path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
+    path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
+    path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
+    path("public/order/<str:token>/questions", PublicQuestionDisplay.as_view()),
     path("public/order/<str:token>/submit", PublicOrderSubmit.as_view()),
     path("staff/reports/generate", GenerateReportPDF.as_view()),
     path("staff/reports/download", StaffDownloadReport.as_view()),
-    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
-    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
-    path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
-    path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
-    path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
-    path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
+
     path("staff/inbox", ClinicalInboxView.as_view()),
     path("staff/order/<int:order_id>/review", ClinicalReviewDetailView.as_view()),
-    path("public/order/<str:token>/questions", PublicQuestionDisplay.as_view()),
+
+    path("staff/orders/deliver", SetDeliveryAndMarkDelivered.as_view()),
+    path("public/order/<str:token>/report.pdf", PublicDownloadReport.as_view()),
+    path("staff/reports/signoff/override", OverrideReportSignoff.as_view()),
+
+    path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
+    path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
+
+    
 ]
 

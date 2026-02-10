@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'backend.clinical.policies',
     'backend.clinical.org',
     "apps.clinical_ops",
+    "rest_framework_simplejwt.token_blacklist"
     
 
 ]

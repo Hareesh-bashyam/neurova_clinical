@@ -8,7 +8,7 @@ from rest_framework.throttling import AnonRateThrottle
  
 from apps.clinical_ops.models import AssessmentOrder
 from apps.clinical_ops.battery_assessment_model import BatteryAssessment,Battery 
- 
+
  
 class PublicQuestionDisplay(APIView): 
     authentication_classes = [] 

@@ -23,6 +23,7 @@ from rest_framework_simplejwt.views import (
 from common.auth.views import (
     AppTokenObtainPairView,
     AppTokenRefreshView,
+    AppLogoutView,
 )
 from core.health import healthz, readyz
 from django.conf import settings
@@ -34,6 +35,7 @@ urlpatterns = [
 
     path("api/v1/auth/login/", AppTokenObtainPairView.as_view()),
     path("api/v1/auth/refresh/", AppTokenRefreshView.as_view()),
+    path("api/v1/auth/logout/", AppLogoutView.as_view()),
     path("api/v1/", include("patients.urls")),
     path("api/v1/", include("catalog.urls")),
     path("api/v1/", include("core.urls")),

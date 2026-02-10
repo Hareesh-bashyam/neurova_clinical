@@ -9,7 +9,11 @@ from rest_framework_simplejwt.views import (
 from .serializers import (
     AppTokenObtainPairSerializer,
     AppTokenRefreshSerializer,
+    AppLogoutSerializer,
 )
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+
 
 
 class AppTokenObtainPairView(TokenObtainPairView):
@@ -65,6 +69,35 @@ class AppTokenRefreshView(TokenRefreshView):
                     "success": False,
                     "status": "ERROR",
                     "status_code": 401,
+                    "message": "Invalid or expired refresh token",
+                    "data": None,
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+
+class AppLogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            serializer = AppLogoutSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Logged out successfully",
+                    "data": None,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except (AuthenticationFailed, ValidationError):
+            return Response(
+                {
+                    "success": False,
                     "message": "Invalid or expired refresh token",
                     "data": None,
                 },
