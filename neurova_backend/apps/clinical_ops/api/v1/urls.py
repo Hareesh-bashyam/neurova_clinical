@@ -38,7 +38,6 @@ urlpatterns = [
 
     path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
     path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
-
     
 ]
 

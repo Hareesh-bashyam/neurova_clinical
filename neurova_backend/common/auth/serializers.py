@@ -9,6 +9,7 @@ from rest_framework_simplejwt.serializers import (
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
 from rest_framework import serializers
+from rest_framework_simplejwt.exceptions import TokenError
 
 User = get_user_model()
 
@@ -52,7 +53,7 @@ class AppTokenRefreshSerializer(TokenRefreshSerializer):
 
         refresh = RefreshToken(attrs["refresh"])
 
-        # ✅ Extract user_id from token payload (SimpleJWT way)
+        # Extract user_id from token payload (SimpleJWT way)
         user_id = refresh.payload.get("user_id")
         if not user_id:
             raise AuthenticationFailed("Invalid refresh token")
@@ -90,13 +91,21 @@ class AppLogoutSerializer(serializers.Serializer):
     refresh_token = serializers.CharField()
 
     def validate(self, attrs):
+        refresh_token = attrs.get("refresh_token")
+
+        if not refresh_token:
+            raise serializers.ValidationError("Refresh token is required")
+
         try:
-            self.token = RefreshToken(attrs["refresh_token"])
-        except Exception:
-            raise AuthenticationFailed("Invalid refresh token")
+            self.token = RefreshToken(refresh_token)
+        except TokenError:
+            # Covers: expired, blacklisted, malformed token
+            raise serializers.ValidationError(
+                "Invalid or expired refresh token"
+            )
 
         return attrs
 
     def save(self, **kwargs):
-        # Blacklist refresh token
+        # Blacklist the refresh token
         self.token.blacklist()
