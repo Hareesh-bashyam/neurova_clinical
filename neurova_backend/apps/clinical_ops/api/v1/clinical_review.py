@@ -53,6 +53,7 @@ class ClinicalReviewDetailView(APIView):
         # -------------------------------
         # Clinical Flag
         # -------------------------------
+        red_flags_value = result_json.get("summary", {}).get("red_flags", [])
         has_red_flags = bool(
             result and result.has_red_flags
         )
@@ -106,8 +107,9 @@ class ClinicalReviewDetailView(APIView):
                         "visible": has_red_flags,
                         "type": "WARNING",
                         "title": "Clinical Flag",
+                        "red_flags":red_flags_value,
                         "message": (
-                            "Responses indicate elevated distress markers requiring clinical attention."
+                            "Suicide ideation item endorsed: Yes"
                             if has_red_flags else None
                         )
                     },

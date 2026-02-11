@@ -1,6 +1,7 @@
 from apps.clinical_ops.models import AssessmentOrder
 from apps.clinical_ops.models_assessment import AssessmentResult
 from apps.clinical_ops.models_report import AssessmentReport
+from django.utils.timezone import localtime
 
 def build_report_context(order: AssessmentOrder) -> dict:
     # Must exist
@@ -70,8 +71,8 @@ def build_report_context(order: AssessmentOrder) -> dict:
             "battery_version": order.battery_version,
             "administration_mode": order.administration_mode,
             "encounter_type": order.encounter_type,
-            "created_at": order.created_at.isoformat(),
-            "completed_at": order.completed_at.isoformat() if order.completed_at else None,
+            "created_at": localtime(order.created_at).strftime("%d %B %Y, %I:%M %p") if order.created_at else None,
+            "completed_at": localtime(order.completed_at).strftime("%d %B %Y, %I:%M %p") if order.completed_at else None,
         },
         "summary": {
             "primary_severity": summary.get("primary_severity"),
