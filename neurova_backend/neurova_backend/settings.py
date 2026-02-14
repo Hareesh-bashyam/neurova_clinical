@@ -61,6 +61,10 @@ load_dotenv(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
+# SECRET_KEY = os.getenv("SECRET_KEY"),
+# if not SECRET_KEY:
+#     raise ImproperlyConfigured("DJANGO_SECRET_KEY must be set")
 SECRET_KEY = 'django-insecure-_!0afham_07aezf%a9#c+(pnu%=dr6mxz=7v=l+jbw@ex*-3p3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -114,10 +118,10 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 
-    # 🔥 Global exception handler (Step 3)
+    # Global exception handler (Step 3)
     "EXCEPTION_HANDLER": "common.api_exception_handler.neurova_exception_handler",
 
-    # 🚦 Global rate limiting (Step 5A)
+    # Global rate limiting (Step 5A)
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
@@ -138,7 +142,7 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
-}
+}   
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Neurova Clinical Engine API",

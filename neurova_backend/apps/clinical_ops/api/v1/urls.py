@@ -19,7 +19,7 @@ urlpatterns = [
     path("staff/patients/create", CreatePatient.as_view()),
     path("staff/orders/create", CreateOrder.as_view()),
     path("staff/queue", ClinicQueue.as_view()),
-    path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
+    path("public/order", PublicOrderBootstrap.as_view()),
     
     path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
     path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
@@ -39,5 +39,6 @@ urlpatterns = [
     path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
     path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
     
+
 ]
 

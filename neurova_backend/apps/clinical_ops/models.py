@@ -4,6 +4,7 @@ from apps.clinical_ops.services.retention_policy import compute_retention_date
 from core.models import Organization    
 
 
+
 class Org(models.Model):
     # If you already have Org/Tenant model, DO NOT use this.
     # Instead, delete this model and import your existing Org model everywhere.
@@ -89,7 +90,7 @@ class AssessmentOrder(models.Model):
     verified_by_staff = models.BooleanField(default=False)
 
     # links
-    public_token = models.CharField(max_length=64, unique=True)
+    public_token = models.CharField(max_length=64, unique=False, null=True)
     public_link_expires_at = models.DateTimeField(blank=True, null=True)
 
     DELIVERY_HOSPITAL_ONLY = "HOSPITAL_ONLY"
@@ -116,6 +117,9 @@ class AssessmentOrder(models.Model):
     report_access_code_expires_at = models.DateTimeField(blank=True, null=True)
     data_retention_until = models.DateTimeField(null=True, blank=True)
     deletion_status = models.CharField(max_length=32,default="ACTIVE")  # ACTIVE / PENDING_DELETE / DELETED
+
+    report_failed_attempts = models.PositiveSmallIntegerField(default=0)
+    report_failed_attempts_locked_until = models.DateTimeField(null=True, blank=True)
     
 
     class Meta:
@@ -196,3 +200,5 @@ from apps.clinical_ops.audit.models import AuditEvent
 from apps.clinical_ops.models_consent import ConsentRecord
 from apps.clinical_ops.models_deletion import DeletionRequest
 from apps.clinical_ops.battery_assessment_model import Assessment, Battery, BatteryAssessment
+from apps.clinical_ops.models_public_token import PublicAccessToken
+

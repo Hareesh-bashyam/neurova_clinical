@@ -1,44 +1,70 @@
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from apps.clinical_ops.models import AssessmentOrder
 from rest_framework.throttling import AnonRateThrottle
+from rest_framework.exceptions import PermissionDenied
+
+from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
+
 
 class PublicOrderBootstrap(APIView):
     authentication_classes = []
     permission_classes = []
     throttle_classes = [AnonRateThrottle]
 
-    def get(self, request, token):
-        order = get_object_or_404(AssessmentOrder, public_token=token)
+    def get(self, request):
+       
+        token = request.headers.get("X-Public-Token")
 
-        if order.public_link_expires_at and timezone.now() > order.public_link_expires_at:
-            return Response({"success": False,
-                            "message":"Link Expired", 
-                            "data": None}, status=403)
+        try:
+            # Secure validation + rotation
+            order, new_token = validate_and_rotate_url_token(token, request)
 
-        # Mark started if not started
-        if order.status == AssessmentOrder.STATUS_IN_PROGRESS:
-            order.mark_started()
+            # Mark started if not started
+            if order.status == order.STATUS_IN_PROGRESS:
+                order.mark_started()
 
-        return Response(
-            {
-                "success": True,
-                "message": "Order initialized successfully",
-                "data": {
-                    "org_id": order.org.id,
-                    "order_id": order.id,
-                    "patient_id": order.patient.id,
-                    "patient_name": order.patient.full_name,
-                    "patient_age": order.patient.age, 
-                    "patient_gender": order.patient.sex,
-                    "battery_code": order.battery_code,
-                    "battery_version": order.battery_version,
-                    "status": order.status,
+            response = Response(
+                {
+                    "success": True,
+                    "message": "Order initialized successfully",
+                    "data": {
+                        "org_id": order.org.id,
+                        "order_id": order.id,
+                        "patient_id": order.patient.id,
+                        "patient_name": order.patient.full_name,
+                        "patient_age": order.patient.age,
+                        "patient_gender": order.patient.sex,
+                        "battery_code": order.battery_code,
+                        "battery_version": order.battery_version,
+                        "status": order.status,
+                    },
                 },
-            },
-            status=status.HTTP_200_OK,
-        )
+                status=status.HTTP_200_OK,
+            )
 
+            # Return rotated token
+            response["X-Public-Token"] = new_token
+
+            return response
+
+        except PermissionDenied as e:
+            return Response(
+                {
+                    "success": False,
+                    "message": str(e),
+                    "data": None,
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        except Exception:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Unable to initialize order.",
+                    "data": None,
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

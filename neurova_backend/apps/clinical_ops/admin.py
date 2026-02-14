@@ -16,6 +16,7 @@ from apps.clinical_ops.models_report import AssessmentReport
 from apps.clinical_ops.models_consent import ConsentRecord
 from apps.clinical_ops.models_deletion import DeletionRequest
 from apps.clinical_ops.battery_assessment_model import Assessment, Battery, BatteryAssessment
+from apps.clinical_ops.audit.models import AuditEvent
 
 
 
@@ -246,3 +247,57 @@ class AssessmentAdmin(admin.ModelAdmin):
         if obj:
             return ("test_code",)
         return ()
+
+@admin.register(AuditEvent)
+class AuditEventAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "created_at",
+        "org",
+        "event_type",
+        "severity",
+        "entity_type",
+        "entity_id",
+        "actor_role",
+        "ip_address",
+    )
+
+    list_filter = (
+        "org",
+        "event_type",
+        "severity",
+        "actor_role",
+        "created_at",
+    )
+
+    search_fields = (
+        "entity_id",
+        "actor_name",
+        "actor_user_id",
+        "ip_address",
+        "request_path",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "org",
+        "event_type",
+        "entity_type",
+        "entity_id",
+        "actor_user_id",
+        "actor_name",
+        "actor_role",
+        "details",
+        "ip_address",
+        "user_agent",
+        "request_path",
+        "severity",
+    )
+
+    ordering = ("-created_at",)
+
+    def has_add_permission(self, request):
+        return False  # prevent manual log creation
+
+    def has_change_permission(self, request, obj=None):
+        return False  # prevent editing logs

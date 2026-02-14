@@ -1,37 +1,40 @@
+# common/auth/serializers.py
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer,
     TokenRefreshSerializer,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
-from rest_framework import serializers
 from rest_framework_simplejwt.exceptions import TokenError
 
 User = get_user_model()
 
 
+# ==============================
+# LOGIN SERIALIZER
+# ==============================
 class AppTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
     Generates JWT tokens + validated organization context
     """
 
     def validate(self, attrs):
-        data = super().validate(attrs)
+        try:
+            data = super().validate(attrs)
+        except Exception:
+            raise AuthenticationFailed("Invalid username or password")
+
         user = self.user
 
-        # ---- HARD REQUIREMENTS ----
-        if not hasattr(user, "profile"):
-            raise AuthenticationFailed("User profile not found")
+        if not hasattr(user, "profile") or not user.profile.organization:
+            raise AuthenticationFailed("User organization context invalid")
 
         profile = user.profile
-
-        if not profile.organization:
-            raise AuthenticationFailed("User is not assigned to an organization")
-
         organization = profile.organization
 
         return {
@@ -43,50 +46,58 @@ class AppTokenObtainPairSerializer(TokenObtainPairSerializer):
         }
 
 
+# ==============================
+# REFRESH SERIALIZER (ROTATION SAFE)
+# ==============================
 class AppTokenRefreshSerializer(TokenRefreshSerializer):
     """
-    Refreshes access token and returns org + role context
+    Secure refresh serializer with proper rotation handling
     """
 
     def validate(self, attrs):
-        data = super().validate(attrs)
+        try:
+            data = super().validate(attrs)
+        except TokenError:
+            raise AuthenticationFailed("Invalid or expired refresh token")
 
-        refresh = RefreshToken(attrs["refresh"])
-
-        # Extract user_id from token payload (SimpleJWT way)
-        user_id = refresh.payload.get("user_id")
-        if not user_id:
-            raise AuthenticationFailed("Invalid refresh token")
+        # IMPORTANT:
+        # When ROTATE_REFRESH_TOKENS=True,
+        # super().validate() returns NEW rotated refresh token in data["refresh"]
 
         try:
-            user = (
-                User.objects
-                .select_related("profile", "profile__organization")
-                .get(id=user_id)
-            )
-        except User.DoesNotExist:
-            raise AuthenticationFailed("User not found")
+            refresh = RefreshToken(data["refresh"])
+        except TokenError:
+            raise AuthenticationFailed("Invalid refresh token")
 
-        # ---- SAME HARD REQUIREMENTS AS LOGIN ----
-        if not hasattr(user, "profile"):
-            raise AuthenticationFailed("User profile not found")
+        user_id = refresh.payload.get("user_id")
+        if not user_id:
+            raise AuthenticationFailed("Invalid token payload")
+
+        user = (
+            User.objects
+            .select_related("profile", "profile__organization")
+            .filter(id=user_id)
+            .first()
+        )
+
+        if not user or not hasattr(user, "profile") or not user.profile.organization:
+            raise AuthenticationFailed("User organization context invalid")
 
         profile = user.profile
-
-        if not profile.organization:
-            raise AuthenticationFailed("User is not assigned to an organization")
-
         organization = profile.organization
 
         return {
             "access_token": data["access"],
-            "refresh_token": attrs["refresh"],  # reuse existing refresh token
+            "refresh_token": data["refresh"],  # NEW rotated refresh
             "expires_in": settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].seconds,
             "org_id": str(organization.external_id),
             "role": profile.role,
         }
 
 
+# ==============================
+# LOGOUT SERIALIZER
+# ==============================
 class AppLogoutSerializer(serializers.Serializer):
     refresh_token = serializers.CharField()
 
@@ -99,13 +110,12 @@ class AppLogoutSerializer(serializers.Serializer):
         try:
             self.token = RefreshToken(refresh_token)
         except TokenError:
-            # Covers: expired, blacklisted, malformed token
-            raise serializers.ValidationError(
-                "Invalid or expired refresh token"
-            )
+            raise AuthenticationFailed("Invalid or expired refresh token")
 
         return attrs
 
     def save(self, **kwargs):
-        # Blacklist the refresh token
-        self.token.blacklist()
+        try:
+            self.token.blacklist()
+        except Exception:
+            raise AuthenticationFailed("Token could not be blacklisted")

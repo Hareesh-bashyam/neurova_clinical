@@ -79,7 +79,7 @@ def system_sign_report(report: AssessmentReport, actor_user=None):
     ])
 
     log_event(
-        org_id=order.org_id,
+        org=report.org,
         event_type="REPORT_SIGNED",
         entity_type="AssessmentReport",
         entity_id=report.id,

@@ -46,6 +46,5 @@ class QueueListSerializer(serializers.ModelSerializer):
             "patient_name",
             "patient_age",
             "patient_sex",
-            "public_token",
-            "public_link_expires_at",
+            
         ]

@@ -18,6 +18,8 @@ from apps.clinical_ops.api.v1.serializers import (
 
 from apps.clinical_ops.services.retention_policy import compute_retention_date
 from backend.clinical.policies.services import get_or_create_policy
+from apps.clinical_ops.models_public_token import PublicAccessToken
+
 
 
 VALID_GENDERS = {"MALE", "FEMALE", "OTHER"}
@@ -36,10 +38,10 @@ class CreatePatient(APIView):
     def post(self, request):
         data = request.data
 
-        # 🔐 Logged-in user's organization (TRUSTED)
+        # Logged-in user's organization (TRUSTED)
         user_org = request.user.profile.organization
 
-        # 🔒 Validate org_id from request (UUID / external_id)
+        # Validate org_id from request (UUID / external_id)
         req_org_id = data.get("org_id")
         if not req_org_id:
             return Response(
@@ -141,7 +143,7 @@ class CreatePatient(APIView):
         mrn = data.get("mrn") or None
 
         patient = Patient.objects.create(
-            org=user_org,  # 🔥 ENFORCED
+            org=user_org,  # ENFORCED
             mrn=mrn,
             full_name=full_name,
             age=age,
@@ -181,7 +183,7 @@ class CreateOrder(APIView):
 
         user_org = request.user.profile.organization
 
-        # 🔒 Validate org_id (UUID)
+        # Validate org_id (UUID)
         req_org_id = request.data.get("org_id")
         if not req_org_id:
             return Response(
@@ -209,12 +211,17 @@ class CreateOrder(APIView):
             org=user_org,  # ENFORCED
         )
 
-        token = _make_token()
-        policy = get_or_create_policy(user_org.id)
-        expires = timezone.now() + timedelta(
-            hours=policy.token_validity_hours if policy else 48
-        )
+        # token = _make_token()
+        # policy = get_or_create_policy(user_org.id)
+        # expires = timezone.now() + timedelta(
+        #     hours=policy.token_validity_hours if policy else 48
+        # )
 
+        # ===============================
+        # SECURE PUBLIC TOKEN CREATION
+        # ===============================
+
+        # Create order WITHOUT storing raw token
         order = AssessmentOrder.objects.create(
             org=user_org,
             patient=patient,
@@ -228,8 +235,23 @@ class CreateOrder(APIView):
             verified_by_staff=serializer.validated_data.get("verified_by_staff", True),
             status=AssessmentOrder.STATUS_IN_PROGRESS,
             created_by_user_id=str(request.user.id),
-            public_token=token,
-            public_link_expires_at=expires,
+
+            # ----------------------------------------
+            # LEGACY METHOD (DO NOT USE ANYMORE)
+            # public_token=token,
+            # public_link_expires_at=expires,
+            # ----------------------------------------
+        )
+
+        # Generate secure rotating token
+        raw_token = PublicAccessToken.generate_raw_token()
+
+        expires_at = timezone.now() + timedelta(minutes=5)
+
+        PublicAccessToken.objects.create(
+            order=order,
+            token_hash=PublicAccessToken.hash_token(raw_token),
+            expires_at=expires_at
         )
 
         order.data_retention_until = compute_retention_date(order.created_at)
@@ -241,8 +263,8 @@ class CreateOrder(APIView):
                 "message": "Patient Registered successfully",
                 "data": {
                     "order_id": order.id,
-                    "public_token": order.public_token,
-                    "public_link_expires_at": order.public_link_expires_at.isoformat(),
+                    "public_token": raw_token,
+                    "public_link_expires_at": expires_at.isoformat(),
                 },
             },
             status=status.HTTP_201_CREATED,
@@ -260,7 +282,7 @@ class ClinicQueue(APIView):
 
         qs = (
             AssessmentOrder.objects
-            .filter(org=user_org)  # 🔥 ALREADY ISOLATED
+            .filter(org=user_org)  # ALREADY ISOLATED
             .order_by("-created_at")[:200]
         )
 

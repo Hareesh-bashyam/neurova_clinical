@@ -1,23 +1,29 @@
+# common/auth/views.py
+
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from rest_framework_simplejwt.exceptions import TokenError
 
 from .serializers import (
     AppTokenObtainPairSerializer,
     AppTokenRefreshSerializer,
     AppLogoutSerializer,
 )
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 
 
-
+# ==============================
+# LOGIN VIEW
+# ==============================
 class AppTokenObtainPairView(TokenObtainPairView):
     serializer_class = AppTokenObtainPairSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -37,8 +43,6 @@ class AppTokenObtainPairView(TokenObtainPairView):
             return Response(
                 {
                     "success": False,
-                    "status": "ERROR",
-                    "status_code": 401,
                     "message": "Invalid username or password",
                     "data": None,
                 },
@@ -46,8 +50,12 @@ class AppTokenObtainPairView(TokenObtainPairView):
             )
 
 
+# ==============================
+# REFRESH VIEW
+# ==============================
 class AppTokenRefreshView(TokenRefreshView):
     serializer_class = AppTokenRefreshSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -63,12 +71,10 @@ class AppTokenRefreshView(TokenRefreshView):
                 status=status.HTTP_200_OK,
             )
 
-        except (AuthenticationFailed, ValidationError):
+        except (AuthenticationFailed, ValidationError, TokenError):
             return Response(
                 {
                     "success": False,
-                    "status": "ERROR",
-                    "status_code": 401,
                     "message": "Invalid or expired refresh token",
                     "data": None,
                 },
@@ -76,8 +82,11 @@ class AppTokenRefreshView(TokenRefreshView):
             )
 
 
+# ==============================
+# LOGOUT VIEW (STATELESS)
+# ==============================
 class AppLogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         try:
