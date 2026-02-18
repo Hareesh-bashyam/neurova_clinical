@@ -3,12 +3,15 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
+from common.encryption_decorators import encrypt_response
+
 from apps.clinical_ops.models import AssessmentOrder
 
 
 class ClinicalInboxView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @encrypt_response
     def get(self, request):
         org = request.user.profile.organization
 

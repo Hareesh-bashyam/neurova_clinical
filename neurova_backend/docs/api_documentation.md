@@ -1,6 +1,6 @@
 # Clinical Operations API Documentation (v1)
 
-**Base URL:** `/api/v1/clinical/`
+**Base URL:** `app.nily360.com/api/v1/clinical/`
 
 
 ---

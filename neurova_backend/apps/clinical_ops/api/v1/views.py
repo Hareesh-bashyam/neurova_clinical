@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+from common.encryption_decorators import decrypt_request, encrypt_response
+
 from apps.clinical_ops.models import Patient, AssessmentOrder
 from apps.clinical_ops.api.v1.serializers import (
     OrderCreateSerializer,
@@ -35,8 +37,10 @@ def _make_token():
 class CreatePatient(APIView):
     permission_classes = [IsAuthenticated]
 
+    @decrypt_request
+    @encrypt_response
     def post(self, request):
-        data = request.data
+        data = request.decrypted_data
 
         # Logged-in user's organization (TRUSTED)
         user_org = request.user.profile.organization
@@ -168,8 +172,10 @@ class CreatePatient(APIView):
 class CreateOrder(APIView):
     permission_classes = [IsAuthenticated]
 
+    @decrypt_request
+    @encrypt_response
     def post(self, request):
-        serializer = OrderCreateSerializer(data=request.data)
+        serializer = OrderCreateSerializer(data=request.decrypted_data)
         if not serializer.is_valid():
             field, errors = next(iter(serializer.errors.items()))
             return Response(
@@ -184,7 +190,7 @@ class CreateOrder(APIView):
         user_org = request.user.profile.organization
 
         # Validate org_id (UUID)
-        req_org_id = request.data.get("org_id")
+        req_org_id = request.decrypted_data.get("org_id")
         if not req_org_id:
             return Response(
                 {
@@ -277,6 +283,7 @@ class CreateOrder(APIView):
 class ClinicQueue(APIView):
     permission_classes = [IsAuthenticated]
 
+    @encrypt_response
     def get(self, request):
         user_org = request.user.profile.organization
 

@@ -11,8 +11,14 @@ def log_event(
     actor_role=None,
     details=None,
     request=None,
-    severity="INFO"
+    severity="INFO",
+    app_version=None  # Regulatory: track app version
 ):
+    from django.conf import settings
+    
+    # Get app version from settings if not provided
+    if app_version is None:
+        app_version = getattr(settings, 'APP_VERSION', '1.0')
 
     AuditEvent.objects.create(
         org=org,
@@ -26,5 +32,6 @@ def log_event(
         ip_address=request.META.get("REMOTE_ADDR") if request else None,
         user_agent=request.META.get("HTTP_USER_AGENT") if request else "",
         request_path=request.path if request else "",
-        severity=severity
+        severity=severity,
+        app_version=app_version  # Regulatory: store app version
     )

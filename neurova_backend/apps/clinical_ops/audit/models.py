@@ -30,6 +30,7 @@ class AuditEvent(models.Model):
     )
 
     details = models.JSONField(default=dict)
+    app_version = models.CharField(max_length=20, null=True, blank=True)  # Regulatory: track app version
 
     created_at = models.DateTimeField(default=timezone.now)
 

@@ -67,6 +67,7 @@ class PublicRequestReportCode(APIView):
                 "data": {
                     "access_code": code,          # dev-only (remove in prod)
                     "expires_in_minutes": 15,
+                    "public_token": token
                 },
             },
             status=status.HTTP_200_OK,

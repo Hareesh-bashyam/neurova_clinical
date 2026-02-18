@@ -58,6 +58,17 @@ class AssessmentOrder(models.Model):
         (STATUS_CANCELLED, "Cancelled"),
     ]
 
+    # Patient Acceptance Status
+    ACCEPTANCE_PENDING = "PENDING"
+    ACCEPTANCE_ACCEPTED = "ACCEPTED"
+    ACCEPTANCE_REJECTED = "REJECTED"
+
+    ACCEPTANCE_STATUS_CHOICES = [
+        (ACCEPTANCE_PENDING, "Pending"),
+        (ACCEPTANCE_ACCEPTED, "Accepted"),
+        (ACCEPTANCE_REJECTED, "Rejected"),
+    ]
+
     MODE_KIOSK = "KIOSK"
     MODE_QR_PHONE = "QR_PHONE"
     MODE_ASSISTED = "ASSISTED"
@@ -73,6 +84,8 @@ class AssessmentOrder(models.Model):
 
     battery_code = models.CharField(max_length=64)     # ex: MENTAL_HEALTH_CORE_V1
     battery_version = models.CharField(max_length=16, default="1.0")
+    app_version = models.CharField(max_length=20, default="1.0")  # Regulatory: track app version
+
 
     encounter_type = models.CharField(max_length=16, default="OPD")  # OPD/IPD/WELLNESS
     referring_unit = models.CharField(max_length=128, blank=True, null=True)  # doctor/department
@@ -120,6 +133,15 @@ class AssessmentOrder(models.Model):
 
     report_failed_attempts = models.PositiveSmallIntegerField(default=0)
     report_failed_attempts_locked_until = models.DateTimeField(null=True, blank=True)
+
+    # Patient Acceptance Fields
+    patient_acceptance_status = models.CharField(
+        max_length=16,
+        choices=ACCEPTANCE_STATUS_CHOICES,
+        default=ACCEPTANCE_PENDING
+    )
+    patient_acceptance_timestamp = models.DateTimeField(blank=True, null=True)
+    patient_acceptance_notes = models.TextField(blank=True, null=True)  # For rejection reasons
     
 
     class Meta:

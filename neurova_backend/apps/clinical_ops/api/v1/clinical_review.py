@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
+from common.encryption_decorators import encrypt_response
+
 from apps.clinical_ops.models import AssessmentOrder
 from apps.clinical_ops.models_assessment import AssessmentResult
 from apps.clinical_ops.models_report import AssessmentReport
@@ -23,6 +25,7 @@ BATTERY_TEST_LABELS = {
 class ClinicalReviewDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @encrypt_response
     def get(self, request, order_id):
         org = request.user.profile.organization
 

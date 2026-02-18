@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+from common.encryption_decorators import decrypt_request, encrypt_response
+
 from apps.clinical_ops.models import AssessmentOrder
 from core.models import Organization
 from apps.clinical_ops.models_report import AssessmentReport
@@ -22,12 +24,14 @@ import hashlib
 class GenerateReportPDF(APIView):
     permission_classes = [IsAuthenticated]
 
+    @decrypt_request
+    @encrypt_response
     @transaction.atomic
     def post(self, request):
 
         try:
-            org_id = request.data.get("org_id")
-            order_id = request.data.get("order_id")
+            org_id = request.decrypted_data.get("org_id")
+            order_id = request.decrypted_data.get("order_id")
 
             if not org_id or not order_id:
                 return Response(

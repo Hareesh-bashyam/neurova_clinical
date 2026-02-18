@@ -5,6 +5,8 @@ from rest_framework import status
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.exceptions import PermissionDenied
 
+from common.encryption_decorators import encrypt_response
+
 from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
 
 
@@ -13,9 +15,9 @@ class PublicOrderBootstrap(APIView):
     permission_classes = []
     throttle_classes = [AnonRateThrottle]
 
-    def get(self, request):
-       
-        token = request.headers.get("X-Public-Token")
+    @encrypt_response
+    def get(self, request, token):
+
 
         try:
             # Secure validation + rotation
@@ -39,6 +41,7 @@ class PublicOrderBootstrap(APIView):
                         "battery_code": order.battery_code,
                         "battery_version": order.battery_version,
                         "status": order.status,
+                        "public_token": new_token,
                     },
                 },
                 status=status.HTTP_200_OK,

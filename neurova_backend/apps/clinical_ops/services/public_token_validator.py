@@ -19,34 +19,34 @@ def validate_and_rotate_url_token(raw_token, request):
     except PublicAccessToken.DoesNotExist:
         raise PermissionDenied("Invalid token")
 
-    # 🔒 Locked?
+    # Locked?
     if token_obj.is_locked:
         raise PermissionDenied("Token locked")
 
-    # ⏳ Expired?
+    # Expired?
     if token_obj.is_expired():
         raise PermissionDenied("Token expired")
 
-    # 🔁 Already used?
+    # Already used?
     if token_obj.is_used:
         raise PermissionDenied("Token already used")
 
     current_ip = request.META.get("REMOTE_ADDR")
     current_ua = request.META.get("HTTP_USER_AGENT")
 
-    # 🌍 IP Binding Check
+    # IP Binding Check
     if token_obj.bound_ip and token_obj.bound_ip != current_ip:
         token_obj.failed_attempts += 1
         token_obj.save(update_fields=["failed_attempts"])
         raise PermissionDenied("IP mismatch")
 
-    # 💻 Device Binding Check
+    # Device Binding Check
     if token_obj.bound_user_agent and token_obj.bound_user_agent != current_ua:
         token_obj.failed_attempts += 1
         token_obj.save(update_fields=["failed_attempts"])
         raise PermissionDenied("Device mismatch")
 
-    # 🔐 Bind on first use
+    # Bind on first use
     if not token_obj.bound_ip:
         token_obj.bound_ip = current_ip
 
@@ -77,7 +77,7 @@ def validate_and_rotate_url_token(raw_token, request):
         is_used=False
     )
 
-    # 🧾 Audit Log
+    # Audit Log
     log_event(
         org=token_obj.order.org,
         event_type="PUBLIC_TOKEN_ROTATED",

@@ -5,6 +5,8 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.exceptions import PermissionDenied
 from django.utils import timezone
 
+from common.encryption_decorators import decrypt_request, encrypt_response
+
 from apps.clinical_ops.models_consent import ConsentRecord
 from apps.clinical_ops.services.consent_text import get_consent_text
 from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
@@ -16,6 +18,7 @@ class PublicGetConsent(APIView):
     permission_classes = []
     throttle_classes = [AnonRateThrottle]
 
+    @encrypt_response
     def get(self, request, token):
 
         try:
@@ -41,7 +44,8 @@ class PublicGetConsent(APIView):
                 "data": {
                     "consent_version": "V1",
                     "consent_language": "en",
-                    "consent_text": text
+                    "consent_text": text,
+                    "public_token": new_token
                 }
             }, status=status.HTTP_200_OK)
 
@@ -70,17 +74,19 @@ class PublicSubmitConsent(APIView):
     permission_classes = []
     throttle_classes = [AnonRateThrottle]
 
+    @decrypt_request
+    @encrypt_response
     def post(self, request, token):
 
         try:
             # Validate & Rotate Token
             order, new_token = validate_and_rotate_url_token(token, request)
 
-            consent_version = request.data.get("consent_version", "V1")
-            consent_language = request.data.get("consent_language", "en")
-            consent_given_by = request.data.get("consent_given_by", "SELF")
-            guardian_name = request.data.get("guardian_name")
-            allow_patient_copy = bool(request.data.get("allow_patient_copy", False))
+            consent_version = request.decrypted_data.get("consent_version", "V1")
+            consent_language = request.decrypted_data.get("consent_language", "en")
+            consent_given_by = request.decrypted_data.get("consent_given_by", "SELF")
+            guardian_name = request.decrypted_data.get("guardian_name")
+            allow_patient_copy = bool(request.decrypted_data.get("allow_patient_copy", False))
 
             text = get_consent_text(consent_version, consent_language)
 
@@ -131,7 +137,8 @@ class PublicSubmitConsent(APIView):
                     "consent_language": consent_language,
                     "consent_given_by": consent_given_by,
                     "allow_patient_copy": allow_patient_copy,
-                    "consent_id": cr.id
+                    "consent_id": cr.id,
+                    "public_token": new_token
                 }
             }, status=status.HTTP_200_OK)
 

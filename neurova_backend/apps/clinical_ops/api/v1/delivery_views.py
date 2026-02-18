@@ -5,18 +5,22 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+from common.encryption_decorators import decrypt_request, encrypt_response
+
 from apps.clinical_ops.models import AssessmentOrder
 
 
 class SetDeliveryAndMarkDelivered(APIView):
     permission_classes = [IsAuthenticated]
 
+    @decrypt_request
+    @encrypt_response
     def post(self, request):
         org = request.user.profile.organization  
 
-        order_id = request.data.get("order_id")
-        delivery_mode = request.data.get("delivery_mode")
-        delivery_target = request.data.get("delivery_target")
+        order_id = request.decrypted_data.get("order_id")
+        delivery_mode = request.decrypted_data.get("delivery_mode")
+        delivery_target = request.decrypted_data.get("delivery_target")
 
         if not all([order_id, delivery_mode]):
             return Response(

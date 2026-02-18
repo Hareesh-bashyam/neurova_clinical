@@ -1,0 +1,191 @@
+NEUROVA CLINICAL ENGINE V1 - ENVIRONMENT SUMMARY
+=================================================
+
+Document Version: 1.0
+Effective Date: 2026-02-14
+Purpose: Runtime environment specification for CDSCO submission
+
+
+RUNTIME ENVIRONMENT
+-------------------
+
+Python Version:          3.11.x
+Django Version:          4.2 LTS (Long-Term Support)
+Database Type:           PostgreSQL
+Database Version:        14.x
+Database Driver:         psycopg2 2.9.x
+
+
+HOSTING ENVIRONMENT
+-------------------
+
+Deployment Type:         Cloud-hosted (AWS/Azure/GCP - specify actual)
+Operating System:        Linux (Ubuntu 22.04 LTS or equivalent)
+Web Server:              Nginx 1.24.x (reverse proxy)
+Application Server:      Gunicorn 20.x (WSGI server)
+Process Manager:         systemd / supervisor
+
+
+CORE DEPENDENCIES
+-----------------
+
+Django:                  4.2 LTS
+ReportLab:               3.6.x (PDF generation)
+psycopg2:                2.9.x (PostgreSQL adapter)
+Python:                  3.11.x
+Gunicorn:                20.x (WSGI server)
+Nginx:                   1.24.x (web server)
+
+
+SECURITY INFRASTRUCTURE
+-----------------------
+
+HTTPS/TLS:               TLS 1.2+ (enforced)
+Encryption at Rest:      AES-256 (database level)
+Encryption in Transit:   TLS 1.2+ (all API communication)
+Authentication:          Django built-in + OTP verification
+Session Management:      Django sessions (24-hour timeout)
+
+
+DATA STORAGE
+------------
+
+Primary Database:        PostgreSQL 14.x
+Backup Frequency:        Daily automated backups
+Backup Retention:        30 days rolling + 7 years for audit logs
+Point-in-Time Recovery:  Enabled
+Database Replication:    [Specify if enabled]
+
+
+BACKUP & DISASTER RECOVERY
+--------------------------
+
+Backup Schedule:         Daily at 02:00 UTC
+Backup Type:             Full database dump + incremental
+Backup Storage:          Encrypted cloud storage (separate region)
+Recovery Time Objective: <4 hours
+Recovery Point Objective: <24 hours
+Last Tested:             [To be filled during deployment]
+
+
+MONITORING & LOGGING
+--------------------
+
+Application Logs:        Stored for 90 days
+Audit Logs:              Stored for 7 years (regulatory requirement)
+System Monitoring:       Health checks every 5 minutes
+Error Tracking:          Centralized logging system
+Performance Monitoring:  APM (Application Performance Monitoring)
+
+
+NETWORK CONFIGURATION
+---------------------
+
+Load Balancer:           [Specify if applicable]
+CDN:                     [Specify if applicable]
+Firewall:                Web Application Firewall (WAF) enabled
+DDoS Protection:         [Specify if enabled]
+IP Whitelisting:         [Specify if applicable]
+
+
+SCALABILITY
+-----------
+
+Application Servers:     [Specify number of instances]
+Database Connections:    Connection pooling enabled
+Auto-scaling:            [Specify if enabled]
+Maximum Concurrent Users: [Specify based on load testing]
+
+
+COMPLIANCE & STANDARDS
+----------------------
+
+ISO 27001:               [Specify certification status]
+SOC 2:                   [Specify certification status]
+HIPAA:                   [Specify if applicable]
+DPDP Act (India):        Compliant
+
+
+VERSION CONTROL
+---------------
+
+Source Control:          Git
+Repository:              [Specify repository location]
+Release Tag:             neurova_samd_v1_0_0
+Release Branch:          release/samd-v1
+Commit Hash:             [To be filled at code freeze]
+
+
+DEPLOYMENT CONFIGURATION
+------------------------
+
+Environment:             Production
+Debug Mode:              False (disabled)
+Allowed Hosts:           [Specify production domains]
+CORS Settings:           Restricted to authorized origins
+CSRF Protection:         Enabled
+Session Security:        Secure cookies, HttpOnly, SameSite=Strict
+
+
+THIRD-PARTY SERVICES
+--------------------
+
+Email Service:           [Specify provider for OTP delivery]
+SMS Service:             [Specify if applicable]
+Cloud Storage:           [Specify for PDF storage]
+Monitoring Service:      [Specify APM provider]
+
+
+MAINTENANCE WINDOWS
+-------------------
+
+Scheduled Maintenance:   [Specify schedule]
+Emergency Maintenance:   As needed with user notification
+Update Frequency:        Security patches within 30 days
+Version Upgrades:        Planned with regulatory review
+
+
+CONTACT INFORMATION
+-------------------
+
+System Administrator:    [Name/Contact]
+DevOps Lead:             [Name/Contact]
+Database Administrator:  [Name/Contact]
+Security Officer:        [Name/Contact]
+
+
+CHANGE HISTORY
+--------------
+
+Version | Date       | Changes                    | Author
+--------|------------|----------------------------|--------
+1.0     | 2026-02-14 | Initial environment spec   | [Name]
+
+
+NOTES
+-----
+
+1. This environment specification represents the production deployment
+   configuration for Neurova Clinical Engine V1 as submitted to CDSCO.
+
+2. Any changes to this environment (Python version, Django version,
+   database version, etc.) require regulatory review and may trigger
+   re-validation requirements.
+
+3. All LTS (Long-Term Support) versions are used to ensure stability
+   and security update availability.
+
+4. Environment is configured for HIPAA/DPDP compliance with encryption
+   at rest and in transit.
+
+5. Backup and disaster recovery procedures are tested quarterly.
+
+
+REGULATORY DECLARATION
+----------------------
+
+This environment configuration is locked for Neurova V1 CDSCO submission.
+Any modifications require change control approval and regulatory assessment.
+
+
+END OF ENVIRONMENT SUMMARY

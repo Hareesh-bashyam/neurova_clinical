@@ -7,6 +7,8 @@ from rest_framework import status
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.exceptions import PermissionDenied
 
+from common.encryption_decorators import decrypt_request, encrypt_response
+
 from apps.clinical_ops.models import AssessmentOrder, ResponseQuality
 from apps.clinical_ops.models_assessment import AssessmentResponse, AssessmentResult
 from apps.clinical_ops.services.quality import compute_quality
@@ -20,6 +22,8 @@ class PublicOrderSubmit(APIView):
     permission_classes = []
     throttle_classes = [AnonRateThrottle]
 
+    @decrypt_request
+    @encrypt_response
     @transaction.atomic
     def post(self, request, token):
 
@@ -57,8 +61,8 @@ class PublicOrderSubmit(APIView):
                     status=status.HTTP_200_OK
                 )
 
-            answers = request.data.get("answers")
-            duration_seconds = int(request.data.get("duration_seconds", 0))
+            answers = request.decrypted_data.get("answers")
+            duration_seconds = int(request.decrypted_data.get("duration_seconds", 0))
 
             if not isinstance(answers, list) or not answers:
                 return Response(
@@ -129,7 +133,8 @@ class PublicOrderSubmit(APIView):
                     "success": True,
                     "message": "Assessment submitted successfully",
                     "data": {
-                        "order_id": order.id
+                        "order_id": order.id,
+                        
                     }
                 },
                 status=status.HTTP_200_OK

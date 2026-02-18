@@ -7,6 +7,8 @@ from rest_framework import status
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.exceptions import PermissionDenied
 
+from common.encryption_decorators import encrypt_response
+
 from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
 from apps.clinical_ops.audit.logger import log_event
 from apps.clinical_ops.battery_assessment_model import BatteryAssessment, Battery
@@ -17,6 +19,7 @@ class PublicQuestionDisplay(APIView):
     permission_classes = []
     throttle_classes = [AnonRateThrottle]
 
+    @encrypt_response
     def get(self, request, token):
 
         try:
@@ -77,6 +80,7 @@ class PublicQuestionDisplay(APIView):
                             "version": battery.version,
                             "screening_label": battery.screening_label,
                             "signoff_required": battery.signoff_required,
+                            "public_token": new_token
                         },
                         "tests": tests_payload
                     }

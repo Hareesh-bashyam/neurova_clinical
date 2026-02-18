@@ -70,7 +70,7 @@ SECRET_KEY = 'django-insecure-_!0afham_07aezf%a9#c+(pnu%=dr6mxz=7v=l+jbw@ex*-3p3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -194,6 +194,7 @@ DATABASES = {
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "neurova"),
         "HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
+
     }
 }
 
@@ -209,6 +210,7 @@ if STORAGE_BACKEND == "s3":
 
 ENGINE_VERSION = os.getenv("ENGINE_VERSION", "v1.0.0")
 REPORT_SCHEMA_VERSION = os.getenv("REPORT_SCHEMA_VERSION", "v1")
+APP_VERSION = "1.0"  # Regulatory: Neurova Clinical Engine V1 version
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Password validation

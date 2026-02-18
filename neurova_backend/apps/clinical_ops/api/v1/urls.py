@@ -13,17 +13,19 @@ from apps.clinical_ops.api.v1.deletion_views import AdminApproveDeletion
 from apps.clinical_ops.api.v1.inbox_views import ClinicalInboxView
 from apps.clinical_ops.api.v1.clinical_review import ClinicalReviewDetailView
 from apps.clinical_ops.api.v1.display_questions import PublicQuestionDisplay
+from apps.clinical_ops.api.v1.patient_acceptance_views import PatientAcceptRejectOrder
 
 
 urlpatterns = [
     path("staff/patients/create", CreatePatient.as_view()),
     path("staff/orders/create", CreateOrder.as_view()),
     path("staff/queue", ClinicQueue.as_view()),
-    path("public/order", PublicOrderBootstrap.as_view()),
-    
+    path("public/order/<str:token>", PublicOrderBootstrap.as_view()),
+
     path("staff/order/<int:order_id>/export", ExportOrderJSON.as_view()),
     path("public/order/<str:token>/consent", PublicGetConsent.as_view()),
     path("public/order/<str:token>/consent/submit", PublicSubmitConsent.as_view()),
+    path("public/order/<str:token>/accept-reject", PatientAcceptRejectOrder.as_view()),
     path("public/order/<str:token>/questions", PublicQuestionDisplay.as_view()),
     path("public/order/<str:token>/submit", PublicOrderSubmit.as_view()),
     path("staff/reports/generate", GenerateReportPDF.as_view()),
