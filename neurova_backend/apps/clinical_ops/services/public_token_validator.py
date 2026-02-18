@@ -32,7 +32,7 @@ def validate_and_rotate_url_token(raw_token, request):
         raise PermissionDenied("Token already used")
 
     current_ip = request.META.get("REMOTE_ADDR")
-    current_ua = request.META.get("HTTP_USER_AGENT")
+    current_ua = request.META.get("HTTP_USER_AGENT", "")
 
     # IP Binding Check
     if token_obj.bound_ip and token_obj.bound_ip != current_ip:

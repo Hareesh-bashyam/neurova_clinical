@@ -217,7 +217,10 @@ class CreateOrder(APIView):
             org=user_org,  # ENFORCED
         )
 
-        token = _make_token()
+        # Generate secure rotating token upfront
+        raw_token = PublicAccessToken.generate_raw_token()
+        token = raw_token  # Unified token for legacy field too
+
         policy = get_or_create_policy(user_org.id)
         expires = timezone.now() + timedelta(
             hours=policy.token_validity_hours if policy else 48
@@ -227,7 +230,7 @@ class CreateOrder(APIView):
         # SECURE PUBLIC TOKEN CREATION
         # ===============================
 
-        # Create order WITHOUT storing raw token
+        # Create order with the secure token stored in public_token
         order = AssessmentOrder.objects.create(
             org=user_org,
             patient=patient,
@@ -243,14 +246,12 @@ class CreateOrder(APIView):
             created_by_user_id=str(request.user.id),
 
             # ----------------------------------------
-            # LEGACY METHOD (DO NOT USE ANYMORE)
+            # LEGACY METHOD + SECURE TOKEN
             public_token=token,
             public_link_expires_at=expires,
             # ----------------------------------------
         )
 
-        # Generate secure rotating token
-        raw_token = PublicAccessToken.generate_raw_token()
 
         expires_at = timezone.now() + timedelta(minutes=5)
 

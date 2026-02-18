@@ -30,7 +30,7 @@ def log_event(
         actor_role=actor_role,
         details=details or {},
         ip_address=request.META.get("REMOTE_ADDR") if request else None,
-        user_agent=request.META.get("HTTP_USER_AGENT") if request else "",
+        user_agent=request.META.get("HTTP_USER_AGENT", "") if request else "",
         request_path=request.path if request else "",
         severity=severity,
         app_version=app_version  # Regulatory: store app version
