@@ -17,7 +17,7 @@ class PatientAcceptRejectOrder(APIView):
     """
     API endpoint for patients to accept or reject an assessment order.
     
-    POST /api/v1/clinical/public/order/<token>/accept-reject
+    POST /api/v1/clinical/clinicaian/order/<order_id>/accept-reject
     
     Request Body (encrypted):
     {

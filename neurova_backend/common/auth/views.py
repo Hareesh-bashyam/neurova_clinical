@@ -16,11 +16,13 @@ from .serializers import (
     AppTokenRefreshSerializer,
     AppLogoutSerializer,
 )
-
+from common.encryption_decorators import decrypt_request, encrypt_response
 
 # ==============================
 # LOGIN VIEW
 # ==============================
+@decrypt_request
+@encrypt_response
 class AppTokenObtainPairView(TokenObtainPairView):
     serializer_class = AppTokenObtainPairSerializer
     permission_classes = [AllowAny]
@@ -53,6 +55,9 @@ class AppTokenObtainPairView(TokenObtainPairView):
 # ==============================
 # REFRESH VIEW
 # ==============================
+
+@decrypt_request
+@encrypt_response
 class AppTokenRefreshView(TokenRefreshView):
     serializer_class = AppTokenRefreshSerializer
     permission_classes = [AllowAny]
@@ -85,6 +90,8 @@ class AppTokenRefreshView(TokenRefreshView):
 # ==============================
 # LOGOUT VIEW (STATELESS)
 # ==============================
+@decrypt_request
+@encrypt_response
 class AppLogoutView(APIView):
     permission_classes = [AllowAny]
 
