@@ -217,11 +217,11 @@ class CreateOrder(APIView):
             org=user_org,  # ENFORCED
         )
 
-        # token = _make_token()
-        # policy = get_or_create_policy(user_org.id)
-        # expires = timezone.now() + timedelta(
-        #     hours=policy.token_validity_hours if policy else 48
-        # )
+        token = _make_token()
+        policy = get_or_create_policy(user_org.id)
+        expires = timezone.now() + timedelta(
+            hours=policy.token_validity_hours if policy else 48
+        )
 
         # ===============================
         # SECURE PUBLIC TOKEN CREATION
@@ -290,6 +290,7 @@ class ClinicQueue(APIView):
         qs = (
             AssessmentOrder.objects
             .filter(org=user_org)  # ALREADY ISOLATED
+            .exclude(deletion_status="DELETED")
             .order_by("-created_at")[:200]
         )
 

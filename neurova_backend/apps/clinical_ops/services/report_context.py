@@ -73,6 +73,7 @@ def build_report_context(order: AssessmentOrder) -> dict:
             "encounter_type": order.encounter_type,
             "created_at": localtime(order.created_at).strftime("%d %B %Y, %I:%M %p") if order.created_at else None,
             "completed_at": localtime(order.completed_at).strftime("%d %B %Y, %I:%M %p") if order.completed_at else None,
+            "patient_acceptance_status": order.patient_acceptance_status,  # ADDED for Watermarking
         },
         "summary": {
             "primary_severity": summary.get("primary_severity"),

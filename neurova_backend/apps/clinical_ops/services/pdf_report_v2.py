@@ -228,7 +228,34 @@ def generate_report_pdf_bytes_v2(report_context: dict) -> bytes:
     footer_right = f"Generated: {order.get('completed_at','-')}"
     elements.append(Table([[Paragraph(footer_left, SMALL), Paragraph(footer_right, RIGHT)]], colWidths=[120*mm, 60*mm]))
 
+    # ===== WATERMARK LOGIC =====
+    # Check if order is accepted. If not, draw "DRAFT" watermark.
+    # We default to "ACCEPTED" if missing to avoid breaking legacy reports, or "PENDING" to succeed safe?
+    # Requirement: "draft water mark in initail stage when, the status has accepted the draft water mark should eliminated"
+    # So if status != ACCEPTED -> Watermark
+    
+    acceptance_status = order.get("patient_acceptance_status", "PENDING")
+
+    def draw_watermark(canvas, doc):
+        """
+        Draws a large grey 'DRAFT' or 'PENDING ACCEPTANCE' across the page.
+        """
+        canvas.saveState()
+        canvas.setFont("Helvetica-Bold", 60)
+        canvas.setFillColor(colors.Color(0.9, 0.9, 0.9, alpha=0.5))  # Very light grey, semi-transparent
+        canvas.translate(100*mm, 150*mm)
+        canvas.rotate(45)
+        canvas.drawCentredString(0, 0, "DRAFT REPORT")
+        canvas.setFont("Helvetica-Bold", 30)
+        canvas.drawCentredString(0, -30, "PATIENT ACCEPTANCE PENDING")
+        canvas.restoreState()
+
     # Build
-    doc.build(elements)
+    if acceptance_status != "ACCEPTED":
+        # Apply watermark to all pages
+        doc.build(elements, onFirstPage=draw_watermark, onLaterPages=draw_watermark)
+    else:
+        doc.build(elements)
+
     buf.seek(0)
     return buf.read()
