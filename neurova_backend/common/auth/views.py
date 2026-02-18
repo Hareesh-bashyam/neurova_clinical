@@ -21,12 +21,13 @@ from common.encryption_decorators import decrypt_request, encrypt_response
 # ==============================
 # LOGIN VIEW
 # ==============================
-@decrypt_request
-@encrypt_response
+
 class AppTokenObtainPairView(TokenObtainPairView):
     serializer_class = AppTokenObtainPairSerializer
     permission_classes = [AllowAny]
 
+    @decrypt_request
+    @encrypt_response
     def post(self, request, *args, **kwargs):
         try:
             serializer = self.get_serializer(data=request.data)
@@ -56,12 +57,12 @@ class AppTokenObtainPairView(TokenObtainPairView):
 # REFRESH VIEW
 # ==============================
 
-@decrypt_request
-@encrypt_response
 class AppTokenRefreshView(TokenRefreshView):
     serializer_class = AppTokenRefreshSerializer
     permission_classes = [AllowAny]
 
+    @decrypt_request
+    @encrypt_response
     def post(self, request, *args, **kwargs):
         try:
             serializer = self.get_serializer(data=request.data)
@@ -90,11 +91,12 @@ class AppTokenRefreshView(TokenRefreshView):
 # ==============================
 # LOGOUT VIEW (STATELESS)
 # ==============================
-@decrypt_request
-@encrypt_response
+
 class AppLogoutView(APIView):
     permission_classes = [AllowAny]
 
+    @decrypt_request
+    @encrypt_response
     def post(self, request):
         try:
             serializer = AppLogoutSerializer(data=request.data)
