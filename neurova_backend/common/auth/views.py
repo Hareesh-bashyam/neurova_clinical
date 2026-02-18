@@ -30,7 +30,7 @@ class AppTokenObtainPairView(TokenObtainPairView):
     @encrypt_response
     def post(self, request, *args, **kwargs):
         try:
-            serializer = self.get_serializer(data=request.data)
+            serializer = self.get_serializer(data=request.decrypted_data)
             serializer.is_valid(raise_exception=True)
 
             return Response(
@@ -65,7 +65,7 @@ class AppTokenRefreshView(TokenRefreshView):
     @encrypt_response
     def post(self, request, *args, **kwargs):
         try:
-            serializer = self.get_serializer(data=request.data)
+            serializer = self.get_serializer(data=request.decrypted_data)
             serializer.is_valid(raise_exception=True)
 
             return Response(
@@ -99,7 +99,7 @@ class AppLogoutView(APIView):
     @encrypt_response
     def post(self, request):
         try:
-            serializer = AppLogoutSerializer(data=request.data)
+            serializer = AppLogoutSerializer(data=request.decrypted_data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
