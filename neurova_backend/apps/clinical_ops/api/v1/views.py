@@ -244,8 +244,8 @@ class CreateOrder(APIView):
 
             # ----------------------------------------
             # LEGACY METHOD (DO NOT USE ANYMORE)
-            # public_token=token,
-            # public_link_expires_at=expires,
+            public_token=token,
+            public_link_expires_at=expires,
             # ----------------------------------------
         )
 
