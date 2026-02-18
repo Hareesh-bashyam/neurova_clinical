@@ -1,7 +1,8 @@
+import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.throttling import AnonRateThrottle
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
@@ -9,15 +10,17 @@ from django.shortcuts import get_object_or_404
 from common.encryption_decorators import decrypt_request, encrypt_response
 
 from apps.clinical_ops.models import AssessmentOrder
-from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
 from apps.clinical_ops.audit.logger import log_event
+
+
+logger = logging.getLogger(__name__)
 
 
 class PatientAcceptRejectOrder(APIView):
     """
-    API endpoint for patients to accept or reject an assessment order.
+    API endpoint for staff to mark an assessment order as accepted or rejected on behalf of patient.
     
-    POST /api/v1/clinical/clinicaian/order/<order_id>/accept-reject
+    POST /api/v1/clinical/staff/order/<order_id>/accept-reject
     
     Request Body (encrypted):
     {
@@ -32,21 +35,25 @@ class PatientAcceptRejectOrder(APIView):
         "data": {
             "order_id": 123,
             "patient_acceptance_status": "ACCEPTED",
-            "patient_acceptance_timestamp": "2026-02-17T20:30:00Z",
-            "public_token": "new_rotated_token"
+            "patient_acceptance_timestamp": "2026-02-17T20:30:00Z"
         }
     }
     """
-    authentication_classes = []
-    permission_classes = []
-    throttle_classes = [AnonRateThrottle]
+    permission_classes = [IsAuthenticated]
 
     @decrypt_request
     @encrypt_response
-    def post(self, request, token):
+    def post(self, request, order_id):
         try:
-            # Validate & Rotate Token
-            order, new_token = validate_and_rotate_url_token(token, request)
+            # Org Isolation
+            user_org = request.user.profile.organization
+            
+            # Fetch Order
+            order = get_object_or_404(
+                AssessmentOrder,
+                pk=order_id,
+                org=user_org
+            )
 
             # Get action from request
             action = request.decrypted_data.get("action", "").upper()
@@ -95,7 +102,8 @@ class PatientAcceptRejectOrder(APIView):
                 event_type=event_type,
                 entity_type="AssessmentOrder",
                 entity_id=order.id,
-                actor_role="Doctor",
+                actor_user_id=str(request.user.id),
+                actor_role=request.user.profile.role,
                 details={
                     "action": action,
                     "notes": notes,
@@ -106,21 +114,15 @@ class PatientAcceptRejectOrder(APIView):
                 severity="INFO"
             )
 
-            response = Response({
+            return Response({
                 "success": True,
                 "message": message,
                 "data": {
                     "order_id": order.id,
                     "patient_acceptance_status": order.patient_acceptance_status,
-                    "patient_acceptance_timestamp": order.patient_acceptance_timestamp.isoformat() if order.patient_acceptance_timestamp else None,
-                    "public_token": new_token
+                    "patient_acceptance_timestamp": order.patient_acceptance_timestamp.isoformat() if order.patient_acceptance_timestamp else None
                 }
             }, status=status.HTTP_200_OK)
-
-            # Return rotated token in header
-            response["X-Public-Token"] = new_token
-
-            return response
 
         except PermissionDenied as e:
             return Response({
@@ -138,8 +140,6 @@ class PatientAcceptRejectOrder(APIView):
 
         except Exception as e:
             # Log the error for debugging
-            import logging
-            logger = logging.getLogger(__name__)
             logger.error(f"Error in PatientAcceptRejectOrder: {str(e)}", exc_info=True)
 
             return Response({

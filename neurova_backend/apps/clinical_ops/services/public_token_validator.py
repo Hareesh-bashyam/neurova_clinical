@@ -77,6 +77,12 @@ def validate_and_rotate_url_token(raw_token, request):
         is_used=False
     )
 
+    # ------------------------------
+    # UPDATE ORDER WITH NEW TOKEN
+    # ------------------------------
+    token_obj.order.public_token = new_raw_token
+    token_obj.order.save(update_fields=["public_token"])
+
     # Audit Log
     log_event(
         org=token_obj.order.org,

@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
@@ -12,6 +13,9 @@ from common.encryption_decorators import encrypt_response
 from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
 from apps.clinical_ops.audit.logger import log_event
 from apps.clinical_ops.battery_assessment_model import BatteryAssessment, Battery
+
+
+logger = logging.getLogger(__name__)
 
 
 class PublicQuestionDisplay(APIView):
@@ -104,8 +108,7 @@ class PublicQuestionDisplay(APIView):
             )
 
         except Exception as e:
-            import traceback
-            traceback.print_exc()
+            logger.error(f"Error displaying questions: {str(e)}", exc_info=True)
             return Response(
                 {
                     "success": False,

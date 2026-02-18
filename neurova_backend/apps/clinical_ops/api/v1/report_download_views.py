@@ -1,4 +1,5 @@
 import hashlib
+import logging
 
 from django.shortcuts import get_object_or_404
 from django.http import FileResponse
@@ -14,6 +15,9 @@ from apps.clinical_ops.models import AssessmentOrder
 from apps.clinical_ops.models_report import AssessmentReport
 from apps.clinical_ops.audit.logger import log_event
 from rest_framework.throttling import AnonRateThrottle
+
+
+logger = logging.getLogger(__name__)
 
 
 class StaffDownloadReport(APIView):
@@ -142,7 +146,8 @@ class StaffDownloadReport(APIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error downloading staff report: {str(e)}", exc_info=True)
             return Response(
                 {
                     "success": False,
@@ -289,7 +294,8 @@ class PublicDownloadReport(APIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error downloading public report: {str(e)}", exc_info=True)
             return Response(
                 {
                     "success": False,

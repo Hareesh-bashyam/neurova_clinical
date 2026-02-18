@@ -1,3 +1,4 @@
+import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,6 +12,9 @@ from apps.clinical_ops.models_consent import ConsentRecord
 from apps.clinical_ops.services.consent_text import get_consent_text
 from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
 from apps.clinical_ops.audit.logger import log_event
+
+
+logger = logging.getLogger(__name__)
 
 
 class PublicGetConsent(APIView):
@@ -61,7 +65,8 @@ class PublicGetConsent(APIView):
                 "data": None
             }, status=status.HTTP_403_FORBIDDEN)
 
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error retrieving consent: {str(e)}", exc_info=True)
             return Response({
                 "success": False,
                 "message": "Unable to retrieve consent at this time.",
@@ -154,7 +159,8 @@ class PublicSubmitConsent(APIView):
                 "data": None
             }, status=status.HTTP_403_FORBIDDEN)
 
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error submitting consent: {str(e)}", exc_info=True)
             return Response({
                 "success": False,
                 "message": "Unable to capture consent at this time.",

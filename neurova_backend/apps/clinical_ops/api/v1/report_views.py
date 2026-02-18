@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.core.files.base import ContentFile
@@ -19,6 +20,9 @@ from apps.clinical_ops.services.signoff_engine import system_sign_report
 from apps.clinical_ops.audit.logger import log_event
 
 import hashlib
+
+
+logger = logging.getLogger(__name__)
 
 
 class GenerateReportPDF(APIView):
@@ -133,7 +137,8 @@ class GenerateReportPDF(APIView):
                 status=status.HTTP_200_OK
             )
 
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error generating report: {str(e)}", exc_info=True)
             return Response(
                 {
                     "success": False,

@@ -21,7 +21,7 @@ def execute_deletion(dr: DeletionRequest):
     dr.save(update_fields=["status", "processed_at"])
 
     log_event(
-        org_id=order.org_id,
+        org=order.org,
         event_type="DATA_DELETION_EXECUTED",
         entity_type="AssessmentOrder",
         entity_id=order.id,

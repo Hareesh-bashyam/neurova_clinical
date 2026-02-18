@@ -68,10 +68,17 @@ def system_sign_report(report: AssessmentReport, actor_user=None):
         return verdict
 
     # SIGN
+    # Use actor_user details if available
+    signer_name = SYSTEM_SIGNER_NAME
+    if actor_user:
+        # Prefer full name, fall back to username
+        full_name = f"{actor_user.first_name} {actor_user.last_name}".strip()
+        signer_name = full_name if full_name else actor_user.username
+
     report.signoff_status = "SIGNED"
-    report.signoff_method = "SYSTEM"
-    report.signed_by_name = SYSTEM_SIGNER_NAME
-    report.signed_by_role = SYSTEM_SIGNER_ROLE
+    report.signoff_method = "esign"
+    report.signed_by_name = signer_name
+    report.signed_by_role = "Psychiatrist"
     report.signed_at = timezone.now()
     report.signoff_reason = "System signoff: data integrity and completeness verified."
     report.save(update_fields=[
@@ -84,12 +91,12 @@ def system_sign_report(report: AssessmentReport, actor_user=None):
         entity_type="AssessmentReport",
         entity_id=report.id,
         actor_user_id=str(getattr(actor_user, "id", "")) if actor_user else None,
-        actor_name=SYSTEM_SIGNER_NAME,
-        actor_role=SYSTEM_SIGNER_ROLE,
+        actor_name=signer_name,
+        actor_role="Psychiatrist",
         details={
             "primary_severity": verdict.get("primary_severity"),
             "has_red_flags": verdict.get("has_red_flags"),
-            "method": "SYSTEM"
+            "method": "esign"
         }
     )
     return verdict

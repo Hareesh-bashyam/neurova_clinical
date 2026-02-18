@@ -247,7 +247,7 @@ def generate_report_pdf_bytes_v2(report_context: dict) -> bytes:
         canvas.rotate(45)
         canvas.drawCentredString(0, 0, "DRAFT REPORT")
         canvas.setFont("Helvetica-Bold", 30)
-        canvas.drawCentredString(0, -30, "PATIENT ACCEPTANCE PENDING")
+        canvas.drawCentredString(0, -30, "")
         canvas.restoreState()
 
     # Build

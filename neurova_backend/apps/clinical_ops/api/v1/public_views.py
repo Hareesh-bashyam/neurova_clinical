@@ -1,3 +1,4 @@
+import logging
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,6 +9,9 @@ from rest_framework.exceptions import PermissionDenied
 from common.encryption_decorators import encrypt_response
 
 from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
+
+
+logger = logging.getLogger(__name__)
 
 
 class PublicOrderBootstrap(APIView):
@@ -63,8 +67,7 @@ class PublicOrderBootstrap(APIView):
             )
 
         except Exception as e:
-            import traceback
-            traceback.print_exc()
+            logger.error(f"Error initializing order: {str(e)}", exc_info=True)
             return Response(
                 {
                     "success": False,

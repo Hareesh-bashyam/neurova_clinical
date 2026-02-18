@@ -1,3 +1,4 @@
+import logging
 from django.utils import timezone
 from django.db import transaction
 
@@ -15,6 +16,9 @@ from apps.clinical_ops.services.quality import compute_quality
 from apps.clinical_ops.services.scoring_adapter import score_battery
 from apps.clinical_ops.services.public_token_validator import validate_and_rotate_url_token
 from apps.clinical_ops.audit.logger import log_event
+
+
+logger = logging.getLogger(__name__)
 
 
 class PublicOrderSubmit(APIView):
@@ -156,8 +160,7 @@ class PublicOrderSubmit(APIView):
             )
 
         except Exception as e:
-            import traceback
-            traceback.print_exc()
+            logger.error(f"Error submitting assessment: {str(e)}", exc_info=True)
             return Response(
                 {
                     "success": False,

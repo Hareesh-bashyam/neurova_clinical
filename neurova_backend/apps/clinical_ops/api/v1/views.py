@@ -1,5 +1,6 @@
 import secrets
 import re
+import logging
 from datetime import timedelta
 
 from django.utils import timezone
@@ -23,6 +24,8 @@ from backend.clinical.policies.services import get_or_create_policy
 from apps.clinical_ops.models_public_token import PublicAccessToken
 
 
+logger = logging.getLogger(__name__)
+
 
 VALID_GENDERS = {"MALE", "FEMALE", "OTHER"}
 
@@ -40,130 +43,141 @@ class CreatePatient(APIView):
     @decrypt_request
     @encrypt_response
     def post(self, request):
-        data = request.decrypted_data
+        try:
+            data = request.decrypted_data
 
-        # Logged-in user's organization (TRUSTED)
-        user_org = request.user.profile.organization
+            # Logged-in user's organization (TRUSTED)
+            user_org = request.user.profile.organization
 
-        # Validate org_id from request (UUID / external_id)
-        req_org_id = data.get("org_id")
-        if not req_org_id:
-            return Response(
-                {
-                    "success": False,
-                    "message": "organization id is required",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if str(user_org.external_id) != str(req_org_id):
-            return Response(
-                {
-                    "success": False,
-                    "message": "Unauthorized organization access",
-                    "data": None,
-                },
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        # ---- Required fields ----
-        required_fields = ["full_name", "age", "sex", "phone", "email"]
-        for field in required_fields:
-            if field not in data or not str(data[field]).strip():
+            # Validate org_id from request (UUID / external_id)
+            req_org_id = data.get("org_id")
+            if not req_org_id:
                 return Response(
                     {
                         "success": False,
-                        "message": f"Missing field: {field}",
+                        "message": "organization id is required",
                         "data": None,
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-        # ---- full_name ----
-        full_name = data["full_name"].strip()
-        if len(full_name) < 3:
+            if str(user_org.external_id) != str(req_org_id):
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Unauthorized organization access",
+                        "data": None,
+                    },
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+            # ---- Required fields ----
+            required_fields = ["full_name", "age", "sex", "phone", "email"]
+            for field in required_fields:
+                if field not in data or not str(data[field]).strip():
+                    return Response(
+                        {
+                            "success": False,
+                            "message": f"Missing field: {field}",
+                            "data": None,
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+            # ---- full_name ----
+            full_name = data["full_name"].strip()
+            if len(full_name) < 3:
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Full Name must be at least 3 characters",
+                        "data": None,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # ---- age ----
+            try:
+                age = int(data["age"])
+                if age < 0 or age > 120:
+                    raise ValueError
+            except Exception:
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Age must be between 0 and 120",
+                        "data": None,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # ---- sex ----
+            sex = data["sex"].strip().upper()
+            if sex not in VALID_GENDERS:
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Invalid Gender. Allowed: MALE, FEMALE, OTHER",
+                        "data": None,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # ---- phone ----
+            phone = data["phone"].strip()
+            if not phone.isdigit() or not (8 <= len(phone) <= 15):
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Invalid Phone Number",
+                        "data": None,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # ---- email ----
+            email = data["email"].strip().lower()
+            email_regex = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
+            if not re.match(email_regex, email):
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Invalid Email Address",
+                        "data": None,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            mrn = data.get("mrn") or None
+
+            patient = Patient.objects.create(
+                org=user_org,  # ENFORCED
+                mrn=mrn,
+                full_name=full_name,
+                age=age,
+                sex=sex,
+                phone=phone,
+                email=email,
+            )
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Patient created successfully",
+                    "data": {"patient_id": patient.id},
+                },
+                status=status.HTTP_201_CREATED,
+            )
+        except Exception as e:
+            logger.error(f"Error creating patient: {str(e)}", exc_info=True)
             return Response(
                 {
                     "success": False,
-                    "message": "Full Name must be at least 3 characters",
-                    "data": None,
+                    "message": "An unexpected error occurred while creating patient.",
+                    "data": None
                 },
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-        # ---- age ----
-        try:
-            age = int(data["age"])
-            if age < 0 or age > 120:
-                raise ValueError
-        except Exception:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Age must be between 0 and 120",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # ---- sex ----
-        sex = data["sex"].strip().upper()
-        if sex not in VALID_GENDERS:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Invalid Gender. Allowed: MALE, FEMALE, OTHER",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # ---- phone ----
-        phone = data["phone"].strip()
-        if not phone.isdigit() or not (8 <= len(phone) <= 15):
-            return Response(
-                {
-                    "success": False,
-                    "message": "Invalid Phone Number",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # ---- email ----
-        email = data["email"].strip().lower()
-        email_regex = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
-        if not re.match(email_regex, email):
-            return Response(
-                {
-                    "success": False,
-                    "message": "Invalid Email Address",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        mrn = data.get("mrn") or None
-
-        patient = Patient.objects.create(
-            org=user_org,  # ENFORCED
-            mrn=mrn,
-            full_name=full_name,
-            age=age,
-            sex=sex,
-            phone=phone,
-            email=email,
-        )
-
-        return Response(
-            {
-                "success": True,
-                "message": "Patient created successfully",
-                "data": {"patient_id": patient.id},
-            },
-            status=status.HTTP_201_CREATED,
-        )
 
 
 # ============================================================
@@ -175,107 +189,120 @@ class CreateOrder(APIView):
     @decrypt_request
     @encrypt_response
     def post(self, request):
-        serializer = OrderCreateSerializer(data=request.decrypted_data)
-        if not serializer.is_valid():
-            field, errors = next(iter(serializer.errors.items()))
+        try:
+            serializer = OrderCreateSerializer(data=request.decrypted_data)
+            if not serializer.is_valid():
+                field, errors = next(iter(serializer.errors.items()))
+                return Response(
+                    {
+                        "success": False,
+                        "message": f"{field}: {errors[0]}",
+                        "data": None,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            user_org = request.user.profile.organization
+
+            # Validate org_id (UUID)
+            req_org_id = request.decrypted_data.get("org_id")
+            if not req_org_id:
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Organization id is required",
+                        "data": None,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            if str(user_org.external_id) != str(req_org_id):
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Unauthorized organization access",
+                        "data": None,
+                    },
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+            patient = get_object_or_404(
+                Patient,
+                id=serializer.validated_data["patient_id"],
+                org=user_org,  # ENFORCED
+            )
+
+            # Generate secure rotating token upfront
+            raw_token = PublicAccessToken.generate_raw_token()
+            token = raw_token  # Unified token for legacy field too
+
+            policy = get_or_create_policy(user_org.id)
+            expires = timezone.now() + timedelta(
+                hours=policy.token_validity_hours if policy else 48
+            )
+
+            # ===============================
+            # SECURE PUBLIC TOKEN CREATION
+            # ===============================
+
+            # Create order with the secure token stored in public_token
+            order = AssessmentOrder.objects.create(
+                org=user_org,
+                patient=patient,
+                battery_code=serializer.validated_data["battery_code"],
+                battery_version=serializer.validated_data.get("battery_version", "1.0"),
+                encounter_type=serializer.validated_data.get("encounter_type", "OPD"),
+                referring_unit=serializer.validated_data.get("referring_unit"),
+                administration_mode=serializer.validated_data.get(
+                    "administration_mode", AssessmentOrder.MODE_KIOSK
+                ),
+                verified_by_staff=serializer.validated_data.get("verified_by_staff", True),
+                status=AssessmentOrder.STATUS_IN_PROGRESS,
+                created_by_user_id=str(request.user.id),
+
+                # ----------------------------------------
+                # LEGACY METHOD + SECURE TOKEN
+                public_token=token,
+                public_link_expires_at=expires,
+                # ----------------------------------------
+            )
+
+            print(order,"order______")
+
+
+            expires_at = timezone.now() + timedelta(minutes=5)
+
+            PublicAccessToken.objects.create(
+                order=order,
+                token_hash=PublicAccessToken.hash_token(raw_token),
+                expires_at=expires_at
+            )
+
+            order.data_retention_until = compute_retention_date(order.created_at)
+            order.save(update_fields=["data_retention_until"])
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Patient Registered successfully",
+                    "data": {
+                        "order_id": order.id,
+                        "public_token": raw_token,
+                        "public_link_expires_at": expires_at.isoformat(),
+                    },
+                },
+                status=status.HTTP_201_CREATED,
+            )
+        except Exception as e:
+            logger.error(f"Error creating order: {str(e)}", exc_info=True)
             return Response(
                 {
                     "success": False,
-                    "message": f"{field}: {errors[0]}",
-                    "data": None,
+                    "message": "An unexpected error occurred while creating order.",
+                    "data": None
                 },
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-        user_org = request.user.profile.organization
-
-        # Validate org_id (UUID)
-        req_org_id = request.decrypted_data.get("org_id")
-        if not req_org_id:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Organization id is required",
-                    "data": None,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if str(user_org.external_id) != str(req_org_id):
-            return Response(
-                {
-                    "success": False,
-                    "message": "Unauthorized organization access",
-                    "data": None,
-                },
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        patient = get_object_or_404(
-            Patient,
-            id=serializer.validated_data["patient_id"],
-            org=user_org,  # ENFORCED
-        )
-
-        # Generate secure rotating token upfront
-        raw_token = PublicAccessToken.generate_raw_token()
-        token = raw_token  # Unified token for legacy field too
-
-        policy = get_or_create_policy(user_org.id)
-        expires = timezone.now() + timedelta(
-            hours=policy.token_validity_hours if policy else 48
-        )
-
-        # ===============================
-        # SECURE PUBLIC TOKEN CREATION
-        # ===============================
-
-        # Create order with the secure token stored in public_token
-        order = AssessmentOrder.objects.create(
-            org=user_org,
-            patient=patient,
-            battery_code=serializer.validated_data["battery_code"],
-            battery_version=serializer.validated_data.get("battery_version", "1.0"),
-            encounter_type=serializer.validated_data.get("encounter_type", "OPD"),
-            referring_unit=serializer.validated_data.get("referring_unit"),
-            administration_mode=serializer.validated_data.get(
-                "administration_mode", AssessmentOrder.MODE_KIOSK
-            ),
-            verified_by_staff=serializer.validated_data.get("verified_by_staff", True),
-            status=AssessmentOrder.STATUS_IN_PROGRESS,
-            created_by_user_id=str(request.user.id),
-
-            # ----------------------------------------
-            # LEGACY METHOD + SECURE TOKEN
-            public_token=token,
-            public_link_expires_at=expires,
-            # ----------------------------------------
-        )
-
-
-        expires_at = timezone.now() + timedelta(minutes=5)
-
-        PublicAccessToken.objects.create(
-            order=order,
-            token_hash=PublicAccessToken.hash_token(raw_token),
-            expires_at=expires_at
-        )
-
-        order.data_retention_until = compute_retention_date(order.created_at)
-        order.save(update_fields=["data_retention_until"])
-
-        return Response(
-            {
-                "success": True,
-                "message": "Patient Registered successfully",
-                "data": {
-                    "order_id": order.id,
-                    "public_token": raw_token,
-                    "public_link_expires_at": expires_at.isoformat(),
-                },
-            },
-            status=status.HTTP_201_CREATED,
-        )
 
 
 # ============================================================
@@ -286,22 +313,36 @@ class ClinicQueue(APIView):
 
     @encrypt_response
     def get(self, request):
-        user_org = request.user.profile.organization
+        try:
+            user_org = request.user.profile.organization
 
-        qs = (
-            AssessmentOrder.objects
-            .filter(org=user_org)  # ALREADY ISOLATED
-            .exclude(deletion_status="DELETED")
-            .order_by("-created_at")[:200]
-        )
+            qs = (
+                AssessmentOrder.objects
+                .filter(org=user_org)  # ALREADY ISOLATED
+                .exclude(deletion_status="DELETED")
+                .order_by("-created_at")[:200]
+            )
 
-        data = QueueListSerializer(qs, many=True).data
+        
 
-        return Response(
-            {
-                "success": True,
-                "message": "Queue fetched successfully",
-                "data": {"results": data},
-            },
-            status=status.HTTP_200_OK,
-        )
+            data = QueueListSerializer(qs, many=True).data
+           
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Queue fetched successfully",
+                    "data": {"results": data},
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            logger.error(f"Error fetching clinic queue: {str(e)}", exc_info=True)
+            return Response(
+                {
+                    "success": False,
+                    "message": "An unexpected error occurred while fetching the queue.",
+                    "data": None
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
