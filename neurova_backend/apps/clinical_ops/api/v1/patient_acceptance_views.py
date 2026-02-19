@@ -24,8 +24,7 @@ class PatientAcceptRejectOrder(APIView):
     
     Request Body (encrypted):
     {
-        "action": "ACCEPT" or "REJECT",
-        "notes": "Optional rejection reason or comments (or use 'reason')",
+        "action": "ACCEPT" or "REJECT" or "REMARK",
         "data": "Optional remark field"
     }
     
@@ -69,17 +68,6 @@ class PatientAcceptRejectOrder(APIView):
                     "data": None
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            # Check if order can be accepted/rejected
-            # Check if order can be accepted/rejected
-            if order.status not in [AssessmentOrder.STATUS_COMPLETED, AssessmentOrder.STATUS_AWAITING_REVIEW]:
-                return Response({
-                    "success": False,
-                    "message": f"Order status is {order.status} and cannot be accepted/rejected.",
-                    "data": {
-                        "current_status": order.status,
-                        "timestamp": order.patient_acceptance_timestamp
-                    }
-                }, status=status.HTTP_400_BAD_REQUEST)
 
             # Update order status
             # Update order status
