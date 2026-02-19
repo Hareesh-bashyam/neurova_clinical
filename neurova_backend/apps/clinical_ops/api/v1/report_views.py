@@ -68,7 +68,10 @@ class GenerateReportPDF(APIView):
             if order.status not in [
                 AssessmentOrder.STATUS_AWAITING_REVIEW,
                 AssessmentOrder.STATUS_DELIVERED,
-                AssessmentOrder.STATUS_COMPLETED
+                AssessmentOrder.STATUS_COMPLETED,
+                AssessmentOrder.STATUS_REMARK,
+                AssessmentOrder.STATUS_ACCEPTED,
+                AssessmentOrder.STATUS_REJECTED
             ]:
                 return Response(
                     {
