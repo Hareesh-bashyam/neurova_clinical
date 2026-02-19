@@ -46,6 +46,8 @@ class AssessmentOrder(models.Model):
     STATUS_IN_PROGRESS = "IN_PROGRESS"
     STATUS_COMPLETED = "COMPLETED"
     STATUS_AWAITING_REVIEW = "AWAITING_REVIEW"
+    STATUS_ACCEPTED = "ACCEPTED"
+    STATUS_REJECTED = "REJECTED"
     STATUS_DELIVERED = "DELIVERED"
     STATUS_CANCELLED = "CANCELLED"
 
@@ -54,6 +56,8 @@ class AssessmentOrder(models.Model):
         (STATUS_IN_PROGRESS, "In Progress"),
         (STATUS_COMPLETED, "Completed"),
         (STATUS_AWAITING_REVIEW, "Awaiting Review"),
+        (STATUS_ACCEPTED, "Accepted"),
+        (STATUS_REJECTED, "Rejected"),
         (STATUS_DELIVERED, "Delivered"),
         (STATUS_CANCELLED, "Cancelled"),
     ]
@@ -142,6 +146,7 @@ class AssessmentOrder(models.Model):
     )
     patient_acceptance_timestamp = models.DateTimeField(blank=True, null=True)
     patient_acceptance_notes = models.TextField(blank=True, null=True)  # For rejection reasons
+    patient_acceptance_remark = models.TextField(blank=True, null=True)
     
 
     class Meta:

@@ -95,6 +95,8 @@ class ClinicalReviewDetailView(APIView):
                     "success": True,
                     "message": "Assessment Review Details",
                     "data": {
+                        "status": order.status, 
+
 
                         # ✅ PANEL SUMMARY (FIXED)
                         "panel_summary": {

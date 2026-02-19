@@ -25,7 +25,8 @@ class PatientAcceptRejectOrder(APIView):
     Request Body (encrypted):
     {
         "action": "ACCEPT" or "REJECT",
-        "notes": "Optional rejection reason or comments"
+        "notes": "Optional rejection reason or comments (or use 'reason')",
+        "remark": "Optional remark field"
     }
     
     Response (encrypted):
@@ -34,7 +35,7 @@ class PatientAcceptRejectOrder(APIView):
         "message": "Order accepted successfully",
         "data": {
             "order_id": 123,
-            "patient_acceptance_status": "ACCEPTED",
+            "status": "ACCEPTED",
             "patient_acceptance_timestamp": "2026-02-17T20:30:00Z"
         }
     }
@@ -57,7 +58,8 @@ class PatientAcceptRejectOrder(APIView):
 
             # Get action from request
             action = request.decrypted_data.get("action", "").upper()
-            notes = request.decrypted_data.get("notes", "")
+            notes = request.decrypted_data.get("notes", "") or request.decrypted_data.get("reason", "")
+            remark = request.decrypted_data.get("remark", "")
 
             # Validate action
             if action not in ["ACCEPT", "REJECT"]:
@@ -68,32 +70,37 @@ class PatientAcceptRejectOrder(APIView):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # Check if order can be accepted/rejected
-            if order.patient_acceptance_status != AssessmentOrder.ACCEPTANCE_PENDING:
+            # Check if order can be accepted/rejected
+            if order.status not in [AssessmentOrder.STATUS_COMPLETED, AssessmentOrder.STATUS_AWAITING_REVIEW]:
                 return Response({
                     "success": False,
-                    "message": f"Order has already been {order.patient_acceptance_status.lower()}.",
+                    "message": f"Order status is {order.status} and cannot be accepted/rejected.",
                     "data": {
-                        "current_status": order.patient_acceptance_status,
+                        "current_status": order.status,
                         "timestamp": order.patient_acceptance_timestamp
                     }
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # Update order status
+            # Update order status
             if action == "ACCEPT":
-                order.patient_acceptance_status = AssessmentOrder.ACCEPTANCE_ACCEPTED
+                order.status = AssessmentOrder.STATUS_ACCEPTED
                 message = "Accepted"
                 event_type = "ORDER_ACCEPTED_BY_DOCTOR"
             else:  # REJECT
-                order.patient_acceptance_status = AssessmentOrder.ACCEPTANCE_REJECTED
+                order.status = AssessmentOrder.STATUS_REJECTED
                 message = "Rejected"
                 event_type = "ORDER_REJECTED_BY_DOCTOR"
 
             order.patient_acceptance_timestamp = timezone.now()
             order.patient_acceptance_notes = notes if notes else None
+            order.patient_acceptance_remark = remark if remark else None
+
             order.save(update_fields=[
-                "patient_acceptance_status",
+                "status",
                 "patient_acceptance_timestamp",
-                "patient_acceptance_notes"
+                "patient_acceptance_notes",
+                "patient_acceptance_remark"
             ])
 
             # Log audit event
@@ -107,6 +114,7 @@ class PatientAcceptRejectOrder(APIView):
                 details={
                     "action": action,
                     "notes": notes,
+                    "remark": remark,
                     "patient_name": order.patient.full_name,
                     "battery_code": order.battery_code
                 },
@@ -119,7 +127,7 @@ class PatientAcceptRejectOrder(APIView):
                 "message": message,
                 "data": {
                     "order_id": order.id,
-                    "patient_acceptance_status": order.patient_acceptance_status,
+                    "status": order.status,
                     "patient_acceptance_timestamp": order.patient_acceptance_timestamp.isoformat() if order.patient_acceptance_timestamp else None
                 }
             }, status=status.HTTP_200_OK)

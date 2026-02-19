@@ -41,7 +41,7 @@ urlpatterns = [
     path("public/order/<str:token>/report/access-code", PublicRequestReportCode.as_view()),
     path("admin/data-deletion/approve", AdminApproveDeletion.as_view()),
     path("staff/order/<int:order_id>/delete", StaffDeleteOrder.as_view()),
-    
+   
 
 ]
 

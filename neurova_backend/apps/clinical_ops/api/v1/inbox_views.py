@@ -23,7 +23,11 @@ class ClinicalInboxView(APIView):
                 .filter(
                     org=org,
                     deletion_status="ACTIVE",
-                    status=AssessmentOrder.STATUS_COMPLETED,
+                    status__in=[
+                        AssessmentOrder.STATUS_COMPLETED,
+                        AssessmentOrder.STATUS_ACCEPTED,
+                        AssessmentOrder.STATUS_REJECTED
+                    ]
                 )
                 .select_related("patient", "result")
                 .order_by("-created_at")[:200]

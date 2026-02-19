@@ -234,7 +234,7 @@ def generate_report_pdf_bytes_v2(report_context: dict) -> bytes:
     # Requirement: "draft water mark in initail stage when, the status has accepted the draft water mark should eliminated"
     # So if status != ACCEPTED -> Watermark
     
-    acceptance_status = order.get("patient_acceptance_status", "PENDING")
+    order_status = order.get("status", "PENDING")
 
     def draw_watermark(canvas, doc):
         """
@@ -251,7 +251,7 @@ def generate_report_pdf_bytes_v2(report_context: dict) -> bytes:
         canvas.restoreState()
 
     # Build
-    if acceptance_status != "ACCEPTED":
+    if order_status != "ACCEPTED":
         # Apply watermark to all pages
         doc.build(elements, onFirstPage=draw_watermark, onLaterPages=draw_watermark)
     else:
