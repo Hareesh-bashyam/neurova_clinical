@@ -50,6 +50,7 @@ class AssessmentOrder(models.Model):
     STATUS_REJECTED = "REJECTED"
     STATUS_DELIVERED = "DELIVERED"
     STATUS_CANCELLED = "CANCELLED"
+    STATUS_REMARK = "REMARK"
 
     STATUS_CHOICES = [
         (STATUS_CREATED, "Created"),
@@ -60,17 +61,20 @@ class AssessmentOrder(models.Model):
         (STATUS_REJECTED, "Rejected"),
         (STATUS_DELIVERED, "Delivered"),
         (STATUS_CANCELLED, "Cancelled"),
+        (STATUS_REMARK, "Remark"),
     ]
 
     # Patient Acceptance Status
     ACCEPTANCE_PENDING = "PENDING"
     ACCEPTANCE_ACCEPTED = "ACCEPTED"
     ACCEPTANCE_REJECTED = "REJECTED"
+    ACCEPTANCE_REMARK = "REMARK"
 
     ACCEPTANCE_STATUS_CHOICES = [
         (ACCEPTANCE_PENDING, "Pending"),
         (ACCEPTANCE_ACCEPTED, "Accepted"),
         (ACCEPTANCE_REJECTED, "Rejected"),
+        (ACCEPTANCE_REMARK, "Remark"),
     ]
 
     MODE_KIOSK = "KIOSK"

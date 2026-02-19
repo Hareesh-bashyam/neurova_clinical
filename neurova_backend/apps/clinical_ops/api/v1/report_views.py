@@ -83,6 +83,7 @@ class GenerateReportPDF(APIView):
                 )
 
             result = AssessmentResult.objects.filter(order=order).first()
+
             if not result:
                 return Response(
                     {
@@ -101,9 +102,11 @@ class GenerateReportPDF(APIView):
                     "generated_at": timezone.now(),
                 }
             )
-
+            
             ctx = build_report_context(order)
             pdf_bytes = generate_report_pdf_bytes_v2(ctx)
+
+            print(pdf_bytes)
 
             filename = f"NEUROVAX_REPORT_ORDER_{order.id}.pdf"
             report.pdf_file.save(filename, ContentFile(pdf_bytes), save=True)
