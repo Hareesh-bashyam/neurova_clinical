@@ -26,7 +26,7 @@ class PatientAcceptRejectOrder(APIView):
     {
         "action": "ACCEPT" or "REJECT",
         "notes": "Optional rejection reason or comments (or use 'reason')",
-        "remark": "Optional remark field"
+        "data": "Optional remark field"
     }
     
     Response (encrypted):
@@ -59,10 +59,10 @@ class PatientAcceptRejectOrder(APIView):
             # Get action from request
             action = request.decrypted_data.get("action", "").upper()
             notes = request.decrypted_data.get("notes", "") or request.decrypted_data.get("reason", "")
-            remark = request.decrypted_data.get("remark", "")
+            data = request.decrypted_data.get("data", "")
 
             # Validate action
-            if action not in ["ACCEPT", "REJECT"]:
+            if action not in ["ACCEPT", "REJECT","REMARK"]:
                 return Response({
                     "success": False,
                     "message": "Invalid action. Must be 'ACCEPT' or 'REJECT'.",
@@ -87,14 +87,18 @@ class PatientAcceptRejectOrder(APIView):
                 order.status = AssessmentOrder.STATUS_ACCEPTED
                 message = "Accepted"
                 event_type = "ORDER_ACCEPTED_BY_DOCTOR"
+            elif action == "REMARK":
+                order.patient_acceptance_remark = data if data else None
+                message = "Remark added"
+                event_type = "ORDER_REMARK_BY_DOCTOR"
             else:  # REJECT
                 order.status = AssessmentOrder.STATUS_REJECTED
                 message = "Rejected"
                 event_type = "ORDER_REJECTED_BY_DOCTOR"
+                # order.patient_acceptance_notes = notes if notes else None
+                order.patient_acceptance_notes = data if data else None
 
             order.patient_acceptance_timestamp = timezone.now()
-            order.patient_acceptance_notes = notes if notes else None
-            order.patient_acceptance_remark = remark if remark else None
 
             order.save(update_fields=[
                 "status",
@@ -114,7 +118,7 @@ class PatientAcceptRejectOrder(APIView):
                 details={
                     "action": action,
                     "notes": notes,
-                    "remark": remark,
+                    "remark": data,
                     "patient_name": order.patient.full_name,
                     "battery_code": order.battery_code
                 },

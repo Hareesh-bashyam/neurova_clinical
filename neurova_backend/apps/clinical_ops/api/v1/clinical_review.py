@@ -87,6 +87,8 @@ class ClinicalReviewDetailView(APIView):
                     "time": timezone.localtime(report.generated_at).strftime("%I:%M %p")
                 })
 
+            remarks = order.patient_acceptance_remark if order.patient_acceptance_remark else None
+
             # ----------------------------------
             # FINAL RESPONSE
             # ----------------------------------
@@ -129,6 +131,7 @@ class ClinicalReviewDetailView(APIView):
                                 if has_red_flags else None
                             )
                         },
+                        "remarks": remarks,
 
                         "audit_timeline": timeline,
                     }
