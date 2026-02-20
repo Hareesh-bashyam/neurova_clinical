@@ -120,7 +120,8 @@ class PatientAcceptRejectOrder(APIView):
                 "data": {
                     "order_id": order.id,
                     "status": order.status,
-                    "patient_acceptance_timestamp": order.patient_acceptance_timestamp.isoformat() if order.patient_acceptance_timestamp else None
+                    "patient_acceptance_timestamp": order.patient_acceptance_timestamp.isoformat() if order.patient_acceptance_timestamp else None,
+                    "patient_acceptance_remark": order.patient_acceptance_remark
                 }
             }, status=status.HTTP_200_OK)
 

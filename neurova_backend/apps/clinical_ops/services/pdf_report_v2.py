@@ -159,6 +159,18 @@ def generate_report_pdf_bytes_v2(report_context: dict) -> bytes:
         elements.append(rf_table)
         elements.append(Spacer(1, 3*mm))
 
+    # ===== REMARKS (ADDED) =====
+    remarks = report_context.get("remarks")
+    if remarks:
+        elements.append(Paragraph("Treatment Plan", H2))
+        # Handle multiline remarks by splitting or just letting Paragraph handle it
+        # If it's very long, Paragraph should wrap. 
+        # But we might want to ensure newlines are respected if they exist.
+        # ReportLab Paragraph helper: <br/> for newlines.
+        formatted_remarks = remarks.replace("\n", "<br/>")
+        elements.append(Paragraph(formatted_remarks, BODY))
+        elements.append(Spacer(1, 3*mm))
+
     # ===== TEST RESULTS TABLE =====
     elements.append(Paragraph("Test Results", H2))
     table_header = ["Instrument", "Score", "Band / Interpretation"]

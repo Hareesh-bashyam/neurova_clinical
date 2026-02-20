@@ -94,7 +94,8 @@ def build_report_context(order: AssessmentOrder) -> dict:
             "signed_at": signed_at,
             "method": method,
             "reason": reason,
-        }
+        },
+        "remarks": order.patient_acceptance_remark,
     }
     # attach response quality flags if present
     try:
